@@ -1,0 +1,26 @@
+.FancyButton {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// Modifier for the 'primary' type
+.FancyButton--primary {
+    background-color: #007bff;
+    color: white;
+}
+
+// Modifier for the 'secondary' type
+.FancyButton--secondary {
+    background-color: #6c757d;
+    color: white;
+}

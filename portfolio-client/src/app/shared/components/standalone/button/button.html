@@ -1,0 +1,30 @@
+<!-- Can't bind to 'ngClass' since it isn't a known property of 'button'. -->
+
+<button 
+  class = "FancyButton"
+  
+  [ngClass] = "{
+    'FancyButton--Primary': ButtonType === 'Primary',
+    'FancyButton--Secondary': ButtonType === 'Secondary'
+  }" 
+
+  (pointerenter) = "OnFocus()"
+  (pointerleave) = "OnUnfocus()"
+
+  (pointercancel) = "OnCancel()"
+
+  (pointerdown) = "OnDown()"
+  (pointerup) = "OnUp()"
+
+  (keydown) = "OnKeyDown()"
+  (keyup) = "OnKeyUp()"
+
+  (wheel) = "OnWheel()"
+
+  (selectstart) = "OnFocus()"
+  (select) = "OnUnfocus()"
+
+  (focus) = "OnFocus()"
+  (blur) = "OnUnfocus()">
+  {{ Label }}
+</button>

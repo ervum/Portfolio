@@ -1,0 +1,77 @@
+body {
+    margin: 0%;
+    
+    background: #161616;
+}
+
+.Concave-Border {
+    --Size: 75%;
+    --X: 50%;
+    --Y: 50%;
+    --Smoothness: 1%;
+
+    height: 100%;
+
+    aspect-ratio: 1 / 1;
+    
+    background: white;
+    
+    mask-image: 
+        radial-gradient(
+            circle at var(--X) var(--Y), 
+            black calc(var(--Size) - var(--Smoothness)),
+            transparent var(--Size)
+        ),
+        linear-gradient(white, white);
+    mask-composite: exclude;
+
+    -webkit-mask-composite: xor;
+}
+
+.Top.Concave-Border, .Top .Concave-Border {
+    --Y: 0%;
+}
+.Bottom.Concave-Border, .Bottom .Concave-Border {
+    --Y: 100%;
+}
+.Left.Concave-Border, .Left .Concave-Border {
+    --X: 0%;
+}
+.Right.Concave-Border, .Right .Concave-Border {
+    --X: 100%;
+}
+
+.Shape {
+    height: 10%;
+
+    aspect-ratio: 1;
+
+    border-radius: 5%;
+
+    clip-path: polygon(var(--Shape));
+
+    background: #ffffff;
+}
+
+.Shape.Invert {
+    --Stroke: -5px;
+
+    padding: calc(-1 * var(--Stroke));
+
+    clip-path: 
+        polygon(
+            evenodd,
+            var(--Stroke) var(--Stroke),
+            calc(100% - var(--Stroke)) var(--Stroke),
+            calc(100% - var(--Stroke)) calc(100% - var(--Stroke)),
+            var(--Stroke) calc(100% - var(--Stroke)),
+            var(--Stroke) var(--Stroke),
+            var(--Shape)
+        ) content-box; 
+
+    box-sizing: content-box; 
+}
+
+.Square {
+    --Shape: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
+}
