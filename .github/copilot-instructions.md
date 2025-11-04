@@ -53,6 +53,17 @@ Common pitfalls & tips
 - Package manager: `portfolio-server/README.md` suggests `pnpm` but `package.json` scripts work with npm/yarn too — prefer the workspace's package manager if one is used consistently.
 - Ports: client SSR server defaults to 4000 in `server.ts`; Nest server hardcodes 6900 in `portfolio-server/src/main.ts`. Use env `PORT` to override where supported.
 
+Database (PostgreSQL)
+- The project uses PostgreSQL (per your stack). I didn't find a checked-in ORM schema (Prisma/TypeORM) or an explicit `DATABASE_URL` in the repository — when adding DB wiring, check for `src/**/prisma`, `ormconfig.*`, or `TypeOrmModule.forRoot`.
+- Convention: use a single `DATABASE_URL` env var (postgres://user:pass@host:5432/dbname) that Nest services and migration tools can read.
+- Quick local start (Docker):
+
+```cmd
+docker run --name portfolio-postgres -e POSTGRES_PASSWORD=pass -e POSTGRES_USER=dev -e POSTGRES_DB=portfolio -p 5432:5432 -d postgres:15
+```
+
+- After starting Postgres, set `DATABASE_URL` (or appropriate env keys) and run your ORM migrations/seeders.
+
 If you change behavior
 - Update the specific script in the corresponding `package.json` and any hard-coded path in `src/server.ts` or `dist/*` references.
 
