@@ -1,7 +1,7 @@
 .Wrapper {
-    --Section-Spacing: 15%;
-    --Section-Width: 500px;
-    --Section-Height: 700px;
+    --Section-Spacing: 10%;
+    --Section-Width: 1200px;
+    --Section-Height: 600px;
 
     position: relative; 
 
@@ -18,11 +18,17 @@
 }
 
 .Section {
+    z-index: -1;
+
     position: relative;
 
     width: var(--Section-Width);
     height: var(--Section-Height);
     
+    background-color: #080808;
+
+    border-radius: 64px;
+
     display: inline-flex;
     flex-direction: column;
     align-items: center;
@@ -42,7 +48,7 @@
     border-style: solid;
     border-width: 1px;
     border-radius: 64px;
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
     
     clip-path: polygon(
         calc(50% - var(--Section-Spacing)) -10%,
@@ -75,7 +81,9 @@
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: top;
 
-    animation: Draw-Section-Borders 5s ease-in both;
+    animation: Draw-Section-Borders 5.0s ease-in both;
+
+    -webkit-animation: Draw-Section-Borders 5.0s ease-in both;
 }
 
 .Section-Content {
@@ -117,7 +125,9 @@
     display: inline-flex;
     flex-direction: column;
 
-    animation: Fade-In 5s ease-in-out both;
+    animation: Fade-In 5.0s ease-in-out both;
+
+    -webkit-animation: 5.0s ease-in-out both;
 }
 
 .Container {         

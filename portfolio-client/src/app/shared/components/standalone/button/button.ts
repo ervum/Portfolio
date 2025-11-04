@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Inject, Input, Output, AfterViewInit, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 export type ButtonType = ('Primary' | 'Secondary');
 export type ButtonStyle = ('Standard' | 'Backgroundless');
@@ -24,11 +24,36 @@ export type CalculatedV1 = {
   templateUrl: './button.html',
   styleUrl: './button.scss'
 })
-export class ButtonComponent implements AfterViewInit {  
-  public ButtonStyles: Styles = {};
-  
+export class ButtonComponent {  
   public RippleStyles: Styles = {};
   public InvertedRippleStyles: Styles = {};
+
+  public get ButtonStyles(): { [key: string]: any } {
+    const NewHeight: CalculatedV1 = this.CalculateVector((this.Height), (0.9 - (this.BorderSpacing)));
+    var NewWidth: string;
+
+    const OldHeight: number = (NewHeight.OldSize);
+    const OldWidth: number = (this.CalculateVector((this.Width), 0.9).OldSize);
+
+    const ButtonAspectRatio: number = (OldWidth / OldHeight);
+
+    const SizeUnit: IsString = (NewHeight.Unit);
+
+    const HeightDifference: number = (OldHeight - (NewHeight.Size));
+
+    if (SizeUnit == '%') {
+      NewWidth = `${(HeightDifference * ButtonAspectRatio)}${SizeUnit}`;
+    } else {
+      NewWidth = `${(OldWidth - (OldHeight - (NewHeight.Size)))}${SizeUnit}`;
+    }
+
+    return {
+      'height': (NewHeight.Result),
+      'width': NewWidth,
+
+      'top': `${(this.Padding)}px`
+    };
+  }
 
   /* private Wait(ms: number): Promise<void> {
     return new Promise((Resolve) => setTimeout(Resolve, ms));
@@ -95,6 +120,8 @@ export class ButtonComponent implements AfterViewInit {
 
   @Input() Label: string = 'Button';
 
+  @Input() Padding: number = -3;
+  
   @Input() Type: ButtonType = 'Primary';
   @Input() Styled: ButtonStyle = 'Standard';
 
@@ -111,35 +138,6 @@ export class ButtonComponent implements AfterViewInit {
   
   @Output() Wheel: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(@Inject(PLATFORM_ID) private PlatformID: Object) {}
-
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.PlatformID)) {
-      const NewHeight: CalculatedV1 = this.CalculateVector((this.Height), (0.9 - (this.BorderSpacing)));
-      var NewWidth: string;
-
-      const OldHeight: number = (NewHeight.OldSize);
-      const OldWidth: number = (this.CalculateVector((this.Width), 0.9).OldSize);
-
-      const ButtonAspectRatio: number = (OldWidth / OldHeight);
-
-      const SizeUnit: IsString = (NewHeight.Unit);
-
-      const HeightDifference: number = (OldHeight - (NewHeight.Size));
-
-      if (SizeUnit == '%') {
-        NewWidth = `${(HeightDifference * ButtonAspectRatio)}${SizeUnit}`;
-      } else {
-        NewWidth = `${(OldWidth - (OldHeight - (NewHeight.Size)))}${SizeUnit}`;
-      }
-
-      this.ButtonStyles = {
-        'height': (NewHeight.Result),
-        'width': NewWidth
-      };
-    }
-  }
-  
   OnFocus(): void { this.Focus.emit(); }
   OnUnfocus(): void {
     this.Unfocus.emit();

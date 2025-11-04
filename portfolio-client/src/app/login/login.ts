@@ -13,6 +13,5 @@ import { TextboxComponent } from '../shared/components/standalone/textbox/textbo
 export class LoginComponent {
   HandleLogin(): void {
     console.log('Login attempt initiated from the login component!');
-    // TODO: Implement login logic (e.g., call an authentication service)
   }
 }
