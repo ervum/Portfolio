@@ -11,7 +11,38 @@
     </div>
 
     <div class = "Section">
+        <div class = "Section-Content">
+            <div class = "Section-Title">Sign In</div>
+    
+            <FancyTextbox
+                class = "Section-Content-Resize"
 
+                Placeholder = "Username"
+                Styled = "Backgroundless">
+            </FancyTextbox>
+            <FancyTextbox 
+                class = "Section-Content-Resize"
+
+                Placeholder = "Password"
+                Styled = "Backgroundless">
+            </FancyTextbox>
+            
+            <FancyButton 
+                class = "Section-Content-Reposition"
+
+                Height = "40px"
+                Width = "100px"
+
+                Label = "Login"
+                (Up) = "HandleLogin()">
+            </FancyButton>
+        </div>
+
+        <FancyButton 
+            Height = "40px"
+            Width = "250px"
+            
+            Label = "Is it your first time here?">
+        </FancyButton>    
     </div>
-    <FancyButton (Up) = "HandleLogin()" Label = "Continue as Guest"></FancyButton>
 </div>
