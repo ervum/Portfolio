@@ -1,0 +1,63 @@
+<div #Wrapper
+  class = "FancyTextbox-Wrapper"
+
+  [attr.Has-Text] = "((InputValue.length) > 0)"
+  [attr.Focus-State] = "FocusState">
+  <p 
+    class = "FancyTextbox-Placeholder"
+
+    [ngClass] = "{
+      'FancyTextbox-Primary': (Type === 'Primary'),
+      'FancyTextbox-Secondary': (Type === 'Secondary'),
+
+      'FancyTextbox-Standard': (Styled === 'Standard'),
+      'FancyTextbox-Backgroundless': (Styled === 'Backgroundless')
+    }"
+  >{{ Placeholder }}
+  </p>
+  <div
+    class = "FancyTextbox-Border"
+    
+    [ngClass] = "{
+      'FancyTextbox-Primary': (Type === 'Primary'),
+      'FancyTextbox-Secondary': (Type === 'Secondary'),
+
+      'FancyTextbox-Standard': (Styled === 'Standard'),
+      'FancyTextbox-Backgroundless': (Styled === 'Backgroundless')
+    }">
+  </div>
+  <input
+    class = "FancyTextbox"
+    
+    [ngClass] = "{
+      'FancyTextbox-Primary': (Type === 'Primary'),
+      'FancyTextbox-Secondary': (Type === 'Secondary'),
+
+      'FancyTextbox-Standard': (Styled === 'Standard'),
+      'FancyTextbox-Backgroundless': (Styled === 'Backgroundless')
+    }"
+    [ngStyle] = "FancyTextboxStyles"
+    [(ngModel)] = "InputValue"  
+
+    [maxlength] = "MaximumLength"
+
+    (submit) = "OnSubmit()"
+
+    (pointerenter) = "OnFocus()"
+    (pointerleave) = "OnUnfocus()"
+
+    (pointercancel) = "OnCancel()"
+    (pointerdown) = "OnDown()"
+    (pointerup) = "OnUp()"
+    
+    (keydown) = "OnKeyDown()"
+    (keyup) = "OnKeyUp()"
+    
+    (wheel) = "OnWheel()"
+    
+    (selectstart) = "OnSelect()"
+    (select) = "OnSelect()"
+
+    (focus) = "OnSelect()"
+    (blur) = "OnUnselect()">
+</div>
