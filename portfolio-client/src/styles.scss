@@ -11,7 +11,6 @@ body {
     --Smoothness: 1%;
 
     height: 100%;
-
     aspect-ratio: 1 / 1;
     
     background: white;
@@ -21,30 +20,38 @@ body {
             circle at var(--X) var(--Y), 
             black calc(var(--Size) - var(--Smoothness)),
             transparent var(--Size)
-        ),
-        linear-gradient(white, white);
+        ), linear-gradient(white, white);
     mask-composite: exclude;
 
+    -webkit-mask-image:
+        radial-gradient(
+            circle at var(--X) var(--Y), 
+            black calc(var(--Size) - var(--Smoothness)),
+            transparent var(--Size)
+        ), linear-gradient(white, white);
     -webkit-mask-composite: xor;
 }
 
-.Top.Concave-Border, .Top .Concave-Border {
+.Top.Concave-Border,
+.Top .Concave-Border {
     --Y: 0%;
 }
-.Bottom.Concave-Border, .Bottom .Concave-Border {
+.Bottom.Concave-Border,
+.Bottom .Concave-Border {
     --Y: 100%;
 }
-.Left.Concave-Border, .Left .Concave-Border {
+.Left.Concave-Border,
+.Left .Concave-Border {
     --X: 0%;
 }
-.Right.Concave-Border, .Right .Concave-Border {
+.Right.Concave-Border,
+.Right .Concave-Border {
     --X: 100%;
 }
 
 .Shape {
     height: 10%;
-
-    aspect-ratio: 1;
+    aspect-ratio: 1 / 1;
 
     border-radius: 5%;
 
@@ -58,16 +65,15 @@ body {
 
     padding: calc(-1 * var(--Stroke));
 
-    clip-path: 
-        polygon(
-            evenodd,
-            var(--Stroke) var(--Stroke),
-            calc(100% - var(--Stroke)) var(--Stroke),
-            calc(100% - var(--Stroke)) calc(100% - var(--Stroke)),
-            var(--Stroke) calc(100% - var(--Stroke)),
-            var(--Stroke) var(--Stroke),
-            var(--Shape)
-        ) content-box; 
+    clip-path: polygon(
+        evenodd,
+        var(--Stroke) var(--Stroke),
+        calc(100% - var(--Stroke)) var(--Stroke),
+        calc(100% - var(--Stroke)) calc(100% - var(--Stroke)),
+        var(--Stroke) calc(100% - var(--Stroke)),
+        var(--Stroke) var(--Stroke),
+        var(--Shape)
+    ) content-box; 
 
     box-sizing: content-box; 
 }
