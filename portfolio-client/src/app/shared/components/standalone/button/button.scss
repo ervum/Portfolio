@@ -19,10 +19,13 @@
 
     transition: all 1.0s cubic-bezier(0.445, 0.05, 0.55, 0.95);
 
+    -webkit-transition: all 1.0s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+
     &:hover {
         @include FancyButton-Focus();
 
-        .FancyButton, .FancyButton-Border {
+        .FancyButton,
+        .FancyButton-Border {
             @include FancyButton-Focus();
         }
     }
@@ -41,6 +44,8 @@
     border-radius: 16px;
 
     transition: inherit;
+
+    -webkit-transition: inherit;
 }
 
 .FancyButton {
@@ -49,7 +54,9 @@
     position: relative;
 
     border-radius: 16px;
-    
+        
+    outline: none;
+
     font-size: 16px;
     font-weight: 500;
     
@@ -58,6 +65,8 @@
     overflow: hidden;
 
     transition: inherit;
+
+    -webkit-transition: inherit;
 }
 
 .FancyButton-Normal {
@@ -79,30 +88,30 @@
     border-width: 1px;
 
     &.FancyButton-Primary {
-        border-color: #ffffff;
-        color: #ffffff;
+        border-color: white;
+        color: white;
     }
     &.FancyButton-Secondary {
-        border-color: #000000;
-        color: #000000;
+        border-color: black;
+        color: black;
     }
 }
 
 .FancyButton-Primary {
-    background-color: #ffffff;
-    border-color: #ffffff;
-    color: #000000;
+    background-color: white;
+    border-color: white;
+    color: black;
 
     .FancyButton-Border {
-        border-color: #ffffff;
+        border-color: white;
     }
 }
 .FancyButton-Secondary {
-    background-color: #000000;
-    border-color: #000000;
-    color: #ffffff;
+    background-color: black;
+    border-color: black;
+    color: white;
 
     .FancyButton-Border {
-        border-color: #000000;
+        border-color: black;
     }
 }

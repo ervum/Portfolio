@@ -57,10 +57,11 @@ body {
 
     clip-path: polygon(var(--Shape));
 
-    background: #ffffff;
+    background: white;
 }
 
-.Shape.Invert {
+.Shape.Invert,
+.Shape .Invert {
     --Stroke: -5px;
 
     padding: calc(-1 * var(--Stroke));
