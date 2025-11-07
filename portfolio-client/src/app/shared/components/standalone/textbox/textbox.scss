@@ -1,225 +1,230 @@
-@mixin Return-Animation($Animation-Name) {
-    @keyframes #{$Animation-Name} {
-        0% {
-            clip-path: polygon(
-                49% -5%,
-                49% -5%,
-                -5% -5%,
-                -5% 105%,
-                105% 105%,
-                105% -5%,
-                51% -5%,
-                51% -5%
-            ); 
+.FancyTextbox-Wrapper {
+    --Textbox-Placeholder-Animation-Spacing: 15%;
+
+    --Textbox-Width: 400px;
+    --Textbox-Height: calc(var(--Textbox-Width) / 9.0);
+    
+    --Focused-Textbox-Border-Size: 32px;
+    --Unfocused-Textbox-Border-Size: 16px;
+
+    position: relative;
+    
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    height: var(--Textbox-Height);
+    width: var(--Textbox-Width);
+
+    display: flex;
+
+    transition: all 0.5s ease-in-out;
+
+    -webkit-transition: all 0.5s ease-in-out;
+
+    &[Focus-State = "Focusing"],
+    &[Focus-State = "Focused"] {
+        height: var(--Textbox-Height);
+        width: calc(var(--Textbox-Width) * 1.1);
+
+        .FancyTextbox-Icon-Container {
+            border-radius: var(--Focused-Textbox-Border-Size);
         }
 
-        10% {
-            clip-path: polygon(
-                49% 5%,
-                49% -5%,
-                -5% -5%,
-                -5% 105%,
-                105% 105%,
-                105% -5%,
-                51% -5%,
-                51% 5%
-            ); 
+        .FancyTextbox-Border {
+            border-radius: var(--Focused-Textbox-Border-Size);
+
+            &.FancyTextbox-Backgroundless {
+                &.FancyTextbox-First,
+                &.FancyTextbox-Unique {
+                    mask-position: 50% 0%, 50% 50%;    
+
+                    -webkit-mask-position: 50% 0%, 50% 50%;
+                }
+                &.FancyTextbox-Last {
+                    mask-position: 50% 100%, 50% 50%;        
+
+                    -webkit-mask-position: 50% 100%, 50% 50%;
+                }
+            }
+
+            &:not(.FancyTextbox-Unique) {
+                border-top: solid !important;
+                border-top-width: 1px !important;
+            }
+        }
+        .FancyTextbox-Placeholder {
+            &.FancyTextbox-Standard {
+                animation: Fade-Out 0.5s ease-in-out both;
+
+                -webkit-animation: Fade-Out 0.5s ease-in-out both;
+            }
+            &.FancyTextbox-Backgroundless {
+                &.FancyTextbox-First,
+                &.FancyTextbox-Unique {
+                    transform: translate(-50%, -100%);
+                }
+                &.FancyTextbox-Intermediate {
+                    animation: Fade-Out 1.0s ease-in-out both;
+
+                    -webkit-animation: Fade-Out 1.0s ease-in-out both;
+                }
+                &.FancyTextbox-Last {
+                    transform: translate(-50%, 100%);   
+                }
+            }
         }
 
-        30% {
-            clip-path: polygon(
-                49% 5%,
-                49% -5%,
-                -5% -5%,
-                -5% 105%,
-                105% 105%,
-                105% 5%,
-                105% 5%,
-                105% 5%
-            ); 
-        }
+        &[Has-Text = "true"] .FancyTextbox-Placeholder.FancyTextbox-Backgroundless {
+            animation: Fade-In 1.0s 0.75s ease-in-out both;
 
-        50% {
-            clip-path: polygon(
-                49% 5%,
-                49% -5%,
-                -5% -5%,
-                -5% 105%,
-                105% 105%,
-                105% 105%,
-                105% 105%,
-                105% 105%
-            ); 
+            -webkit-animation: Fade-In 1.0s 0.75s ease-in-out both;
         }
+    }
 
-        70% {
-            clip-path: polygon(
-                49% 5%,
-                49% -5%,
-                -5% -5%,
-                -5% 105%,
-                -5% 105%,
-                -5% 105%,
-                -5% 105%,
-                -5% 105%
-            ); 
-        }
+    &[Focus-State = "Unfocusing"],
+    &[Focus-State = "Unfocused"] {
+        &[Has-Text = "true"] .FancyTextbox-Placeholder {
+            animation: Fade-Out 1.0s ease-in-out both;
 
-        100% {
-            clip-path: polygon(
-                49% 5%,
-                49% 5%,
-                49% 5%,
-                49% 5%,
-                49% 5%,
-                49% 5%,
-                49% 5%,
-                49% 5%,
-            ); 
+            -webkit-animation: Fade-Out 1.0s ease-in-out both;
         }
     }
 }
 
-@include Return-Animation('Textbox-Border-FocusIn');
-@include Return-Animation('Textbox-Border-FocusOut');
-
-.FancyTextbox {
-    cursor: pointer;
-
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0%);
+.FancyTextbox-Icon-Container {
+    z-index: 3;
     
+    height: 100%;
+    aspect-ratio: 1 / 1;
+
+    border-radius: var(--Unfocused-Textbox-Border-Size);
+
+    display: block;
+    justify-items: center;
+    align-content: center;
+    
+    transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    -webkit-transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    &.FancyTextbox-First {
+        border-bottom-left-radius: 0px;
+
+        &.FancyTextbox-IconBackgroundless {
+            border-bottom-right-radius: 0px;
+        }
+    }
+    &.FancyTextbox-Intermediate {
+        &.FancyTextbox-IconStandard {
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+        &.FancyTextbox-IconBackgroundless {
+            border-radius: 0px;
+        }
+    }
+    &.FancyTextbox-Last {
+        border-top-left-radius: 0px;
+
+        &.FancyTextbox-IconBackgroundless {
+            border-top-right-radius: 0px;
+        }
+    }
+}
+
+.FancyTextbox-Icon {
+    pointer-events: none;
+
+    z-index: 5;
+
+    position: relative;
+    
+    height: 50%;
+    width: 50%;
+
+    mask-image: var(--Icon-URL);
+    mask-position: center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    
+    -webkit-mask-image: var(--Icon-URL);
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.FancyTextbox-Content {
     height: 100%;
     width: 100%;
 
-    border: none;
-    border-width: 0px !important;
-    border-radius: inherit;
-    
-    background-color: transparent;
+    color: transparent;
 
-    outline: none;
-
-    font-size: inherit;
-    font-weight: inherit;
-}
-
-.FancyTextbox-Wrapper {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    
-    aspect-ratio: 7 / 1;
- 
-    font-size: 16px;
-    font-weight: 500;
-
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 
-    &[Focus-State = "Focusing"], &[Focus-State = "Focused"] {
-        .FancyTextbox-Border {
-            border-radius: 64px;
-            aspect-ratio: 10 / 1;
-
-            animation: 
-                Textbox-Border-FocusIn 1.0s ease-in-out both,
-                Textbox-Border-Circling 1.5s 1.0s cubic-bezier(0.445, 0.05, 0.55, 0.95) forwards infinite;
-
-            -webkit-animation: 
-                Textbox-Border-FocusIn 1.0s ease-in-out both,
-                Textbox-Border-Circling 1.5s 1.0s cubic-bezier(0.445, 0.05, 0.55, 0.95) forwards infinite;
-        }
-        .FancyTextbox-Placeholder {
-            transform: translate(-50%, -100%);
-        }
-
-        &[Has-Text = "true"] {
-            .FancyTextbox-Placeholder {
-                animation: Fade-In 0.5s 1.0s ease-in-out both;
-
-                -webkit-animation: Fade-In 0.5s 1.0s ease-in-out both;
-            }
-        }
-    }
-
-    &[Focus-State = "Unfocusing"], &[Focus-State = "Unfocused"] {
-        .FancyTextbox-Border {
-            animation: Textbox-Border-FocusOut 1.0s 1.0s ease-in-out both reverse;
-
-            -webkit-animation: Textbox-Border-FocusOut 1.0s 1.0s ease-in-out both reverse;
-        }
-
-       &[Has-Text = "true"] {
-            .FancyTextbox-Placeholder {
-                animation: Fade-Out 1.0s ease-in-out both;
-
-                -webkit-animation: Fade-Out 1.0s ease-in-out both;
-            }
-        }
+    &.FancyTextbox-Standard {
+        gap: 10px;
     }
 }
 
 .FancyTextbox-Border {
-    --Spacing: 15%;
-    
+    --FancyTextbox-Border-Mask: radial-gradient(
+        ellipse 100% 400% at center,
+        black 0%,
+        black var(--Textbox-Placeholder-Animation-Spacing),
+        transparent calc(var(--Textbox-Placeholder-Animation-Spacing) + 10%),
+        transparent 100%
+    ), linear-gradient(black, black);
+
     pointer-events: none;
     
     position: absolute;
+
     left: 50%;
     transform: translate(-50%, 0%);
 
-    height: 50%;
-    aspect-ratio: 8 / 1;
+    height: 100%;
+    width: 100%;
 
-    border-radius: 8px;
+    transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
     
-    transition: all 0.5s ease-in-out;
-}
+    -webkit-transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
 
-.FancyTextbox-Standard {
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-}
-.FancyTextbox-Backgroundless {
-    background-color: transparent !important;
-
-    border-top: solid;
-    border-left: solid;
-    border-right: solid;
-    border-bottom: solid;
-    border-width: 1px;
-}
-
-.FancyTextbox-Primary {
-    background-color: #ffffff;
-
-    &.FancyTextbox-Standard {
-        color: rgba(0, 0, 0, 0.5);
-    }
     &.FancyTextbox-Backgroundless {
-        color: rgba(255, 255, 255, 0.5);
-        border-color: rgba(255, 255, 255, 0.5);
+        mask-image: var(--FancyTextbox-Border-Mask);
+        mask-repeat: no-repeat;    
+        mask-size: 100% 10%, 100% 100%;
+        mask-position: 50% 50%, 50% 50%;
+        mask-composite: exclude;
+        
+        -webkit-mask-image: var(--FancyTextbox-Border-Mask);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 10%, 100% 100%;
+        -webkit-mask-position: 50% 50%, 50% 50%;
+        -webkit-mask-composite: xor; 
     }
-}
-.FancyTextbox-Secondary {
-    background-color: #000000;
-    
-    &.FancyTextbox-Standard {
-        color: rgba(255, 255, 255, 0.5);
+
+    &.FancyTextbox-First {
+        border-radius: var(--Unfocused-Textbox-Border-Size) var(--Unfocused-Textbox-Border-Size) 2px 2px;
     }
-    &.FancyTextbox-Backgroundless {
-        color: rgba(0, 0, 0, 0.5);
-        border-color: rgba(0, 0, 0, 0.5);
+    &.FancyTextbox-Intermediate {
+        border-top: none;
+        border-radius: 0px;
+    }
+    &.FancyTextbox-Last {
+        border-top: none;
+        border-radius: 2px 2px var(--Unfocused-Textbox-Border-Size) var(--Unfocused-Textbox-Border-Size);
+    }
+    &.FancyTextbox-Unique {
+        border-radius: var(--Unfocused-Textbox-Border-Size);
     }
 }
 
 .FancyTextbox-Placeholder {
     pointer-events: none; 
+
+    z-index: 5;
 
     position: absolute;
 
@@ -231,181 +236,155 @@
 
     box-shadow: none !important;
 
+    text-align: center;
+    
     font-size: inherit;
     font-weight: inherit;
 
     transition: all 2.0s ease-in-out;
     animation: Fade-In 0.5s ease-in-out both;
 
+    -webkit-transition: all 2.0s ease-in-out;
     -webkit-animation: Fade-In 0.5s ease-in-out both;
 }
 
+.FancyTextbox {
+    cursor: pointer;
+
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    height: 100%;
+    width: 100%;
+
+    border: none;
+    border-width: 0px !important;
+    border-radius: inherit;
+    
+    background-color: transparent !important;
+
+    outline: none;
+
+    text-align: center;
+
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.FancyTextbox-Standard {
+    border: none;
+}
+.FancyTextbox-Backgroundless {
+    border: solid;
+    border-width: 1px;
+}
+
+.FancyTextbox-IconStandard {
+    border-width: 1px !important;
+}
+.FancyTextbox-IconBackgroundless {
+    border-width: 0px 1px 0px 0px !important;
+}
+
+.FancyTextbox-Primary {
+    &.FancyTextbox-Standard {
+        background-color: rgba(216, 216, 216, 1);
+        color: black;
+
+        &.FancyTextbox-IconStandard {
+            background-color: black !important;
+
+            .FancyTextbox-Icon {
+                background-color: white;
+            }
+        }
+        &.FancyTextbox-IconBackgroundless {
+            background-color: transparent !important;
+
+            .FancyTextbox-Icon {
+                background-color: black;
+            }
+        }
+    }
+    &.FancyTextbox-Backgroundless {
+        color: white;
+        border-color: white;
+
+        &.FancyTextbox-IconStandard {
+            background-color: white !important;
+
+            .FancyTextbox-Icon {
+                background-color: black;
+            }
+        }
+        &.FancyTextbox-IconBackgroundless {
+            background-color: transparent !important;
+
+            .FancyTextbox-Icon {
+                background-color: white;
+            }
+        }
+    }
+}
+.FancyTextbox-Secondary {
+    &.FancyTextbox-Standard {
+        background-color: rgba(16, 16, 16, 1);
+        color: white;
+        
+        &.FancyTextbox-IconStandard {
+            background-color: white !important;
+
+            .FancyTextbox-Icon {
+                background-color: black;
+            }
+        }
+        &.FancyTextbox-IconBackgroundless {
+            background-color: transparent !important;
+
+            .FancyTextbox-Icon {
+                background-color: white;
+            }
+        }
+    }
+    &.FancyTextbox-Backgroundless {
+        border-color: black;
+        color: white;
+
+        &.FancyTextbox-IconStandard {
+            background-color: black !important;
+
+            .FancyTextbox-Icon {
+                background-color: white;
+            }
+        }
+        &.FancyTextbox-IconBackgroundless {
+            background-color: transparent !important;
+
+            .FancyTextbox-Icon {
+                background-color: black;
+            }
+        }
+    }
+}
+
 @keyframes Fade-In {
-    0% {
+    from {
         opacity: 0%;
     }
 
-    100% {
+    to {
         opacity: 100%;
     }
 }
 
 @keyframes Fade-Out {
-    0% {
+    from {
         opacity: 100%;
     }
 
-    100% {
+    to {
         opacity: 0%;
     }
 }
-
-@keyframes Textbox-Border-Circling {
-    0% {
-        clip-path: polygon(
-            calc(50% + var(--Spacing)) -10%,
-            calc(50% + var(--Spacing)) -10%,
-            calc(50% + var(--Spacing)) 10%,
-            calc(50% + var(--Spacing)) 10%
-        ); 
-    }
-
-    10% {
-        clip-path: polygon(
-            calc(50% + var(--Spacing)) -10%,
-            110% -10%,
-            110% 10%,
-            calc(50% + var(--Spacing)) 10%,
-        ); 
-    }
-
-    15% {
-        clip-path: polygon(
-            90% -10%,
-            110% -10%,
-            100% 110%,
-            100% 110%
-        ); 
-    }
-
-    25% {
-        clip-path: polygon(
-            90% 90%,
-            100% -10%,
-            100% 110%,
-            90% 110%
-        ); 
-    }
-
-    45% {
-        clip-path: polygon(
-            -10% 90%,
-            110% 90%,
-            110% 110%,
-            -10% 110%
-        ); 
-    }
-
-    50% {
-        clip-path: polygon(
-            0% -10%,
-            0% 10%,
-            10% 110%,
-            -10% 110%
-        ); 
-    }
-    
-    60% {
-        clip-path: polygon(
-            -10% -10%,
-            10% -10%,
-            10% 110%,
-            -10% 110%
-        ); 
-    }
-
-    70% {
-        clip-path: polygon(
-            -10% -10%,
-            calc(50% - var(--Spacing)) -10%,
-            calc(50% - var(--Spacing)) 10%,
-            -10% 10%,
-        ); 
-    }
-
-    100% {
-        clip-path: polygon(
-            calc(50% - var(--Spacing)) -10%,
-            calc(50% - var(--Spacing)) -10%,
-            calc(50% - var(--Spacing)) 10%,
-            calc(50% - var(--Spacing)) 10%
-        ); 
-    }
-}
-
-/*
-    0% {
-        clip-path: polygon(
-            49% -5%,
-            48% -5%,
-            -5% -5%,
-            -5% 105%,
-            105% 105%,
-            105% -5%,
-            52% -5%,
-            51% -5%
-        ); 
-    }
-
-    10% {
-        clip-path: polygon(
-            49% 5%,
-            49% -5%,
-            -5% -5%,
-            -5% 105%,
-            105% 105%,
-            105% -5%,
-            51% -5%,
-            51% 5%
-        ); 
-    }
-
-    40% {
-        clip-path: polygon(
-            -5% 5%,
-            -5% -5%,
-            -5% -5%,
-            -5% 105%,
-            105% 105%,
-            105% -5%,
-            105% -5%,
-            105% 5%
-        ); 
-    }
-
-    60% {
-        clip-path: polygon(
-            -5% 95%,
-            -5% 105%,
-            -5% 105%,
-            -5% 105%,
-            105% 105%,
-            105% 105%,
-            105% 105%,
-            105% 95%
-        ); 
-    }
-
-    100% {
-        clip-path: polygon(
-            50% 95%,
-            50% 105%,
-            50% 105%,
-            50% 105%,
-            50% 105%,
-            50% 105%,
-            50% 105%,
-            50% 95%
-        ); 
-    }
-*/

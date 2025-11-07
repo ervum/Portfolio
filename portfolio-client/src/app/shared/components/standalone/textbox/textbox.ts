@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Inject, Input, Output, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
 export type TextboxType = ('Primary' | 'Secondary');
 export type TextboxStyle = ('Standard' | 'Backgroundless');
+export type TextboxOrder = ('First' | 'Intermediate' | 'Last' | 'Unique');
 
 export type FocusState = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
 
@@ -18,8 +19,8 @@ export type FocusState = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
   templateUrl: './textbox.html',
   styleUrl: './textbox.scss'
 })
-export class TextboxComponent implements AfterViewInit {
-  public FancyTextboxStyles: { [key: string]: string } = {};
+export class TextboxComponent {
+  public TextboxStyles: { [key: string]: string } = {};
   
   public InputValue: string = '';
   public FocusState: FocusState = 'Unfocused';
@@ -27,20 +28,31 @@ export class TextboxComponent implements AfterViewInit {
   private FocusTimeoutID: any = null;
   private AnimationStartTime: number = 0;
 
+  private readonly IconsBasePath = '../../../../../assets/icons/';
+
   private readonly AnimationDurationIn: number = 2000;
   private readonly AnimationDurationOut: number = 2000;
+
+  public get TextboxIconStyle(): string {
+    if (!this.Icon) {
+      return '';
+    }
+    
+    return `url(${(this.IconsBasePath)}${(this.Icon)}.png)`;
+  }
 
   private Wait(ms: number): Promise<void> {
     return new Promise((Resolve) => setTimeout(Resolve, ms));
   }
-  
-  @ViewChild('Wrapper') private WrapperElementReference!: ElementRef;
 
   @Input() MaximumLength: number = 30; 
   @Input() Placeholder: string = '';
+  @Input() Icon: string = '';
 
   @Input() Type: TextboxType = 'Primary';
   @Input() Styled: TextboxStyle = 'Standard';
+  @Input() IconStyled: TextboxStyle = 'Backgroundless';
+  @Input() Order: TextboxOrder = 'Unique';
 
   @Output() Submit: EventEmitter<void> = new EventEmitter<void>();
 
@@ -59,52 +71,6 @@ export class TextboxComponent implements AfterViewInit {
   @Output() KeyUp: EventEmitter<void> = new EventEmitter<void>();
   
   @Output() Wheel: EventEmitter<void> = new EventEmitter<void>();
-
-  constructor(
-    @Inject(PLATFORM_ID) private PlatformID: Object,
-        
-    private ChangeDetectorReference: ChangeDetectorRef
-  ) {}
-
-  /*
-    ngOnInit(): void {
-      if (isPlatformBrowser(this.PlatformID)) {
-        this.AnimationFrameID = requestAnimationFrame(this.Update.bind(this));
-      } 
-    }
-  */
-
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.PlatformID)) {
-      const WrapperElement: HTMLElement = (this.WrapperElementReference.nativeElement);
-      const WrapperStyles: CSSStyleDeclaration = window.getComputedStyle(WrapperElement);
-
-      const WrapperHeight: number = (WrapperElement.offsetHeight);
-      const WrapperAspectRatioWidth: number = parseFloat(WrapperStyles.getPropertyValue('aspect-ratio').split('/')[0]);
-
-      const Offset: number = 10.0;
-      const AspectRatioDifference: number = 1.5;
-
-      this.FancyTextboxStyles = { 
-        'width': `${(WrapperHeight * (WrapperAspectRatioWidth - AspectRatioDifference)) - Offset}px`,
-        'padding-left': `${((WrapperHeight * AspectRatioDifference) + Offset)}px`
-      };
-      
-      this.ChangeDetectorReference.detectChanges();
-    }
-  }
-  
-  /*
-    ngOnDestroy(): void {
-      if (isPlatformBrowser(this.PlatformID) && (this.AnimationFrameID)) {
-        cancelAnimationFrame(this.AnimationFrameID);
-      }
-    }
-
-    Update(): void {
-      this.AnimationFrameID = requestAnimationFrame(this.Update.bind(this));
-    }
-  */
  
   OnSubmit(): void { this.Submit.emit(); }
 
