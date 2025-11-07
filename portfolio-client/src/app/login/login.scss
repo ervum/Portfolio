@@ -6,7 +6,6 @@
     position: relative; 
 
     left: 50%;
-
     transform: translateX(-50%);
 
     height: 100vh;
@@ -97,18 +96,10 @@
     align-items: center;
 }
 
-.Section-Content-Resize {
-    width: var(--Section-Width);
-}
-
-.Section-Content-Reposition {
-    transform: translateY(calc(var(--Section-Width) / 6 / 4));
-}
-
 .Section-Title {
     padding-bottom: 64px;
     
-    color: #ffffff;
+    color: white;
     
     font-size: 32px;
 
@@ -118,8 +109,7 @@
 .Diamond {
     position: absolute;
     
-    top: 45%; 
-  
+    top: 45%;
     transform: translateY(calc(var(--Section-Height) / -2));
 
     display: inline-flex;
@@ -138,7 +128,7 @@
 }
 
 .Container * {
-    background: #ffffff;
+    background: white;
 }
 
 .Container .Concave-Border {
