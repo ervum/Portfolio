@@ -1,5 +1,5 @@
 .FancyTextbox-Wrapper {
-    --Textbox-Placeholder-Animation-Spacing: 15%;
+    --Textbox-Placeholder-Animation-Spacing: 42.5%;
 
     --Textbox-Width: 400px;
     --Textbox-Height: calc(var(--Textbox-Width) / 9.0);
@@ -36,14 +36,15 @@
             &.FancyTextbox-Backgroundless {
                 &.FancyTextbox-First,
                 &.FancyTextbox-Unique {
-                    mask-position: 50% 0%, 50% 50%;    
+                    mask-position: 50% -10%, 50% 50%;    
 
-                    -webkit-mask-position: 50% 0%, 50% 50%;
+                    -webkit-mask-position: 50% -10%, 50% 50%;
                 }
-                &.FancyTextbox-Last {
-                    mask-position: 50% 100%, 50% 50%;        
+                &.FancyTextbox-Last,
+                &.FancyTextboxBorder-AnimationBelow {
+                    mask-position: 50% 110%, 50%, 50%; 
 
-                    -webkit-mask-position: 50% 100%, 50% 50%;
+                    -webkit-mask-position: 50% 110%, 50%, 50%;
                 }
             }
 
@@ -68,7 +69,7 @@
 
                     -webkit-animation: Fade-Out 1.0s ease-in-out both;
                 }
-                &.FancyTextbox-Last {
+                &.FancyTextbox-Last, &.FancyTextboxBorder-AnimationBelow {
                     transform: translate(-50%, 100%);   
                 }
             }
@@ -170,10 +171,10 @@
 
 .FancyTextbox-Border {
     --FancyTextbox-Border-Mask: radial-gradient(
-        ellipse 100% 400% at center,
+        ellipse 100% 100% at center,
         black 0%,
         black var(--Textbox-Placeholder-Animation-Spacing),
-        transparent calc(var(--Textbox-Placeholder-Animation-Spacing) + 10%),
+        transparent calc(var(--Textbox-Placeholder-Animation-Spacing) + 3%),
         transparent 100%
     ), linear-gradient(black, black);
 
@@ -194,15 +195,14 @@
     &.FancyTextbox-Backgroundless {
         mask-image: var(--FancyTextbox-Border-Mask);
         mask-repeat: no-repeat;    
-        mask-size: 100% 10%, 100% 100%;
+        mask-size: 50% 50%, 100%, 100%;
         mask-position: 50% 50%, 50% 50%;
         mask-composite: exclude;
         
         -webkit-mask-image: var(--FancyTextbox-Border-Mask);
         -webkit-mask-repeat: no-repeat;
-        -webkit-mask-size: 100% 10%, 100% 100%;
+        -webkit-mask-size: 50% 50%, 100% 100%;
         -webkit-mask-position: 50% 50%, 50% 50%;
-        -webkit-mask-composite: xor; 
     }
 
     &.FancyTextbox-First {

@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 
 export type TextboxType = ('Primary' | 'Secondary');
 export type TextboxStyle = ('Standard' | 'Backgroundless');
+
+export type TextboxBorderAnimation = ('Above' | 'Below');
+
 export type TextboxOrder = ('First' | 'Intermediate' | 'Last' | 'Unique');
 
 export type FocusState = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
@@ -50,8 +53,12 @@ export class TextboxComponent {
   @Input() Icon: string = '';
 
   @Input() Type: TextboxType = 'Primary';
+
   @Input() Styled: TextboxStyle = 'Standard';
   @Input() IconStyled: TextboxStyle = 'Backgroundless';
+
+  @Input() BorderAnimation: TextboxBorderAnimation = 'Above';
+
   @Input() Order: TextboxOrder = 'Unique';
 
   @Output() Submit: EventEmitter<void> = new EventEmitter<void>();
