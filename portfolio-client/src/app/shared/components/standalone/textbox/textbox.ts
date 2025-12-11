@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
+export type Boolean = ('True' | 'False');
+
 export type TextboxType = ('Primary' | 'Secondary');
 export type TextboxStyle = ('Standard' | 'Backgroundless');
 
@@ -35,7 +37,12 @@ export class TextboxComponent {
 
   private readonly AnimationDurationIn: number = 2000;
   private readonly AnimationDurationOut: number = 2000;
-
+  
+  private readonly AnimationModes: Record<Boolean, [FocusState, FocusState, number]> = {
+    'True': ['Unfocused', 'Unfocusing', (this.AnimationDurationOut)],
+    'False': ['Focused', 'Focusing', (this.AnimationDurationIn)]
+  };
+  
   public get TextboxIconStyle(): string {
     if (!this.Icon) {
       return '';
@@ -46,6 +53,32 @@ export class TextboxComponent {
 
   private Wait(ms: number): Promise<void> {
     return new Promise((Resolve) => setTimeout(Resolve, ms));
+  }
+
+  private ParseBoolean(b: boolean): Boolean {
+    return (b ? 'True' : 'False');
+  }
+
+  private async AnimateTextbox(Mode: boolean): Promise<void> {
+    const AnimationMode: [FocusState, FocusState, number] = this.AnimationModes[this.ParseBoolean(Mode)];
+    const InverseAnimationMode: [FocusState, FocusState, number] = this.AnimationModes[this.ParseBoolean(!Mode)];
+  
+    clearTimeout(this.FocusTimeoutID);
+
+    if (((this.FocusState) === AnimationMode[0]) || ((this.FocusState) === AnimationMode[1])) {
+      let AnimationTimeElapsed: number = (performance.now() - (this.AnimationStartTime));
+
+      if (AnimationTimeElapsed <= AnimationMode[2]) { 
+        await this.Wait(AnimationMode[2] - AnimationTimeElapsed); 
+      }
+
+      this.FocusState = InverseAnimationMode[1];
+      this.AnimationStartTime = performance.now();
+
+      this.FocusTimeoutID = setTimeout(() => {
+        this.FocusState = InverseAnimationMode[0];
+      }, (this.AnimationDurationIn));
+    }
   }
 
   @Input() MaximumLength: number = 30; 
@@ -66,6 +99,10 @@ export class TextboxComponent {
   @Output() Select: EventEmitter<void> = new EventEmitter<void>();
   @Output() Unselect: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output() Hover: EventEmitter<void> = new EventEmitter<void>();
+  @Output() Move: EventEmitter<void> = new EventEmitter<void>();
+  @Output() Unhover: EventEmitter<void> = new EventEmitter<void>();
+
   @Output() Focus: EventEmitter<void> = new EventEmitter<void>();
   @Output() Unfocus: EventEmitter<void> = new EventEmitter<void>();
 
@@ -83,47 +120,29 @@ export class TextboxComponent {
 
   async OnSelect(): Promise<void> { 
     this.Select.emit(); 
-    
-    clearTimeout(this.FocusTimeoutID);
 
-    if (((this.FocusState) === 'Unfocused') || ((this.FocusState) === 'Unfocusing')) {
-      let AnimationTimeElapsed: number = (performance.now() - (this.AnimationStartTime));
-
-      if (AnimationTimeElapsed <= (this.AnimationDurationOut)) { await this.Wait((this.AnimationDurationOut) - AnimationTimeElapsed); }
-
-      this.FocusState = 'Focusing';
-      this.AnimationStartTime = performance.now();
-
-      this.FocusTimeoutID = setTimeout(() => {
-        this.FocusState = 'Focused';
-      }, (this.AnimationDurationIn));
-    }
+    this.AnimateTextbox(true);
+  
   }
   async OnUnselect(): Promise<void> {
     this.Unselect.emit(); 
 
-    clearTimeout(this.FocusTimeoutID);
-
-    if (((this.FocusState) === 'Focused') || ((this.FocusState) === 'Focusing')) {
-      let AnimationTimeElapsed: number = (performance.now() - (this.AnimationStartTime));
-
-      if (AnimationTimeElapsed <= (this.AnimationDurationIn)) { await this.Wait((this.AnimationDurationIn) - AnimationTimeElapsed); }
-      
-      this.FocusState = 'Unfocusing';
-      this.AnimationStartTime = performance.now();
-
-      this.FocusTimeoutID = setTimeout(() => {
-        this.FocusState = 'Unfocused';
-      }, (this.AnimationDurationOut));
-    }
+    this.AnimateTextbox(false);
   }
+
+  OnHover(): void { this.Hover.emit(); }
+  OnMove(): void { this.Move.emit(); }
+  OnUnhover(): void { this.Unhover.emit(); }
 
   OnFocus(): void { 
-    this.Focus.emit(); 
+    this.Focus.emit();
 
+    this.AnimateTextbox(true);
   }
   OnUnfocus(): void { 
-    this.Unfocus.emit(); 
+    this.Unfocus.emit();
+
+    this.AnimateTextbox(false);
   }
 
   OnCancel(): void { this.Cancel.emit(); }

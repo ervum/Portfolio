@@ -17,9 +17,9 @@
 
     display: flex;
 
-    transition: all 0.5s ease-in-out;
+    transition: all 0.5s cubic-bezier(0.86, 0, 0.07, 1);
 
-    -webkit-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s cubic-bezier(0.86, 0, 0.07, 1);
 
     &[Focus-State = "Focusing"],
     &[Focus-State = "Focused"] {
@@ -55,9 +55,9 @@
         }
         .FancyTextbox-Placeholder {
             &.FancyTextbox-Standard {
-                animation: Fade-Out 0.5s ease-in-out both;
+                animation: Fade-Out 0.5s cubic-bezier(0.86, 0, 0.07, 1) both;
 
-                -webkit-animation: Fade-Out 0.5s ease-in-out both;
+                -webkit-animation: Fade-Out 0.5s cubic-bezier(0.86, 0, 0.07, 1) both;
             }
             &.FancyTextbox-Backgroundless {
                 &.FancyTextbox-First,
@@ -65,9 +65,9 @@
                     transform: translate(-50%, -100%);
                 }
                 &.FancyTextbox-Intermediate {
-                    animation: Fade-Out 1.0s ease-in-out both;
+                    animation: Fade-Out 1.0s cubic-bezier(0.86, 0, 0.07, 1) both;
 
-                    -webkit-animation: Fade-Out 1.0s ease-in-out both;
+                    -webkit-animation: Fade-Out 1.0s cubic-bezier(0.86, 0, 0.07, 1) both;
                 }
                 &.FancyTextbox-Last, &.FancyTextboxBorder-AnimationBelow {
                     transform: translate(-50%, 100%);   
@@ -76,18 +76,18 @@
         }
 
         &[Has-Text = "true"] .FancyTextbox-Placeholder.FancyTextbox-Backgroundless {
-            animation: Fade-In 1.0s 0.75s ease-in-out both;
+            animation: Fade-In 1.0s 0.75s cubic-bezier(0.86, 0, 0.07, 1) both;
 
-            -webkit-animation: Fade-In 1.0s 0.75s ease-in-out both;
+            -webkit-animation: Fade-In 1.0s 0.75s cubic-bezier(0.86, 0, 0.07, 1) both;
         }
     }
 
     &[Focus-State = "Unfocusing"],
     &[Focus-State = "Unfocused"] {
         &[Has-Text = "true"] .FancyTextbox-Placeholder {
-            animation: Fade-Out 1.0s ease-in-out both;
+            animation: Fade-Out 1.0s cubic-bezier(0.86, 0, 0.07, 1) both;
 
-            -webkit-animation: Fade-Out 1.0s ease-in-out both;
+            -webkit-animation: Fade-Out 1.0s cubic-bezier(0.86, 0, 0.07, 1) both;
         }
     }
 }
@@ -188,9 +188,9 @@
     height: 100%;
     width: 100%;
 
-    transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: all 1.5s cubic-bezier(1, 0, 0, 1);
     
-    -webkit-transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
+    -webkit-transition: all 1.5s cubic-bezier(1, 0, 0, 1);
 
     &.FancyTextbox-Backgroundless {
         mask-image: var(--FancyTextbox-Border-Mask);
@@ -203,6 +203,7 @@
         -webkit-mask-repeat: no-repeat;
         -webkit-mask-size: 50% 50%, 100% 100%;
         -webkit-mask-position: 50% 50%, 50% 50%;
+        -webkit-mask-composite: xor;
     }
 
     &.FancyTextbox-First {
@@ -241,11 +242,11 @@
     font-size: inherit;
     font-weight: inherit;
 
-    transition: all 2.0s ease-in-out;
-    animation: Fade-In 0.5s ease-in-out both;
+    transition: all 2.0s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    animation: Fade-In 0.5s cubic-bezier(0.86, 0, 0.07, 1) both;
 
-    -webkit-transition: all 2.0s ease-in-out;
-    -webkit-animation: Fade-In 0.5s ease-in-out both;
+    -webkit-transition: all 2.0s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    -webkit-animation: Fade-In 0.5s cubic-bezier(0.86, 0, 0.07, 1) both;
 }
 
 .FancyTextbox {
