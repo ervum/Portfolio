@@ -5,7 +5,6 @@
     'FancyButton-Primary': (Type === 'Primary'),
     'FancyButton-Secondary': (Type === 'Secondary'),
   }"
-  [ngStyle] = "InvertedRippleStyles"
 
   [style.height] = "Height"
   [style.width] = "Width">
@@ -19,11 +18,11 @@
       'FancyButton-Standard': (Styled === 'Standard'),
       'FancyButton-Backgroundless': (Styled === 'Backgroundless')
     }" 
-    [ngStyle] = "ButtonStyles"
 
-    (pointerenter) = "OnFocus()"
-    (pointerleave) = "OnUnfocus()"
-
+    (pointerenter) = "OnHover()"
+    (pointermove) = "OnMove($event)"
+    (pointerleave) = "OnUnhover()"
+    
     (pointercancel) = "OnCancel()"
 
     (pointerdown) = "OnDown($event)"
@@ -34,16 +33,12 @@
 
     (wheel) = "OnWheel()"
 
-    (selectstart) = "OnFocus()"
-    (select) = "OnUnfocus()"
-
     (focus) = "OnFocus()"
     (blur) = "OnUnfocus()">
     {{ Label }}
   </button>  
-  <div class = "FancyButton-Border"></div>
 </div>
-<div
+<div #InvertedWrapper
   class = "FancyButton-Wrapper FancyButton-Inverted"
   
   [ngClass] = "{
@@ -63,9 +58,7 @@
       
       'FancyButton-Standard': (Styled === 'Standard'),
       'FancyButton-Backgroundless': (Styled === 'Backgroundless')
-    }"
-    [ngStyle] = "ButtonStyles">
+    }">
     {{ Label }}
   </button>
-  <div class = "FancyButton-Border"></div>
 </div>

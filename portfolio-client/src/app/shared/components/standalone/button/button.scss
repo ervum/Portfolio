@@ -1,7 +1,20 @@
-@mixin FancyButton-Focus() {
-    transform: translateY(-10px) scale(10px 10px);
+@use 'sass:list';
 
-    border-radius: 64px;
+@mixin CreateTransition($Properties ...) {
+  $Duration: 1.0s;
+  $Easing: cubic-bezier(0.86, 0, 0.07, 1);
+  
+  $Transitions: ();
+
+  @each $Property in $Properties {
+    $SingleTransition: $Property $Duration $Easing;
+    
+    $Transitions: list.append($Transitions, $SingleTransition, comma);
+  }
+
+  transition: $Transitions;
+  
+  -webkit-transition: $Transitions;
 }
 
 .FancyButton-Wrapper {
@@ -11,41 +24,23 @@
     
     color: transparent !important;
 
+    outline: none;
+    
     display: flex;
     justify-self: center;
     align-self: center;
     justify-content: center;
     align-items: center;
 
-    transition: all 1.0s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    @include CreateTransition(transform, border-radius);
 
-    -webkit-transition: all 1.0s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    &.FancyButton-Normal:hover {
+        .FancyButton, ~ .FancyButton-Wrapper.FancyButton-Inverted .FancyButton {
+            transform: translateY(-5px);
 
-    &:hover {
-        @include FancyButton-Focus();
-
-        .FancyButton,
-        .FancyButton-Border {
-            @include FancyButton-Focus();
+            border-radius: 64px;
         }
     }
-}
-
-.FancyButton-Border {
-    pointer-events: none;
-
-    position: absolute;
-    
-    height: 100%;
-    width: 100%;
-
-    border: solid;
-    border-width: 1px;
-    border-radius: 16px;
-
-    transition: inherit;
-
-    -webkit-transition: inherit;
 }
 
 .FancyButton {
@@ -53,6 +48,9 @@
     
     position: relative;
 
+    height: 100%;
+    width: 100%;
+    
     border-radius: 16px;
         
     outline: none;
@@ -61,21 +59,18 @@
     font-weight: 500;
     
     text-align: center;
-    
-    overflow: hidden;
 
     transition: inherit;
-
+    
     -webkit-transition: inherit;
 }
 
-.FancyButton-Normal {
-    clip-path: circle(200% at center);
-}
 .FancyButton-Inverted {
     pointer-events: none;
 
     clip-path: circle(0% at center);
+
+    transform: scale(1.05);
 }
 
 .FancyButton-Standard {
@@ -101,17 +96,9 @@
     background-color: white;
     border-color: white;
     color: black;
-
-    .FancyButton-Border {
-        border-color: white;
-    }
 }
 .FancyButton-Secondary {
     background-color: black;
     border-color: black;
     color: white;
-
-    .FancyButton-Border {
-        border-color: black;
-    }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type ButtonType = ('Primary' | 'Secondary');
@@ -24,91 +24,24 @@ export type CalculatedV1 = {
   templateUrl: './button.html',
   styleUrl: './button.scss'
 })
-export class ButtonComponent {  
+export class ButtonComponent implements OnInit {  
   public RippleStyles: Styles = {};
-  public InvertedRippleStyles: Styles = {};
 
-  public get ButtonStyles(): { [key: string]: any } {
-    const NewHeight: CalculatedV1 = this.CalculateVector((this.Height), (0.9 - (this.BorderSpacing)));
-    var NewWidth: string;
+  private IsPointerDown: boolean = false;
 
-    const OldHeight: number = (NewHeight.OldSize);
-    const OldWidth: number = (this.CalculateVector((this.Width), 0.9).OldSize);
+  private RippleTransition: string = '';
 
-    const ButtonAspectRatio: number = (OldWidth / OldHeight);
-
-    const SizeUnit: IsString = (NewHeight.Unit);
-
-    const HeightDifference: number = (OldHeight - (NewHeight.Size));
-
-    if (SizeUnit == '%') {
-      NewWidth = `${(HeightDifference * ButtonAspectRatio)}${SizeUnit}`;
-    } else {
-      NewWidth = `${(OldWidth - (OldHeight - (NewHeight.Size)))}${SizeUnit}`;
-    }
-
-    return {
-      'height': (NewHeight.Result),
-      'width': NewWidth,
-
-      'top': `${(this.Padding)}px`
-    };
-  }
-
-  /* private Wait(ms: number): Promise<void> {
-    return new Promise((Resolve) => setTimeout(Resolve, ms));
-  } */
-
-  private CalculateVector(SizeString: string | null, Factor: number): CalculatedV1 {
-    if (!SizeString) {
-      return {
-        OldSize: 0,
-
-        Size: 0,
-        Unit: 'px',
-
-        Result: '0px'
-      };
-    }
-    
-    const SizeParts: (RegExpMatchArray | null) = SizeString.match(/^(-?\d*\.?\d+)(.*)$/);
-
-    if (!SizeParts) {
-      return { 
-        OldSize: 0,
-
-        Size: 0,
-        Unit: null,
-
-        Result: SizeString
-      };
-    }
-
-    const OldSize: number = parseFloat(SizeParts[1]);
-    
-    const Size: number = (OldSize * Factor);
-    const Unit: string = SizeParts[2];
-
-    return {
-      OldSize: OldSize,
-
-      Size: Size,
-      Unit: Unit,
-
-      Result: `${Size}${Unit}`
-    };
-  }
+  private readonly TransitionStyle: string = '1.0s cubic-bezier(0.86, 0, 0.07, 1)';
+  private readonly TransitionProperties: string[] = ['transform', 'border-radius', 'clip-path'];
+  
+  private readonly MaximumRippleSize: number = 150.0;
 
   private InvertButton(Event: PointerEvent, Size: number): void {
-    const CirclePosition: string = `at ${(Event.offsetX)}px ${(Event.offsetY)}px`;
-
     requestAnimationFrame(() => {
       this.RippleStyles = {
-        'clip-path': `circle(${Size}% ${CirclePosition})`
-      };
+        'clip-path': `circle(${Size}% at ${(Event.offsetX)}px ${(Event.offsetY)}px`,
 
-      this.InvertedRippleStyles = {
-        'clip-path': `circle(${(150 - Size)}% ${CirclePosition})`
+        'transition': (this.RippleTransition)
       };
     });
   }
@@ -125,6 +58,10 @@ export class ButtonComponent {
   @Input() Type: ButtonType = 'Primary';
   @Input() Styled: ButtonStyle = 'Standard';
 
+  @Output() Hover: EventEmitter<void> = new EventEmitter<void>();
+  @Output() Move: EventEmitter<void> = new EventEmitter<void>();
+  @Output() Unhover: EventEmitter<void> = new EventEmitter<void>();
+
   @Output() Focus: EventEmitter<void> = new EventEmitter<void>();
   @Output() Unfocus: EventEmitter<void> = new EventEmitter<void>();
 
@@ -138,16 +75,83 @@ export class ButtonComponent {
   
   @Output() Wheel: EventEmitter<void> = new EventEmitter<void>();
 
-  OnFocus(): void { this.Focus.emit(); }
-  OnUnfocus(): void {
-    this.Unfocus.emit();
+  @ViewChild('InvertedWrapper', { static: true }) InvertedWrapperElementReference!: ElementRef<HTMLDivElement>;
+
+  ngOnInit(): void {
+    this.TransitionProperties.forEach((TransitionProperty, i) => {
+      this.RippleTransition += `${TransitionProperty} ${(this.TransitionStyle)}`;  
+
+      if (i !== (this.TransitionProperties.length - 1)) {
+        this.RippleTransition += ', ';
+      }
+    });
 
     this.RippleStyles = {
-      'clip-path': 'circle(0% at center)'
-    };
+      'clip-path': 'circle(0% at center)',
 
-    this.InvertedRippleStyles = {
-      'clip-path': 'circle(200% at center)'
+      'transition': (this.RippleTransition)
+    };
+  }
+
+  OnFocus(): void { this.Focus.emit(); }
+  OnUnfocus(): void { this.Unfocus.emit(); }
+
+  OnHover(): void { this.Hover.emit(); }
+  OnMove(Event: PointerEvent): void {
+    this.Move.emit();
+    
+    const X: number = (Event.offsetX);
+    const Y: number = (Event.offsetY);
+    const CirclePosition: string = `at ${X}px ${Y}px`;
+
+    const InvertedWrapperElement: HTMLDivElement = (this.InvertedWrapperElementReference.nativeElement);
+
+    let CurrentRippleSize: number = 0;
+
+    if ((this.InvertedWrapperElementReference) && InvertedWrapperElement) {
+      const ClipCircle: (RegExpExecArray | null) = /circle\(\s*([0-9.]+)%/i.exec(window.getComputedStyle(InvertedWrapperElement).getPropertyValue('clip-path') || '');
+
+      if (ClipCircle && ClipCircle[1]) {
+        CurrentRippleSize = parseFloat(ClipCircle[1]);
+      }
+    }
+    
+    if (CurrentRippleSize === 0) {
+      this.RippleStyles = {
+        'clip-path': `circle(0% ${CirclePosition})`,
+
+        'transition': (this.RippleTransition)
+      };
+
+      requestAnimationFrame(() => {
+        const Styles: Styles = { ... (this.RippleStyles) };
+        delete Styles['transition'];
+
+        this.RippleStyles = Styles;
+      });
+    } else {
+      if (this.IsPointerDown) {
+        this.RippleStyles = {
+          'clip-path': `circle(${(this.MaximumRippleSize)}% ${CirclePosition})`,
+
+          'transition': (this.RippleTransition)
+        };
+      } /* else {
+        this.RippleStyles = {
+          'clip-path': `circle(0% ${CirclePosition})`,
+
+          'transition': (this.RippleTransition)
+        };
+      } */
+    }
+  }
+  OnUnhover(): void {
+    this.Unhover.emit();
+
+    this.RippleStyles = {
+      'clip-path': 'circle(0% at center)',
+
+      'transition': (this.RippleTransition)
     };
   }
 
@@ -156,11 +160,13 @@ export class ButtonComponent {
   OnDown(Event: PointerEvent): void {
     this.Down.emit(); 
     
-    this.InvertButton(Event, 150);
+    this.IsPointerDown = true;
+    this.InvertButton(Event, (this.MaximumRippleSize));
   }
   OnUp(Event: PointerEvent): void {
     this.Up.emit();
 
+    this.IsPointerDown = false;
     this.InvertButton(Event, 0);
   }
 
