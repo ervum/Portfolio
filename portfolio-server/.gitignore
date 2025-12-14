@@ -1,7 +1,16 @@
-# compiled output
+# Compiled Output
 /dist
 /node_modules
 /build
+/tmp
+/out-tsc
+/bazel-out
+
+# Cache Files
+.cache
+.parcel-cache
+.eslintcache
+*.tsbuildinfo
 
 # Logs
 logs
@@ -12,21 +21,20 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# OS
-.DS_Store
-
 # Tests
 /coverage
 /.nyc_output
 
-# IDEs and editors
+# IDEs and Editors
+*.sublime-workspace
 /.idea
+.idea/
 .project
 .classpath
 .c9/
 *.launch
 .settings/
-*.sublime-workspace
+.project
 
 # IDE - VSCode
 .vscode/*
@@ -34,23 +42,79 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/*.code-workspace
+.history/*
 
-# dotenv environment variable files
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# dotenv Environment Variable Files
 .env
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
 
-# temp directory
+# Temp Directory
 .temp
 .tmp
 
-# Runtime data
+# Runtime Data
 pids
 *.pid
 *.seed
 *.pid.lock
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+
+# Diagnostic Reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Local SSL / certs
+*.crt
+*.key
+*.pem
+certs/
+
+# Local database files and dev db folders
+*.sqlite
+*.db
+pgdata/
+.postgres/
+.psql_history
+
+# VS Code workspace files (keep settings and tasks, ignore workspace files)
+.vscode/*.code-workspace
+
+# Local editor caches
+*.sublime-workspace
+*.swp
+*.swo
+
+# pnpm store (if present locally)
+.pnpm-store/
+
+# Development Containers and Docker files
+# Keep committed devcontainer.json; ignore local overrides and sensitive files
+!/.devcontainer/devcontainer.json
+.devcontainer/*.local.json
+.devcontainer/*.local.*
+docker-compose.override.yml
+docker-compose.*.local.yml
+
+# Local Docker data
+docker-data/
