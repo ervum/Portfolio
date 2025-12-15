@@ -1,0 +1,4 @@
+packages:
+  - 'portfolio-client'
+  - 'portfolio-server'
+  - 'packages/*'

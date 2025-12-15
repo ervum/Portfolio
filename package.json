@@ -1,0 +1,19 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.25.0",
+  "workspaces": [
+    "portfolio-client",
+    "portfolio-server",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "install:all": "pnpm -w install",
+    "build": "pnpm -r build",
+    "dev:all": "concurrently \"cd packages/shared-configuration && pnpm run watch\" \"cd portfolio-server && pnpm start:dev\" \"cd portfolio-client && pnpm start\""
+  }
+}
