@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  workspace:
+    image: node:18-bullseye
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace:cached
+      - /workspace/node_modules
+    command: /bin/sh -c "sleep infinity"
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "4200:4200"
+      - "6900:6900"
+      - "9229:9229"
+
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: portfolio
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
