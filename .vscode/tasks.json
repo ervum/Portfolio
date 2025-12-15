@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Shared Config: watch",
+      "type": "shell",
+      "command": "pnpm run watch",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/shared-configuration"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Server: start:dev",
+      "type": "shell",
+      "command": "pnpm start:dev",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/portfolio-server"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Client: start",
+      "type": "shell",
+      "command": "pnpm start",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "${workspaceFolder}/portfolio-client"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Dev: All",
+      "dependsOn": [
+        "Shared Config: watch",
+        "Server: start:dev",
+        "Client: start"
+      ],
+      "dependsOrder": "parallel",
+      "detail": "Run shared config watcher, Nest dev server and Angular dev server in dedicated terminals"
+    }
+  ]
+}
