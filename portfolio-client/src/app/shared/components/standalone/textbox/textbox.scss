@@ -104,9 +104,9 @@
     justify-items: center;
     align-content: center;
     
-    transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: all 1.5s cubic-bezier(1, 0, 0, 1);
 
-    -webkit-transition: all 2.0s cubic-bezier(0.645, 0.045, 0.355, 1);
+    -webkit-transition: all 1.5s cubic-bezier(1, 0, 0, 1);
 
     &.FancyTextbox-First {
         border-bottom-left-radius: 0px;
