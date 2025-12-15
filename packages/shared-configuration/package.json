@@ -1,0 +1,22 @@
+{
+  "name": "@ervum/shared-configuration",
+  "version": "1.0.0",
+  "description": "Shared client/server configuration values",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf ./dist",
+    "watch": "tsc -p tsconfig.json --watch"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "npm-watch": "^0.13.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.9.2"
+  }
+}
