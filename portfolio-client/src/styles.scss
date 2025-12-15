@@ -55,9 +55,9 @@ body {
 
     border-radius: 5%;
 
-    clip-path: polygon(var(--Shape));
-
     background: white;
+
+    clip-path: polygon(var(--Shape));
 }
 
 .Shape.Invert,
