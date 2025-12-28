@@ -1,21 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type ButtonType = ('Primary' | 'Secondary');
-export type ButtonStyle = ('Standard' | 'Backgroundless');
+import { FancyButtonTypeType, FancyButtonStyleType, NGStylesType } from '@ervum/types';
 
-export type IsString = (string | null);
-
-export type Styles = { [key: string]: string };
-
-export type CalculatedV1 = { 
-  OldSize: number,
-  
-  Size: number,
-  Unit: IsString,
-
-  Result: string
-};
 
 @Component({
   selector: 'FancyButton',
@@ -25,7 +12,7 @@ export type CalculatedV1 = {
   styleUrl: './button.scss'
 })
 export class ButtonComponent implements OnInit {  
-  public RippleStyles: Styles = {};
+  public RippleStyles: NGStylesType = {};
 
   private IsPointerDown: boolean = false;
 
@@ -55,8 +42,8 @@ export class ButtonComponent implements OnInit {
 
   @Input() Padding: number = -3;
   
-  @Input() Type: ButtonType = 'Primary';
-  @Input() Styled: ButtonStyle = 'Standard';
+  @Input() Type: FancyButtonTypeType = 'Primary';
+  @Input() Styled: FancyButtonStyleType = 'Standard';
 
   @Output() Hover: EventEmitter<void> = new EventEmitter<void>();
   @Output() Move: EventEmitter<void> = new EventEmitter<void>();
@@ -124,7 +111,7 @@ export class ButtonComponent implements OnInit {
       };
 
       requestAnimationFrame(() => {
-        const Styles: Styles = { ... (this.RippleStyles) };
+        const Styles: NGStylesType = { ... (this.RippleStyles) };
         delete Styles['transition'];
 
         this.RippleStyles = Styles;

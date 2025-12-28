@@ -3,16 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
-export type Boolean = ('True' | 'False');
-
-export type TextboxType = ('Primary' | 'Secondary');
-export type TextboxStyle = ('Standard' | 'Backgroundless');
-
-export type TextboxBorderAnimation = ('Above' | 'Below');
-
-export type TextboxOrder = ('First' | 'Intermediate' | 'Last' | 'Unique');
-
-export type FocusState = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
+import { FancyTextboxStyleType, FancyTextboxTypeType, FancyTextboxOrderType, FancyTextboxBorderAnimationType, UIElementFocusStateType, StringBooleanType } from '@ervum/types';
 
 @Component({
   selector: 'FancyTextbox',
@@ -28,7 +19,7 @@ export class TextboxComponent {
   public TextboxStyles: { [key: string]: string } = {};
   
   public InputValue: string = '';
-  public FocusState: FocusState = 'Unfocused';
+  public FocusState: UIElementFocusStateType = 'Unfocused';
 
   private FocusTimeoutID: any = null;
   private AnimationStartTime: number = 0;
@@ -38,7 +29,7 @@ export class TextboxComponent {
   private readonly AnimationDurationIn: number = 2000;
   private readonly AnimationDurationOut: number = 2000;
   
-  private readonly AnimationModes: Record<Boolean, [FocusState, FocusState, number]> = {
+  private readonly AnimationModes: Record<StringBooleanType, [UIElementFocusStateType, UIElementFocusStateType, number]> = {
     'True': ['Unfocused', 'Unfocusing', (this.AnimationDurationOut)],
     'False': ['Focused', 'Focusing', (this.AnimationDurationIn)]
   };
@@ -55,13 +46,13 @@ export class TextboxComponent {
     return new Promise((Resolve) => setTimeout(Resolve, ms));
   }
 
-  private ParseBoolean(b: boolean): Boolean {
+  private ParseBoolean(b: boolean): StringBooleanType {
     return (b ? 'True' : 'False');
   }
 
   private async AnimateTextbox(Mode: boolean): Promise<void> {
-    const AnimationMode: [FocusState, FocusState, number] = this.AnimationModes[this.ParseBoolean(Mode)];
-    const InverseAnimationMode: [FocusState, FocusState, number] = this.AnimationModes[this.ParseBoolean(!Mode)];
+    const AnimationMode: [UIElementFocusStateType, UIElementFocusStateType, number] = this.AnimationModes[this.ParseBoolean(Mode)];
+    const InverseAnimationMode: [UIElementFocusStateType, UIElementFocusStateType, number] = this.AnimationModes[this.ParseBoolean(!Mode)];
   
     clearTimeout(this.FocusTimeoutID);
 
@@ -85,14 +76,14 @@ export class TextboxComponent {
   @Input() Placeholder: string = '';
   @Input() Icon: string = '';
 
-  @Input() Type: TextboxType = 'Primary';
+  @Input() Type: FancyTextboxTypeType = 'Primary';
 
-  @Input() Styled: TextboxStyle = 'Standard';
-  @Input() IconStyled: TextboxStyle = 'Backgroundless';
+  @Input() Styled: FancyTextboxStyleType = 'Standard';
+  @Input() IconStyled: FancyTextboxStyleType = 'Backgroundless';
 
-  @Input() BorderAnimation: TextboxBorderAnimation = 'Above';
+  @Input() BorderAnimation: FancyTextboxBorderAnimationType = 'Above';
 
-  @Input() Order: TextboxOrder = 'Unique';
+  @Input() Order: FancyTextboxOrderType = 'Unique';
 
   @Output() Submit: EventEmitter<void> = new EventEmitter<void>();
 

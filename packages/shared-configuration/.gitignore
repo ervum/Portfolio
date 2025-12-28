@@ -119,7 +119,5 @@ docker-compose.*.local.yml
 # Local Docker data
 docker-data/
 
-# Shared Configuration Package Auto-Generated Files and Secrets
-!/src/index.ts
-!/src/secrets.ts.example
-/src/*
+# Secrets
+/src/secrets.ts
