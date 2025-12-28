@@ -14,6 +14,6 @@
   "scripts": {
     "install:all": "pnpm -w install",
     "build": "pnpm -r build",
-    "dev:all": "concurrently \"cd packages/shared-configuration && pnpm run watch\" \"cd portfolio-server && pnpm start:dev\" \"cd portfolio-client && pnpm start\""
+    "dev:all": "concurrently \"pnpm run --if-present watch --filter './packages/*' --parallel\" \"cd portfolio-server && pnpm start:dev\" \"cd portfolio-client && pnpm start\""
   }
 }

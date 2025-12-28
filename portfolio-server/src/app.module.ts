@@ -2,27 +2,32 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationModule } from './authentication/authentication.module';
 
-import { ServerSideConfiguration } from '@ervum/shared-configuration';
+import { ServerConfiguration } from '@ervum/shared-configuration';
+import { ServerConfigurationType } from '@ervum/types';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: (ServerSideConfiguration.Database.Host),
-      port: (ServerSideConfiguration.Database.Port),
-      username: (ServerSideConfiguration.Database.User),
-      password: (ServerSideConfiguration.Database.Password),
-      database: (ServerSideConfiguration.Database.Name),
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: async () => {
+        const Configuration: ServerConfigurationType = await ServerConfiguration;
+
+        return {
+          type: 'postgres',
+          host: (Configuration.Database.Host),
+          port: (Configuration.Database.Port),
+          username: (Configuration.Database.User),
+          password: (Configuration.Database.Password),
+          database: (Configuration.Database.Name),
+          autoLoadEntities: true,
+          synchronize: true,
+        };
+      },
     }),
 
     UsersModule,
-
     AuthenticationModule,
   ],
   controllers: [AppController],

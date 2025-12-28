@@ -2,12 +2,12 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Shared Config: watch",
+      "label": "Packages: watch",
       "type": "shell",
-      "command": "pnpm run watch",
+      "command": "pnpm run --if-present watch --filter './packages/*' --parallel",
       "problemMatcher": [],
       "options": {
-        "cwd": "${workspaceFolder}/packages/shared-configuration"
+        "cwd": "${workspaceFolder}"
       },
       "presentation": {
         "reveal": "always",
@@ -43,12 +43,12 @@
     {
       "label": "Dev: All",
       "dependsOn": [
-        "Shared Config: watch",
+        "Packages: watch",
         "Server: start:dev",
         "Client: start"
       ],
       "dependsOrder": "parallel",
-      "detail": "Run shared config watcher, Nest dev server and Angular dev server in dedicated terminals"
+      "detail": "Run packages watcher, Nest dev server and Angular dev server in dedicated terminals"
     }
   ]
 }

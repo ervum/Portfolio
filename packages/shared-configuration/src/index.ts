@@ -1,4 +1,14 @@
-let Secrets: { Database: DatabaseConfiguration } = {
+import { ConfigurationType, SecretsType, ServerConfigurationType } from '@ervum/types';
+
+
+
+const ServerPort: number = 6900;
+const ClientPort: number = 4200;
+
+const ProxyURL: string = 'api';
+const SlashedProxyURL: string = `/${ProxyURL}`;
+
+const DefaultSecrets: SecretsType = {
     Database: {
         Host: 'localhost',
         Port: 5432,
@@ -10,57 +20,40 @@ let Secrets: { Database: DatabaseConfiguration } = {
 
 
 
-try {
-  Secrets = (((await import('./secrets')).Secrets) ?? Secrets);
-} catch (e: any) {}
+async function GetSecrets(): Promise<SecretsType> {
+  try {
+    const { Secrets: DynamicSecrets } = await import('./secrets.js');
+    
+    return { ...DefaultSecrets, ...DynamicSecrets };
+  } catch (e: any) {
+    console.log("Optional 'secrets.ts' not found, using default configuration.");
 
+    return DefaultSecrets;
+  }
+}
 
+async function CreateServerConfiguration(): Promise<ServerConfigurationType> {
+  const Secrets: SecretsType = await GetSecrets();
 
-const ServerSidePort: number = 6900;
-const ClientSidePort: number = 4200;
-
-const ProxyURL: string = 'api';
-const SlashedProxyURL: string = `/${ProxyURL}`;
-
-
-
-export type ConfigurationType = {
-    URL: string,
-    Port: number,
-
-    ProxyURL: string,
-    SlashedProxyURL: string
-};
-
-export type DatabaseConfiguration = {
-  Host: string;
-  Port: number;
-  User: string;
-  Password: string;
-  Name: string;
-};
-
-
-
-export const ServerSideConfiguration: ConfigurationType & { Database: DatabaseConfiguration } = {
-    URL: `http://localhost:${ServerSidePort}`,
-    Port: ServerSidePort,
+  const ServerConfiguration: ServerConfigurationType = {
+    URL: `http://localhost:${ServerPort}`,
+    Port: ServerPort,
 
     ProxyURL: ProxyURL,
     SlashedProxyURL: SlashedProxyURL,
+    
+    ...Secrets
+  };
 
-    Database: {
-      Host: (Secrets.Database.Host),
-      Port: (Secrets.Database.Port),
-      User: (Secrets.Database.User),
-      Password: (Secrets.Database.Password),
-      Name: (Secrets.Database.Name)
-    }
-};
+  return ServerConfiguration;
+}
 
-export const ClientSideConfiguration: ConfigurationType = {
-    URL: `http://localhost:${ClientSidePort}`,
-    Port: ClientSidePort,
+
+
+export const ServerConfiguration: Promise<ServerConfigurationType> = CreateServerConfiguration();
+export const ClientConfiguration: ConfigurationType = {
+    URL: `http://localhost:${ClientPort}`,
+    Port: ClientPort,
     
     ProxyURL: ProxyURL,
     SlashedProxyURL: SlashedProxyURL
