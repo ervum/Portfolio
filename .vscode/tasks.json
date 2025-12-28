@@ -4,7 +4,7 @@
     {
       "label": "Packages: watch",
       "type": "shell",
-      "command": "pnpm run --if-present watch --filter './packages/*' --parallel",
+      "command": "pnpm --filter \"@ervum/*\" --parallel watch",
       "problemMatcher": [],
       "options": {
         "cwd": "${workspaceFolder}"
