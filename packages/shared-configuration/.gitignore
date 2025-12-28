@@ -118,3 +118,9 @@ docker-compose.*.local.yml
 
 # Local Docker data
 docker-data/
+
+# Auto-generated files from project setup — keep uncommitted
+# Ignore generated JS, type declarations, and source maps in src
+/src/*.js
+/src/*.d.ts
+/src/*.map

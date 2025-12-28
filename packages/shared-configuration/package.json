@@ -8,10 +8,11 @@
     "dist"
   ],
   "private": true,
+  "type": "commonjs",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -b",
     "clean": "rimraf ./dist",
-    "watch": "tsc -p tsconfig.json --watch"
+    "watch": "tsc -b --watch"
   },
   "license": "UNLICENSED",
   "devDependencies": {
