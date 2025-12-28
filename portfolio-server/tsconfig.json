@@ -21,12 +21,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@ervum/shared-configuration": ["../packages/shared-configuration/src"],
-      "@ervum/*": ["../packages/*/src"]
+      "@ervum/shared-configuration": ["../packages/shared-configuration/dist"],
+      "@ervum/*": ["../packages/*/dist"]
     },
     "types": ["node"],
     "resolveJsonModule": true
-  }
-
-,  "include": ["src/**/*", "test/**/*"]
+  },
+  "references": [{ "path": "../packages/shared-configuration" }],
+  "include": ["src/**/*", "test/**/*"]
 }
