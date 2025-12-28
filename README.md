@@ -9,7 +9,8 @@ pnpm run dev:all
 ```
 
 This runs the following workspace scripts in parallel:
-- `packages/shared-configuration`: `pnpm run watch`
+
+- `packages/*`: `pnpm run watch` (runs on all shared packages)
 - `portfolio-server`: `pnpm start:dev`
 - `portfolio-client`: `pnpm start`
 
@@ -22,6 +23,7 @@ Stop the processes from the terminal using Ctrl+C or by closing the terminal.
 This repository includes a GitHub Actions workflow that validates the workspace build order and artifacts on push / PR to `main`.
 
 What the workflow does:
+
 - Installs dependencies with `pnpm install -w`
 - Runs the workspace build (`pnpm -w -r build`) — TypeScript project references are built first
 - Verifies that `packages/shared-configuration/dist/index.js` and `portfolio-server/dist/main.js` were produced
