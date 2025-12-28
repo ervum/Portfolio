@@ -8,7 +8,7 @@
     "dist"
   ],
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "build": "tsc -b",
     "clean": "rimraf ./dist",

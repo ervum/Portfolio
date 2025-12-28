@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2024",
-    "module": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "declaration": true,
     "declarationMap": false,
     "outDir": "dist",
@@ -11,7 +12,15 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "composite": true,
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@ervum/types": ["../types/dist"]
+    },
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [
+    {
+      "path": "../types" 
+    }
+  ]
 }

@@ -13,12 +13,12 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2024",
-    "module": "preserve"
-  },
+    "module": "preserve",
     "paths": {
-    "@ervum/shared-configuration": ["../packages/shared-configuration/dist"],
-    "@ervum/types": ["../packages/types/dist"],
-    "@ervum/*": ["../packages/*/dist"]
+      "@ervum/shared-configuration": ["../packages/shared-configuration/dist"],
+      "@ervum/types": ["../packages/types/dist"],
+      "@ervum/*": ["../packages/*/dist"]
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
