@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ButtonComponent } from '../shared/components/standalone/button/button';
@@ -13,6 +13,9 @@ import { AuthenticationService } from '../core/services/authentication/authentic
   styleUrl: './login.scss'
 })
 export class LoginComponent {
+  @ViewChild('UserIdentifierTextbox') private UserIdentifierTextbox!: TextboxComponent;
+  @ViewChild('PasswordTextbox') private PasswordTextbox!: TextboxComponent;
+
   private AuthenticationService: AuthenticationService = inject(AuthenticationService);
   private Router: Router = inject(Router);
 
@@ -25,9 +28,12 @@ export class LoginComponent {
   HandleLogin(): void {
     console.log('Login attempt initiated from the login component!');
 
-    const UserPayload = {
-      Username: 'TestUser',
-      Password: 'TestPassword'
+    const UserPayload: { 
+      UserIdentifier: string,
+      Password: string
+    } = {
+      UserIdentifier: ((this.UserIdentifierTextbox?.InputValue) ?? ''),
+      Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 
     this.AuthenticationService.Register(UserPayload).subscribe({

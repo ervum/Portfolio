@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ClientSideConfiguration as Configuration } from '@ervum/shared-configuration';
 
 export interface RegisterData {
-  Username: string;
+  UserIdentifier: string;
   Password?: string;
 }
 
