@@ -6,15 +6,17 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationModule } from './authentication/authentication.module';
 
+import { ServerSideConfiguration } from '@ervum/shared-configuration';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'eervuml',
-      password: '9!SL1zo2#4o(@oz5',
-      database: 'portfolio_database',
+      host: (ServerSideConfiguration.Database.Host),
+      port: (ServerSideConfiguration.Database.Port),
+      username: (ServerSideConfiguration.Database.User),
+      password: (ServerSideConfiguration.Database.Password),
+      database: (ServerSideConfiguration.Database.Name),
       autoLoadEntities: true,
       synchronize: true,
     }),

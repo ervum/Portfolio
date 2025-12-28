@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+    "target": "ES2024",
+    "module": "esnext",
     "declaration": true,
     "declarationMap": false,
     "outDir": "dist",
