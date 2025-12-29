@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextboxComponent } from './textbox';
+import { MultibuttonComponent } from './multibutton';
 
-describe('TextboxComponent', () => {
-  let component: TextboxComponent;
-  let fixture: ComponentFixture<TextboxComponent>;
+describe('MultibuttonComponent', () => {
+  let component: MultibuttonComponent;
+  let fixture: ComponentFixture<MultibuttonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TextboxComponent]
+      imports: [MultibuttonComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TextboxComponent);
+    fixture = TestBed.createComponent(MultibuttonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
