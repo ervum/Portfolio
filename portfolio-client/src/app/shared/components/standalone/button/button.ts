@@ -33,17 +33,14 @@ export class ButtonComponent implements OnInit {
     });
   }
 
-  @Input() Height: string = '0px';
-  @Input() Width: string = '0px'; 
+  @Input() BorderSpacing: (number | undefined) = 0.03;
 
-  @Input() BorderSpacing: number = 0.03;
+  @Input() Label: (string | undefined) = 'Button';
 
-  @Input() Label: string = 'Button';
-
-  @Input() Padding: number = -3;
+  @Input() Padding: (number | undefined) = -3;
   
-  @Input() Type: FancyButtonTypeType = 'Primary';
-  @Input() Styled: FancyButtonStyleType = 'Standard';
+  @Input() Type: (FancyButtonTypeType | undefined) = 'Primary';
+  @Input() Styled: (FancyButtonStyleType | undefined) = 'Standard';
 
   @Output() Hover: EventEmitter<void> = new EventEmitter<void>();
   @Output() Move: EventEmitter<void> = new EventEmitter<void>();

@@ -18,6 +18,9 @@
 }
 
 .FancyButton-Wrapper {
+    height: inherit;
+    width: inherit;
+
     position: absolute;
     
     background-color: transparent !important;

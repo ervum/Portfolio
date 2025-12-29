@@ -39,17 +39,19 @@
             <br>
             
             <FancyButton 
-                Height = "40px"
-                Width = "100px"
+                class = "Action-Button"
 
                 Label = "Login"
                 (Up) = "HandleLogin()">
             </FancyButton>
+
+            <FancyMultibutton
+                class = "ActionType-Multibutton">
+            </FancyMultibutton>
         </div>
 
         <FancyButton 
-            Height = "40px"
-            Width = "250px"
+            class = "NavigateHome-Button"
             
             Label = "Is it your first time here?"
             (Up) = "NavigateToHome()">

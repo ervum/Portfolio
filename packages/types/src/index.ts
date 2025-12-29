@@ -1,3 +1,8 @@
+///          Shared Types          \\\
+export type AnyFunction = ((...Arguments: any[]) => (any));
+
+
+
 ///          Server Types          \\\
 export type ConfigurationType = {
     URL: string,
@@ -41,3 +46,32 @@ export type FancyTextboxBorderAnimationType = ('Above' | 'Below');
 export type FancyTextboxOrderType = ('First' | 'Intermediate' | 'Last' | 'Unique');
 
 export type UIElementFocusStateType = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
+
+/////      Fancy Multibutton      \\\\\
+export interface FancyButtonConfiguration {
+  BorderSpacing?: number,
+
+  Label?: string,
+
+  Padding?: number,
+
+  Type?: FancyButtonTypeType,
+  Styled?: FancyButtonStyleType,
+
+  Hover?: AnyFunction,
+  Move?: AnyFunction,
+  Unhover?: AnyFunction,
+
+  Focus?: AnyFunction,
+  Unfocus?: AnyFunction,
+  
+  Cancel?: AnyFunction,
+
+  Down?: AnyFunction,
+  Up?: AnyFunction,
+
+  KeyDown?: AnyFunction,
+  KeyUp?: AnyFunction,
+
+  Wheel?: AnyFunction
+}

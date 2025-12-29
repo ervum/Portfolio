@@ -3,12 +3,18 @@ import { Router } from '@angular/router';
 
 import { ButtonComponent } from '../shared/components/standalone/button/button';
 import { TextboxComponent } from '../shared/components/standalone/textbox/textbox';
+import { MultibuttonComponent } from '../shared/components/standalone/multibutton/multibutton';
 
 import { AuthenticationService } from '../core/services/authentication/authentication';
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonComponent, TextboxComponent],
+  imports: [
+    ButtonComponent, 
+    TextboxComponent,
+    MultibuttonComponent
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
