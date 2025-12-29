@@ -53,8 +53,9 @@
 
     height: 100%;
     width: 100%;
+    padding: var(--fancy-button-padding, initial);
     
-    border-radius: 16px;
+    border-radius: var(--fancy-button-border-radius, 16px);
         
     outline: none;
 
@@ -77,31 +78,30 @@
 }
 
 .FancyButton-Standard {
-    border: none;
+    border: var(--fancy-button-border, none);
 }
 .FancyButton-Backgroundless {
     background-color: transparent !important;
 
-    border: solid;
-    border-width: 1px;
+    border: var(--fancy-button-border, solid 1px);
 
     &.FancyButton-Primary {
-        border-color: white;
-        color: white;
+        border-color: var(--fancy-button-primary-border-color, white);
+        color: var(--fancy-button-primary-color, white);
     }
     &.FancyButton-Secondary {
-        border-color: black;
-        color: black;
+        border-color: var(--fancy-button-secondary-border-color, black);
+        color: var(--fancy-button-secondary-color, black);
     }
 }
 
 .FancyButton-Primary {
-    background-color: white;
-    border-color: white;
-    color: black;
+    background-color: var(--fancy-button-primary-background-color, white);
+    border-color: var(--fancy-button-primary-border-color, white);
+    color: var(--fancy-button-primary-color, black);
 }
 .FancyButton-Secondary {
-    background-color: black;
-    border-color: black;
-    color: white;
+    background-color: var(--fancy-button-secondary-background-color, black);
+    border-color: var(--fancy-button-secondary-border-color, black);
+    color: var(--fancy-button-secondary-color, white);
 }

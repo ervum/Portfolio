@@ -1,9 +1,21 @@
-.FancyMultibutton-Wrapper {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+:host {
+  --fancy-button-padding: 8px 24px;
+  --fancy-button-border-radius: 100px;
+  --fancy-button-secondary-border-color: transparent;
+  --fancy-button-secondary-color: white;
+  --fancy-button-border: none;
 
-    gap: 16px;     
+  display: contents;
 }
 
+.FancyMultibutton-Wrapper {
+  display: inline-flex;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 100px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+FancyButton {
+  flex: 1;
+}
