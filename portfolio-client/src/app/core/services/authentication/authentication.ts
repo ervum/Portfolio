@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { ClientConfiguration as Configuration } from '@ervum/shared-configuration';
 
 export interface RegisterData {
