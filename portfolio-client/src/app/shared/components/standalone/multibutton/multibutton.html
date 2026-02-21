@@ -1,5 +1,33 @@
-<div class = "FancyMultibutton-Wrapper">
-    <FancyButton 
-        Label = "ㅤ">
-    </FancyButton>
+<div
+    class = "FancyMultibutton-Wrapper"
+    
+    [ngClass] = GetBaseClasses>
+    <div
+        class = "FancyMultibutton-Content"
+
+        [ngClass] = "GetBaseClasses">
+        @for (Label of Labels; track $index) {
+            <button
+                type="button"
+                class = "FancyMultibutton"
+                [class.FancyMultibutton--Selected] = "SelectedIndex === $index"
+                (click) = "SelectButton($index)">
+                @if (DisplayMode === 'Text') {
+                    <span class = "FancyMultibutton-Label">{{ Label }}</span>
+                } @else {
+                    <div
+                        class = "FancyMultibutton-Icon"
+                        [style.--Icon-URL] = "GetIconUrl(Label)"></div>
+                }
+            </button>
+        }
+    </div>
 </div>
+
+@if (Labels.length) {
+    <div class = "FancyMultibutton-IndicatorTrack">
+        <div
+            class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ Indicator ?? 'dash' }}"
+            [style.left.%] = "IndicatorPositionPercent"></div>
+    </div>
+}

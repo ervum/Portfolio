@@ -1,107 +1,217 @@
 @use 'sass:list';
 
+
+
 @mixin CreateTransition($Properties ...) {
-  $Duration: 1.0s;
-  $Easing: cubic-bezier(0.86, 0, 0.07, 1);
-  
-  $Transitions: ();
+    $Duration: 1.0s;
+    $Easing: cubic-bezier(0.86, 0, 0.07, 1);
 
-  @each $Property in $Properties {
-    $SingleTransition: $Property $Duration $Easing;
-    
-    $Transitions: list.append($Transitions, $SingleTransition, comma);
-  }
+    $Transitions: ();
 
-  transition: $Transitions;
-  
-  -webkit-transition: $Transitions;
+    @each $Property in $Properties {
+        $SingleTransition: $Property $Duration $Easing;
+
+        $Transitions: list.append($Transitions, $SingleTransition, comma);
+    }
+
+    transition: $Transitions;
 }
 
+@mixin SynchronizeStates($Selector) {
+    #{$Selector}, 
+    ~ .FancyButton-Wrapper.FancyButton--Inverted #{$Selector} {
+        @content;
+    }
+}
+
+
+
+:host {
+    --Button-FontSize: 14px;
+}
+
+
+
 .FancyButton-Wrapper {
-    height: inherit;
-    width: inherit;
+    @include CreateTransition(transform, border-radius);
+    
+    outline: none;
 
     position: absolute;
-    
+
+    width: inherit;
+    height: inherit;
+
     background-color: transparent !important;
-    
     color: transparent !important;
 
-    outline: none;
-    
-    display: flex;
-    justify-self: center;
-    align-self: center;
-    justify-content: center;
-    align-items: center;
-
-    @include CreateTransition(transform, border-radius);
-
-    &.FancyButton-Normal:hover {
-        .FancyButton, ~ .FancyButton-Wrapper.FancyButton-Inverted .FancyButton {
+    &.FancyButton--Normal:hover {
+        @include SynchronizeStates('.FancyButton') {
             transform: translateY(-5px);
 
             border-radius: 64px;
+        }
+            font-weight: 600;
+
+        @include SynchronizeStates('.FancyButton-Label') {
+            font-size: calc(var(--Button-FontSize) * var(--Hovering-Strength));
+        }
+
+        @include SynchronizeStates('.FancyButton-Icon-Container') {
+            border-radius: 64px;
+        }
+
+        @include SynchronizeStates('.FancyButton-Icon') {
+            width: 40%;
+            height: 40%;
         }
     }
 }
 
 .FancyButton {
-    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    place-content: space-between;
     
-    position: relative;
+    gap: 8px;
+    padding: 0px 4px 0px 16px;
 
-    height: 100%;
-    width: 100%;
-    
-    border-radius: 16px;
-        
     outline: none;
 
-    font-size: 16px;
-    font-weight: 500;
-    
-    text-align: center;
+    position: relative;
+
+    width: 100%;
+    height: 100%;
 
     transition: inherit;
-    
-    -webkit-transition: inherit;
+
+    cursor: pointer;
+
+    border-radius: 16px;
+
+    text-align: center;
 }
 
-.FancyButton-Inverted {
+.FancyButton-Icon-Container {
+    @include CreateTransition(border-radius);
+    
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    place-content: center;
+    
+    position: relative;
+    
+    height: 80%;
+    aspect-ratio: 1 / 1;
+    
+    border-radius: 12px;
+    
+    overflow: hidden;
+
+    flex-shrink: 0;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.FancyButton-Icon {
+    @include CreateTransition(width, height);
+    
+    will-change: transform;
+
+    -webkit-mask-image: var(--Icon-URL);
+    -webkit-mask-size: contain;
+
+    mask-image: var(--Icon-URL);
+    mask-size: contain;
+
+    height: 50%;
+    width: 50%;
+
+    &.FancyButton-Icon--Entering {
+        animation: Icon-EnterLeft 1.5s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+    &.FancyButton-Icon--Exiting {
+        animation: Icon-ExitRight 1.5s cubic-bezier(0.2, 0, 0.2, 1) 0.5s forwards;
+    }
+}
+
+.FancyButton-Label {
+    @include CreateTransition(font-size);
+    
+    text-align: center;
+    
+    font-size: var(--Button-FontSize);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.FancyButton--Inverted {
     pointer-events: none;
 
-    clip-path: circle(0% at center);
+    transform: scale(1.01);
 
-    transform: scale(1.05);
+    clip-path: circle(0% at center);
 }
 
-.FancyButton-Standard {
+.FancyButton--Centered {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.FancyButton--Standard {
     border: none;
 }
-.FancyButton-Backgroundless {
+.FancyButton--Backgroundless {
     background-color: transparent !important;
 
     border: solid;
     border-width: 1px;
-
-    &.FancyButton-Primary {
+    
+    &.FancyButton--Primary {
         border-color: white;
         color: white;
     }
-    &.FancyButton-Secondary {
+    &.FancyButton--Secondary {
         border-color: black;
         color: black;
     }
 }
 
-.FancyButton-Primary {
+.FancyButton--Primary {
     background-color: white;
     border-color: white;
     color: black;
 }
-.FancyButton-Secondary {
+.FancyButton--Secondary {
     background-color: black;
     border-color: black;
     color: white;
+}
+
+
+
+@keyframes Icon-EnterLeft {
+    0% {
+        transform: translateX(-50px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+@keyframes Icon-ExitRight {
+    0% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(50px);
+    }
 }

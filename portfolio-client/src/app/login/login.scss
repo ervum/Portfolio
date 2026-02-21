@@ -1,167 +1,296 @@
-.Wrapper {
-    --Section-Spacing: 10%;
+@property --Edge-Colour {
+    syntax: '<color>';
+    initial-value: #ffffff;
+    inherits: true;
+}
+
+@property --Edge-Glow {
+    syntax: '<color>';
+    initial-value: rgba(255, 255, 255, 0.8);
+    inherits: true;
+}
+
+
+
+$Logo-Section-Animation-Duration: 3.0s;
+$Content-Section-Animation-Duration: calc($Logo-Section-Animation-Duration / 2.0);
+
+
+
+:host {
+    --Section-Spacing: 0%;
     --Section-Width: 1200px;
     --Section-Height: 600px;
 
-    position: relative; 
+    --Edge-Colour: #ffffff;
+    --Edge-Glow: rgba(255, 255, 255, 0.8);
+}
 
-    left: 50%;
-    transform: translateX(-50%);
 
+
+.Main {
+    width: 100vw;
     height: 100vh;
+
+    gap: 64px;
+}
+
+.Wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    place-content: center;
+    place-items: center;
+}
+
+.Section-Wrapper {
+    width: var(--Section-Width);
+    height: var(--Section-Height);
 
     display: inline-flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.Section {
-    z-index: -1;
+    place-content: center;
+    place-items: center;
 
     position: relative;
 
-    width: var(--Section-Width);
-    height: var(--Section-Height);
+    &::after {
+        --Edge-Colour: rgba(255, 255, 255, 0);
+        --Edge-Glow: rgba(255, 255, 255, 0);
+
+        content: '';
+
+        position: absolute;
+        z-index: 10;
+        pointer-events: none;
+
+        width: 50px;
+        height: 1px; 
     
-    background-color: rgba(8, 8, 8, 0.3);
+        background: linear-gradient(90deg, transparent, var(--Edge-Colour), transparent);
+
+        box-shadow: 0px 0px 15px 1px var(--Edge-Glow);
+
+        filter: blur(1px);
+
+        offset-path: rect(0% 100% 100% 0% round 64px);
+
+        animation: Section-EdgeLighting 2.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+        animation-play-state: paused;
+
+        transition:
+            --Edge-Colour 0.5s cubic-bezier(0.77, 0, 0.175, 1),
+            --Edge-Glow 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+
+        opacity: 0%;
+    }
+
+    &:not(.Section--Idle)::after {
+        animation-play-state: running;
+    }
+
+    &.Section--Loading::after {
+        --Edge-Colour: #ffffff;
+        --Edge-Glow: rgba(255, 255, 255, 0.8);
+
+        opacity: 100%;
+    }
+
+    &.Section--Success::after {
+        --Edge-Colour: #4ade80;
+        --Edge-Glow: rgba(34, 197, 94, 0.8);
+
+        opacity: 100%;
+    }
+
+    &.Section--Error::after {
+        --Edge-Colour: #ef4444;
+        --Edge-Glow: rgba(220, 38, 38, 0.8);
+
+        opacity: 100%;
+    }
+}
+
+.Logo-Section {
+    display: inline-flex;
+    flex-direction: column;
+    place-items: center;
+
+    position: relative;
+    right: 25%;
+
+    background-color: rgba(8, 8, 8, 1.0);
+
+    height: 100%;
+    aspect-ratio: 1 / 1;
+
+    z-index: 5;
+
+    border-radius: 64px;
+}
+
+.Content-Section-Wrapper {
+    display: flex;
+    place-content: flex-end; 
+    place-items: center; 
+
+    position: absolute;
 
     border-radius: 64px;
 
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.Section::before,
-.Section::after {
-    content: '';
-    
-    pointer-events: none;
-    
-    position: absolute;
+    background-color: rgba(255, 255, 255, 0.05);
 
     width: 100%;
     height: 100%;
-    
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 64px;
-    border-color: rgba(255, 255, 255, 0.1);
-    
-    clip-path: polygon(
-        calc(50% - var(--Section-Spacing)) -10%,
-        -10% -10%,
-        -10% 110%,
-        110% 110%,
-        110% -10%,
-        calc(50% + var(--Section-Spacing)) -10%,
-        calc(50% + var(--Section-Spacing)) 10%,
-        90% 10%,
-        90% 90%,
-        10% 90%,
-        10% 10%,
-        calc(50% - var(--Section-Spacing)) 10%
-    );
-    
-    mask-image: linear-gradient(
-        to bottom,
-        black 50%,
-        transparent 100%
-    );
-    mask-repeat: no-repeat;
-    mask-position: top;
-    
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        black 50%,
-        transparent 100%
-    );
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: top;
-
-    animation: Draw-Section-Borders 5.0s ease-in both;
-
-    -webkit-animation: Draw-Section-Borders 5.0s ease-in both;
-}
-
-.Section-Content {
-    height: 100%;
-    
-    padding: 100px 0px 0px 0px;
 
     box-sizing: border-box;
+
+    overflow: hidden; 
+
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+
+    mask-image: radial-gradient(white, black);
+
+    // &::before,
+    &::after {
+        content: '';
+
+        position: absolute;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: linear-gradient(
+            120deg, 
+            transparent 30%, 
+            rgba(255, 255, 255, 0.4) 45%, 
+            rgba(255, 255, 255, 0.8) 50%, 
+            rgba(255, 255, 255, 0.4) 55%, 
+            transparent 70%
+        );
+    
+        transform: translateX(-100%) skewX(-20deg);
+
+        pointer-events: none;
+        z-index: 10;
+    
+        filter: blur(50px);
+
+        animation: Section-ShineSwipe 3.0s cubic-bezier(0.86, 0, 0.07, 1) 2.5s both;
+    
+        padding: 1px;
+    }
+    /* &::before {
+        animation-play-state: paused;
+        animation-iteration-count: infinite;
+    
+        -webkit-mask: 
+            -webkit-linear-gradient(#fff 0 0) content-box, 
+            -webkit-linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+
+        mask:
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+    } */
+}
+
+.Content-Section {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: column; 
+    place-content: center;
+    place-items: center;
+
+    position: relative;
+
+    gap: 16px;
+
+    box-sizing: border-box;
+
+    width: 50%;
+    height: 100%;
+
+    padding: 100px 0px 0px 0px;
+
+    min-width: 0; 
+    min-height: 0;
 }
 
 .Section-Title {
-    padding-bottom: 64px;
-    
-    color: white;
-    
     font-size: 32px;
 
-    text-shadow:  0px 3px 10px rgba(255, 255, 255, 1);
+    color: white;
+
+    text-shadow: 0px 3px 10px rgba(255, 255, 255, 1);
 }
 
 .ActionType-Multibutton {
-    height: 40px;
     width: 500px;
+    height: 40px;
 }
 
 .Action-Button {
+    width: 120px;
     height: 40px;
-    width: 100px;
 }
 
 .NavigateHome-Button {
-    height: 40px;
     width: 250px;
+    height: 40px;
+}
+
+.Logo-Section-Entry {
+    animation: Section-GrowIn $Logo-Section-Animation-Duration cubic-bezier(0.35, 0, 0.25, 1) forwards;
+      
+    will-change: border-radius, height, right;
+}
+
+.Content-Section-Entry {
+    animation: Section-Expand $Content-Section-Animation-Duration cubic-bezier(0.35, 0, 0.25, 1) $Content-Section-Animation-Duration both;
+      
+    will-change: width, opacity;
 }
 
 .Diamond {
-    position: absolute;
-    
-    top: 45%;
-    transform: translateY(calc(var(--Section-Height) / -2));
-
     display: inline-flex;
     flex-direction: column;
 
-    animation: Fade-In 5.0s ease-in-out both;
+    position: absolute;
 
-    -webkit-animation: 5.0s ease-in-out both;
+    top: 45%;
+    
+    transform: translateY(calc(var(--Section-Height) / -2));
+
+    animation: FadeIn 5.0s ease-in-out both;
 }
 
-.Container {         
-    height: 50px;
-
+.Container {
     display: inline-flex;
     flex-direction: row;
-}
 
-.Container * {
-    background: white;
-}
+    height: 50px;
 
-.Container .Concave-Border {
-    --Size: 75%;
+    .Concave-Border {
+        --Size: 75%;
+    }
+    
+    * {
+        background: white;
+    }
 }
 
 .Rectangle {
+    display: flex;
+    place-content: center;
+    place-items: center;
+
     width: 200px;
     height: 100%;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     color: #161616;
-
-    font-size: 32px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .Top.Container .Rectangle {
@@ -173,29 +302,106 @@
 }
 
 
-@keyframes Fade-In {
+
+@keyframes FadeIn {
     0% {
         opacity: 0%;
     }
 
     100% {
-        opacity: 75%;
+        opacity: 100%;
     }
 }
 
-@keyframes Draw-Section-Borders {
+@keyframes Section-GrowIn {
+  0% {
+    border-radius: 1024px;
+
+    right: 0%;
+    
+    height: 0%;
+  }
+
+  50% {
+    border-radius: 64px;
+
+    right: 0%;
+    
+    height: 100%;
+  }
+
+  100% {
+    border-radius: 64px;
+
+    right: 25%;
+    
+    height: 100%;
+  }
+}
+
+@keyframes Section-Expand {
+  0% {
+    opacity: 0%; 
+
+    width: 40%;
+  }
+
+  0.1% {
+    opacity: 100%;
+
+    width: 40%;
+  }
+
+  100% {
+    opacity: 100%;
+
+    width: 100%;
+  }
+}
+
+@keyframes Section-DrawBorders {
     0% {
-        mask-size: 0% 1%;
         -webkit-mask-size: 0% 1%;
+        
+        mask-size: 0% 1%;
     }
 
-    50% {
-        mask-size: 100% 1%;
-        -webkit-mask-size: 100% 1%;
+
+    100% {
+        -webkit-mask-size: 150% 100%;
+        
+        mask-size: 150% 100%;
+    }
+}
+
+@keyframes Section-EdgeLighting {
+    0% {
+        offset-distance: 0%;
+
+        opacity: 0%;
+    }
+
+    1% {
+        opacity: 100%;
+    }
+
+    99% {
+        opacity: 100%;
     }
 
     100% {
-        mask-size: 100% 100%;
-        -webkit-mask-size: 100% 100%;
+        offset-distance: 100%;
+
+        opacity: 0%;
+    }
+}
+
+@keyframes Section-ShineSwipe {
+    0% {
+        transform: translateX(-100%) skewX(-20deg);
+    }
+    
+    100% {
+        transform: translateX(100%) skewX(-20deg);
     }
 }

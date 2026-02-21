@@ -1,20 +1,13 @@
 <div
-  class = "FancyButton-Wrapper FancyButton-Normal"
-  
-  [ngClass] = "{
-    'FancyButton-Primary': (Type === 'Primary'),
-    'FancyButton-Secondary': (Type === 'Secondary'),
-  }">
+  class = "FancyButton-Wrapper FancyButton--Normal"
+
+  [ngClass] = "GetWrapperClasses(false)"
+
+  [style.--Icon-URL] = "ButtonIconStyle">
   <button
     class = "FancyButton"
-    
-    [ngClass] = "{
-      'FancyButton-Primary': (Type === 'Primary'),
-      'FancyButton-Secondary': (Type === 'Secondary'),
-      
-      'FancyButton-Standard': (Styled === 'Standard'),
-      'FancyButton-Backgroundless': (Styled === 'Backgroundless')
-    }" 
+
+    [ngClass] = "GetButtonClasses(false)" 
 
     (pointerenter) = "OnHover()"
     (pointermove) = "OnMove($event)"
@@ -32,27 +25,51 @@
 
     (focus) = "OnFocus()"
     (blur) = "OnUnfocus()">
-    {{ Label }}
+    <span class="FancyButton-Label">{{ Label }}</span>
+
+    @if (Icon !== '') {
+      <div
+        class = "FancyButton-Icon-Container"
+      
+        [ngClass] = "GetIconClasses(true)">
+        <div
+          class = "FancyButton-Icon"
+      
+          [ngClass] = "GetIconClasses(false)"
+          
+          (animationend) = "OnIconAnimationEnd()">
+        </div>
+      </div>
+    }
   </button>  
 </div>
+
 <div #InvertedWrapper
-  class = "FancyButton-Wrapper FancyButton-Inverted"
+  class = "FancyButton-Wrapper FancyButton--Inverted"
+
+  [ngClass] = "GetWrapperClasses(true)"
+  [ngStyle] = "RippleStyles"
   
-  [ngClass] = "{
-    'FancyButton-Primary': (Type === 'Secondary'),
-    'FancyButton-Secondary': (Type === 'Primary'),
-  }"
-  [ngStyle] = "RippleStyles">
+  [style.--Icon-URL] = "ButtonIconStyle">
   <button
     class = "FancyButton"
     
-    [ngClass] = "{
-      'FancyButton-Primary': (Type === 'Secondary'),
-      'FancyButton-Secondary': (Type === 'Primary'),
+    [ngClass] = "GetButtonClasses(true)">
+    <span class="FancyButton-Label">{{ Label }}</span>
+
+    @if (Icon !== '') {
+      <div
+        class = "FancyButton-Icon-Container"
       
-      'FancyButton-Standard': (Styled === 'Standard'),
-      'FancyButton-Backgroundless': (Styled === 'Backgroundless')
-    }">
-    {{ Label }}
+        [ngClass] = "GetIconClasses(false)">
+        <div
+          class = "FancyButton-Icon"
+      
+          [ngClass] = "GetIconClasses(true)"
+
+          (animationend) = "OnIconAnimationEnd()">
+        </div>
+      </div>
+    }
   </button>
 </div>

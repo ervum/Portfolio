@@ -25,7 +25,6 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/assets",
-              
               {
                 "glob": "**/*",
                 "input": "public"
@@ -50,8 +49,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "12kB",
+                  "maximumError": "16kB"
                 }
               ],
               "outputHashing": "all"
@@ -67,7 +66,7 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "proxyConfig": "proxyconfig.json" 
+            "proxyConfig": "proxyconfig.json"
           },
           "configurations": {
             "production": {

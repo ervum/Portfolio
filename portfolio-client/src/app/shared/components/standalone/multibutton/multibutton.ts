@@ -1,47 +1,61 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import { ButtonComponent } from '../button/button';
+import { Nullable, FancyUIElementTypeType, FancyUIElementStyleType, FancyMultiButtonDisplayModeType, FancyMultiButtonIndicatorType } from '@ervum/types';
 
 @Component({
   selector: 'FancyMultibutton',
-  imports: [ButtonComponent],
+  imports: [CommonModule],
   templateUrl: './multibutton.html',
   styleUrl: './multibutton.scss',
 })
 export class MultibuttonComponent {
-  @Input() Buttons: string[] = [];
+  /** Currently selected button index. */
+  public SelectedIndex: number = 0;
 
-  @Output() Hover: EventEmitter<void> = new EventEmitter<void>();
-  @Output() Move: EventEmitter<void> = new EventEmitter<void>();
-  @Output() Unhover: EventEmitter<void> = new EventEmitter<void>();
+  /** Left position (percent) for the indicator, centered under the selected button. */
+  public get IndicatorPositionPercent(): number {
+    const n: number = ((this.Labels?.length) ?? 0);
 
-  @Output() Focus: EventEmitter<void> = new EventEmitter<void>();
-  @Output() Unfocus: EventEmitter<void> = new EventEmitter<void>();
+    return (n > 0) ? ((((this.SelectedIndex) + 0.5) / n) * 100) : 0;
+  }
 
-  @Output() Cancel: EventEmitter<void> = new EventEmitter<void>();
+  public SelectButton(Index: number): void {
+    if (Index === this.SelectedIndex) return;
 
-  @Output() Down: EventEmitter<void> = new EventEmitter<void>();
-  @Output() Up: EventEmitter<void> = new EventEmitter<void>();
-  
-  @Output() KeyDown: EventEmitter<void> = new EventEmitter<void>();
-  @Output() KeyUp: EventEmitter<void> = new EventEmitter<void>();
-  
-  @Output() Wheel: EventEmitter<void> = new EventEmitter<void>();
+    this.SelectedIndex = Index;
+    this.selectedIndexChange.emit(Index);
+  }
 
-  OnFocus(): void { this.Focus.emit(); }
-  OnUnfocus(): void { this.Unfocus.emit(); }
+  public GetIconUrl(IconName: string): string {
+    return `url(assets/icons/${IconName}.png)`;
+  }
 
-  OnHover(): void { this.Hover.emit(); }
-  OnMove(): void { this.Move.emit(); }
-  OnUnhover(): void { this.Unhover.emit(); }
+  public get GetBaseClasses(): Record<string, boolean> {
+    return {
+      [`FancyMultibutton--${this.Type}`]: true,
+      [`FancyMultibutton--${this.Styled}`]: true
+    };
+  }
 
-  OnCancel(): void { this.Cancel.emit(); }
+  // #region Inputs
 
-  OnDown(): void { this.Down.emit(); }
-  OnUp(): void { this.Up.emit(); }
+  @Input() Labels: string[] = [];
 
-  OnKeyDown(): void { this.KeyDown.emit(); }
-  OnKeyUp(): void { this.KeyUp.emit(); }
+  @Input() Type: Nullable<FancyUIElementTypeType> = 'Primary';
+  @Input() Styled: Nullable<FancyUIElementStyleType> = 'Standard';
+  @Input() BorderStyled: Nullable<FancyUIElementStyleType> = 'Standard';
 
-  OnWheel(): void { this.Wheel.emit(); }
+  @Input() DisplayMode: Nullable<FancyMultiButtonDisplayModeType> = 'Text';
+
+  /** Shape of the selection indicator below the buttons: circle, dash, or arrow. */
+  @Input() Indicator: Nullable<FancyMultiButtonIndicatorType> = 'circle';
+
+  // #endregion
+
+  // #region Outputs
+
+  @Output() selectedIndexChange = new EventEmitter<number>();
+
+  // #endregion
 }

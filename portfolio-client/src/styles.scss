@@ -1,8 +1,23 @@
+:root {
+    --Hovering-Strength: 0.9;
+}
+
+
+
 body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
     margin: 0%;
     
     background: #161616;
 }
+
+input, 
+button {
+  font-family: inherit;
+}
+
+
 
 .Concave-Border {
     --Size: 75%;
@@ -10,26 +25,25 @@ body {
     --Y: 50%;
     --Smoothness: 1%;
 
-    height: 100%;
     aspect-ratio: 1 / 1;
     
-    background: white;
-    
-    mask-image: 
-        radial-gradient(
-            circle at var(--X) var(--Y), 
-            black calc(var(--Size) - var(--Smoothness)),
-            transparent var(--Size)
-        ), linear-gradient(white, white);
+    -webkit-mask-image: -webkit-radial-gradient(
+        circle at var(--X) var(--Y), 
+        black calc(var(--Size) - var(--Smoothness)),
+        transparent var(--Size)
+    ), -webkit-linear-gradient(white, white);
+    -webkit-mask-composite: xor;
+
+    mask-image: radial-gradient(
+        circle at var(--X) var(--Y), 
+        black calc(var(--Size) - var(--Smoothness)),
+        transparent var(--Size)
+    ), linear-gradient(white, white);
     mask-composite: exclude;
 
-    -webkit-mask-image:
-        radial-gradient(
-            circle at var(--X) var(--Y), 
-            black calc(var(--Size) - var(--Smoothness)),
-            transparent var(--Size)
-        ), linear-gradient(white, white);
-    -webkit-mask-composite: xor;
+    height: 100%;
+
+    background: white;
 }
 
 .Top.Concave-Border,
@@ -50,21 +64,20 @@ body {
 }
 
 .Shape {
-    height: 10%;
     aspect-ratio: 1 / 1;
 
-    border-radius: 5%;
-
+    clip-path: polygon(var(--Shape));
+    
+    height: 10%;
+    
     background: white;
 
-    clip-path: polygon(var(--Shape));
+    border-radius: 5%;
 }
 
 .Shape.Invert,
 .Shape .Invert {
     --Stroke: -5px;
-
-    padding: calc(-1 * var(--Stroke));
 
     clip-path: polygon(
         evenodd,
@@ -76,7 +89,9 @@ body {
         var(--Shape)
     ) content-box; 
 
-    box-sizing: content-box; 
+    box-sizing: content-box;
+
+    padding: calc(-1 * var(--Stroke));
 }
 
 .Square {

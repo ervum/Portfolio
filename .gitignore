@@ -99,6 +99,7 @@ pgdata/
 
 # VS Code workspace files (keep settings and tasks, ignore workspace files)
 .vscode/*.code-workspace
+.cursor
 
 # Local editor caches
 *.sublime-workspace
@@ -118,4 +119,3 @@ docker-compose.*.local.yml
 
 # Local Docker data
 docker-data/
-

@@ -1,5 +1,8 @@
 ///          Shared Types          \\\
 export type AnyFunction = ((...Arguments: any[]) => (any));
+export type Nullable<T> = (T | undefined);
+
+export type StringBooleanType = ('True' | 'False');
 
 
 
@@ -29,49 +32,22 @@ export type ServerConfigurationType = (ConfigurationType & SecretsType);
 
 
 ///          Client Types          \\\
-/////        Fancy Button        \\\\\
-export type FancyButtonTypeType = ('Primary' | 'Secondary');
-export type FancyButtonStyleType = ('Standard' | 'Backgroundless');
+/////      User  Interfaces      \\\\\
+export type FancyUIElementTypeType = ('Primary' | 'Secondary');
+export type FancyUIElementStyleType = ('Standard' | 'Backgroundless');
+
+export type FancyUIElementFocusStateType = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
+export type FancyUIElementLoadStatusType = ('Idle' | 'Loading' | 'Success' | 'Error');
 
 export type NGStylesType = { [key: string]: string };
 
 /////        Fancy Textbox       \\\\\
-export type StringBooleanType = ('True' | 'False');
-
-export type FancyTextboxTypeType = ('Primary' | 'Secondary');
-export type FancyTextboxStyleType = ('Standard' | 'Backgroundless');
-
 export type FancyTextboxBorderAnimationType = ('Above' | 'Below');
-
 export type FancyTextboxOrderType = ('First' | 'Intermediate' | 'Last' | 'Unique');
 
-export type UIElementFocusStateType = ('Focusing' | 'Focused' | 'Unfocusing' | 'Unfocused');
+/////         Fancy Button       \\\\\
+export type FancyButtonIconStateType = ('AtCenter' | 'Exiting' | 'OffScreen' | 'Entering');
 
-/////      Fancy Multibutton      \\\\\
-export interface FancyButtonConfiguration {
-  BorderSpacing?: number,
-
-  Label?: string,
-
-  Padding?: number,
-
-  Type?: FancyButtonTypeType,
-  Styled?: FancyButtonStyleType,
-
-  Hover?: AnyFunction,
-  Move?: AnyFunction,
-  Unhover?: AnyFunction,
-
-  Focus?: AnyFunction,
-  Unfocus?: AnyFunction,
-  
-  Cancel?: AnyFunction,
-
-  Down?: AnyFunction,
-  Up?: AnyFunction,
-
-  KeyDown?: AnyFunction,
-  KeyUp?: AnyFunction,
-
-  Wheel?: AnyFunction
-}
+/////      Fancy Multibutton     \\\\\
+export type FancyMultiButtonDisplayModeType = ('Text' | 'Icon');
+export type FancyMultiButtonIndicatorType = ('circle' | 'dash' | 'arrow');

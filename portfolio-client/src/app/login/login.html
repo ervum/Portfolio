@@ -1,60 +1,67 @@
-<div class = "Wrapper">
-    <div class = "Diamond">
-        <div class = "Top Container">
-            <div class = "Left Concave-Border"></div>
-            <div class = "Right Concave-Border"></div>
-        </div>
-        <div class = "Bottom Container">
-            <div class = "Left Concave-Border"></div>
-            <div class = "Right Concave-Border"></div>
-        </div>
+<Aurora/> 
+
+<div class = "Main Wrapper">
+    <div class = "Wrapper">
+        <span class = "Section-Title">🐺⁉️</span>
+                            
+        <FancyMultibutton
+            class = "ActionType-Multibutton"
+                            
+            [Labels] = "AuthenticationButtons"
+            DisplayMode = "Text">
+        </FancyMultibutton>
     </div>
-
-    <div class = "Section">
-        <div class = "Section-Content">
-            <div class = "Section-Title">Sign In</div>
-                
-            <FancyTextbox #UserIdentifierTextbox
-                Placeholder = "User Identifier"
-
-                Styled = "Backgroundless"
-                IconStyled = "Standard"
-                
-                Icon = "envelope">
-            </FancyTextbox>
-
-            <br>
-
-            <FancyTextbox #PasswordTextbox
-                Placeholder = "Password"
-                
-                Styled = "Backgroundless"
-                IconStyled = "Standard"
-
-                Icon = "lock">
-            </FancyTextbox>
-            
-            <br>
-            <br>
-            <br>
-            
-            <FancyButton 
-                class = "Action-Button"
-
-                Label = "Login"
-                (Up) = "HandleLogin()">
-            </FancyButton>
-
-            <FancyMultibutton
-                class = "ActionType-Multibutton">
-            </FancyMultibutton>
+    
+    <div 
+        class = "Section-Wrapper"
+        
+        [ngClass] = "IsLoading">
+        <div class = "Logo-Section" animate.enter = "Logo-Section-Entry">
+            <!-- <div class = "Diamond">
+                <div class = "Top Container">
+                    <div class = "Left Concave-Border"></div>
+                    <div class = "Right Concave-Border"></div>
+                </div>
+                <div class = "Bottom Container">
+                    <div class = "Left Concave-Border"></div>
+                    <div class = "Right Concave-Border"></div>
+                </div>
+            </div> -->
         </div>
 
-        <FancyButton 
+        <div class = "Content-Section-Wrapper" animate.enter = "Content-Section-Entry">
+            <div class = "Content-Section">
+                <FancyTextbox #UserIdentifierTextbox
+                    Placeholder = "User Identifier"
+
+                    Styled = "Standard"
+                    IconStyled = "Standard"
+                        
+                    Icon = "envelope">
+                </FancyTextbox>
+                <FancyTextbox #PasswordTextbox
+                    Placeholder = "Password"
+                    
+                    Styled = "Standard"
+                    IconStyled = "Standard"
+
+                    Icon = "lock">
+                </FancyTextbox>
+
+                <FancyButton 
+                    class = "Action-Button"
+
+                    Label = "Login"
+                    (Up) = "HandleSignIn()">
+                </FancyButton>
+            </div>
+        </div>
+
+        <!-- <FancyButton 
             class = "NavigateHome-Button"
-            
+                
             Label = "Is it your first time here?"
             (Up) = "NavigateToHome()">
-        </FancyButton>    
+        </FancyButton> -->
     </div>
 </div>

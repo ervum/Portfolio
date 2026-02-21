@@ -1,9 +1,163 @@
-.FancyMultibutton-Wrapper {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+$ContentPadding: 3px;
+$IndicatorTrackHeight: 14px;
+$IndicatorTweenDuration: 0.75s;
+$IndicatorTweenEasing: cubic-bezier(1, 0, 0, 1);
+$NeonGlowColor: rgba(255, 255, 255, 0.6);
+$NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
 
-    gap: 16px;     
+.FancyMultibutton-Wrapper {
+    --multibutton-glow: #{$NeonGlowColor};
+
+    display: inline-flex;
+    flex-direction: column;
+    place-content: center;
+    place-items: stretch;
+
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 100%;
+
+    border: solid;
+    border-width: 1px;
+    border-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 12px var(--multibutton-glow), 0 0 20px $NeonGlowColorStrong;
+
+    &.FancyMultibutton--Backgroundless {
+        border: none;
+        box-shadow: 0 0 12px var(--multibutton-glow);
+    }
 }
 
+.FancyMultibutton-Content {
+    display: inline-flex;
+    flex-direction: row;
+    place-content: center;
+    place-items: center;
+
+    position: relative;
+
+    width: calc(100% - #{$ContentPadding * 2});
+    height: calc(100% - #{$ContentPadding * 2});
+
+    margin: 0px $ContentPadding $ContentPadding;
+}
+
+.FancyMultibutton {
+    outline: none;
+
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+
+    text-align: center;
+
+    display: flex;
+    place-content: center;
+    place-items: center;
+
+    flex: 1 1 0;
+
+    border-radius: calc(16px - #{$ContentPadding});
+
+    color: #000;
+    background-color: #fff;
+
+    white-space: nowrap;
+
+    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+        box-shadow: 0 0 10px $NeonGlowColorStrong;
+    }
+
+    &.FancyMultibutton--Selected {
+        box-shadow: 0 0 8px $NeonGlowColorStrong;
+    }
+
+    &.FancyMultibutton--Standard {
+    }
+    &.FancyMultibutton--Backgroundless {
+    }
+}
+
+.FancyMultibutton-Label {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    place-content: center;
+    place-items: center;
+}
+
+.FancyMultibutton-Icon {
+    width: 1.25em;
+    height: 1.25em;
+
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: var(--Icon-URL);
+}
+
+.FancyMultibutton-IndicatorTrack {
+    position: relative;
+
+    width: calc(100% - #{$ContentPadding * 2});
+    height: $IndicatorTrackHeight;
+
+    margin: 8px $ContentPadding $ContentPadding;
+    flex-shrink: 0;
+}
+
+.FancyMultibutton-Indicator {
+    position: absolute;
+
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    transition: left $IndicatorTweenDuration $IndicatorTweenEasing;
+
+    &.FancyMultibutton-Indicator--circle {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+
+        color: #fff;
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    &.FancyMultibutton-Indicator--dash {
+        width: 20px;
+        height: 3px;
+
+        border-radius: 2px;
+
+        background: currentColor;
+
+        color: #fff;
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    &.FancyMultibutton-Indicator--arrow {
+        width: 0;
+        height: 0;
+
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 8px solid currentColor;
+
+        color: #fff;
+
+        top: 40%;
+        transform: translate(-50%, -50%) rotate(180deg);
+        filter: drop-shadow(0 0 6px currentColor);
+    }
+}

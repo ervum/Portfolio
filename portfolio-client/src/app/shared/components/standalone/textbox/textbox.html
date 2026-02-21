@@ -1,103 +1,51 @@
 <div
   class = "FancyTextbox-Wrapper"
-  
-  [attr.Has-Text] = "((InputValue.length) > 0)"
+
+  [attr.Has-Text] = "HasText"
   [attr.Focus-State] = "FocusState"
-  
+
   [style.--Icon-URL] = "TextboxIconStyle">
   <div
     class = "FancyTextbox-Icon-Container"
 
-    [ngClass] = "{
-      'FancyTextbox-Primary': (Type === 'Primary'),
-      'FancyTextbox-Secondary': (Type === 'Secondary'),
-
-      'FancyTextbox-Standard': (Styled === 'Standard'),
-      'FancyTextbox-Backgroundless': (Styled === 'Backgroundless'),
-
-      'FancyTextbox-IconStandard': (IconStyled === 'Standard'),
-      'FancyTextbox-IconBackgroundless': (IconStyled === 'Backgroundless'),
-    
-      'FancyTextbox-First': (Order === 'First'),
-      'FancyTextbox-Intermediate': (Order === 'Intermediate'),
-      'FancyTextbox-Last': (Order === 'Last'),
-      'FancyTextbox-Unique': (Order === 'Unique')
-    }">
+    [ngClass] = "GetIconContainerClasses">
     <div
       class = "FancyTextbox-Icon"
-      
-      [ngClass] = "{
-        'FancyTextbox-Primary': (Type === 'Primary'),
-        'FancyTextbox-Secondary': (Type === 'Secondary'),
 
-        'FancyTextbox-Standard': (Styled === 'Standard'),
-        'FancyTextbox-Backgroundless': (Styled === 'Backgroundless')
-      }"></div>
+      [ngClass] = "GetInputClasses">
+    </div>
   </div>
+
   <div
     class = "FancyTextbox-Content"
-    
-    [ngClass] = "{
-      'FancyTextbox-Standard': (Styled === 'Standard'),
-      'FancyTextbox-Backgroundless': (Styled === 'Backgroundless')
-    }">
+
+    [ngClass] = "GetContentClasses">
     <p 
       class = "FancyTextbox-Placeholder"
 
-      [ngClass] = "{
-        'FancyTextbox-Primary': (Type === 'Primary'),
-        'FancyTextbox-Secondary': (Type === 'Secondary'),
-
-        'FancyTextbox-Standard': (Styled === 'Standard'),
-        'FancyTextbox-Backgroundless': (Styled === 'Backgroundless'),
-
-        'FancyTextboxBorder-AnimationBelow': (BorderAnimation === 'Below'),
-        
-        'FancyTextbox-First': (Order === 'First'),
-        'FancyTextbox-Intermediate': (Order === 'Intermediate'),
-        'FancyTextbox-Last': (Order === 'Last'),
-        'FancyTextbox-Unique': (Order === 'Unique')
-      }"
-    >{{ Placeholder }}
+      [ngClass] = "GetOverlayClasses">
+      {{ Placeholder }}
     </p>
+
     <div
       class = "FancyTextbox-Border"
-      
-      [ngClass] = "{
-        'FancyTextbox-Primary': (Type === 'Primary'),
-        'FancyTextbox-Secondary': (Type === 'Secondary'),
 
-        'FancyTextbox-Standard': (Styled === 'Standard'),
-        'FancyTextbox-Backgroundless': (Styled === 'Backgroundless'),
-
-        'FancyTextboxBorder-AnimationBelow': (BorderAnimation === 'Below'),
-
-        'FancyTextbox-First': (Order === 'First'),
-        'FancyTextbox-Intermediate': (Order === 'Intermediate'),
-        'FancyTextbox-Last': (Order === 'Last'),
-        'FancyTextbox-Unique': (Order === 'Unique')
-      }">
+      [ngClass] = "GetOverlayClasses">
     </div>
+    
     <input
       class = "FancyTextbox"
-      
-      [ngClass] = "{
-        'FancyTextbox-Primary': (Type === 'Primary'),
-        'FancyTextbox-Secondary': (Type === 'Secondary'),
 
-        'FancyTextbox-Standard': (Styled === 'Standard'),
-        'FancyTextbox-Backgroundless': (Styled === 'Backgroundless')
-      }"
+      [ngClass] = "GetInputClasses"
       [ngStyle] = "TextboxStyles"
-      [(ngModel)] = "InputValue"  
+      [(ngModel)] = "InputValue" 
 
-      [maxlength] = "MaximumLength"
+      [maxlength] = "MaximumLength ?? 30"
 
       (submit) = "OnSubmit()"
 
       (pointerenter) = "OnHover()"
       (pointerleave) = "OnUnhover()"
-
       (pointercancel) = "OnCancel()"
       (pointerdown) = "OnDown()"
       (pointerup) = "OnUp()"
