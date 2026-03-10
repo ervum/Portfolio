@@ -136,6 +136,7 @@ export class ButtonComponent implements OnInit {
 
       'FancyButton-Icon--Entering': ((this.IconStatus) === 'Entering'),
       'FancyButton-Icon--Exiting': ((this.IconStatus) === 'Exiting'),
+      'FancyButton-Icon--OffScreen': ((this.IconStatus) === 'OffScreen'),
 
       [`FancyButton--${this.IconStyled}`]: true
     };
@@ -283,7 +284,9 @@ export class ButtonComponent implements OnInit {
       'transition': (this.RippleTransition)
     };
 
-    if (((this.IconStatus) === 'Exiting') || ((this.IconStatus) === 'OffScreen')) {
+    if ((this.IconStatus) === 'OffScreen') {
+      this.IconStatus = 'Entering';
+    } else if ((this.IconStatus) === 'Exiting') {
       this.EntryIsQueued = true;
     }
   }
@@ -310,7 +313,11 @@ export class ButtonComponent implements OnInit {
     this.IsPointerDown = false;
     this.RippleButton(Event, 0);
 
-    if (((this.IconStatus) === 'Exiting') || ((this.IconStatus) === 'OffScreen')) {
+    (Event.currentTarget as HTMLElement)?.blur();
+
+    if ((this.IconStatus) === 'OffScreen') {
+      this.IconStatus = 'Entering';
+    } else if ((this.IconStatus) === 'Exiting') {
       this.EntryIsQueued = true;
     }
   }

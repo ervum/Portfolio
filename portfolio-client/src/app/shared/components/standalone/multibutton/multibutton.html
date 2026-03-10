@@ -1,6 +1,9 @@
 <FancyContainer
     class = "FancyMultibutton-Wrapper"
-    
+
+    [class.Hovering--First] = "HoveredIndex() === 0"
+    [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1"
+
     [ngClass] = "GetBaseClasses">
     <div
         class = "FancyMultibutton-Content"
@@ -9,7 +12,15 @@
         [style.--Button-Count] = "Items.length"
 
         [ngClass] = "GetBaseClasses">
-        <FancyContainer class="FancyMultibutton-Highlight"></FancyContainer>
+        <FancyContainer 
+            class="FancyMultibutton-Highlight"
+
+            [class.Hovering--Selected] = "HoveredIndex() === SelectedIndex"
+            
+            [class.Hovering--First] = "HoveredIndex() === 0 && SelectedIndex === 0"
+            [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1 && SelectedIndex === Items.length - 1">
+        </FancyContainer>
+        
         @for (Item of Items; track $index) {
             <button
                 type = "button"
@@ -18,7 +29,14 @@
 
                 [class.FancyMultibutton--Selected] = "SelectedIndex === $index"
 
-                (click) = "SelectButton($index)">
+                [class.Hovering--Self] = "HoveredIndex() === $index"
+
+                [class.Hovering--First] = "$index === 0"
+                [class.Hovering--Last] = "$index === Items.length - 1"
+
+                (click) = "SelectButton($index)"
+                (pointerenter) = "OnHover($index)"
+                (pointerleave) = "OnUnhover()">
                 @if (DisplayMode === 'Text') {
                     <span class = "FancyMultibutton-Label">{{ Item.Label }}</span>
                 } @else {
@@ -37,7 +55,7 @@
 @if (Items.length) {
     <div class = "FancyMultibutton-IndicatorTrack">
         <div
-            class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ Indicator ?? 'dash' }}"
+            class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ Indicator ?? 'Dash' }}"
 
             [style.left.%] = "IndicatorPositionPercent"></div>
     </div>

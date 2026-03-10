@@ -40,6 +40,7 @@
       [ngStyle] = "TextboxStyles"
       [(ngModel)] = "InputValue" 
 
+      [type] = "IsSensitive ? (IsVisible ? 'text' : 'password') : 'text'"
       [attr.maxlength] = "MaximumLength"
 
       (submit) = "OnSubmit()"
@@ -60,5 +61,14 @@
 
       (focus) = "OnFocus()"
       (blur) = "OnUnfocus()">
+
+    <div
+      *ngIf = "IsSensitive"
+      class = "FancyTextbox-Visibility-Toggle"
+      
+      [ngClass] = "GetInputClasses"
+      [style.--Icon-URL] = "VisibilityIconStyle"
+      (click) = "ToggleVisibility()">
+    </div>
   </div>
 </FancyContainer>

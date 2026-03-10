@@ -3,8 +3,8 @@
 
 
 @mixin CreateTransition($Properties ...) {
-    $Duration: 1.0s;
-    $Easing: cubic-bezier(0.86, 0, 0.07, 1);
+    $Duration: var(--Duration-Slow);
+    $Easing: var(--Easing-Standard);
 
     $Transitions: ();
 
@@ -26,12 +26,6 @@
 
 
 
-:host {
-    --Button-FontSize: 14px;
-}
-
-
-
 .FancyButton-Wrapper {
     @include CreateTransition(transform, border-radius);
     
@@ -45,25 +39,22 @@
     background-color: transparent !important;
     color: transparent !important;
 
-    &.FancyButton--Normal:hover {
+    &.FancyButton--Normal:hover,
+    &.FancyButton--Normal:active,
+    &.FancyButton--Normal:has(.FancyButton:focus-visible) {
         @include SynchronizeStates('.FancyButton') {
-            transform: translateY(-5px);
+            transform: translateY(var(--Hover-MoveY));
 
-            border-radius: 64px;
+            border-radius: var(--Radius-Round);
         }
-            font-weight: 600;
 
         @include SynchronizeStates('.FancyButton-Label') {
-            font-size: calc(var(--Button-FontSize) * var(--Hovering-Strength));
+            transform: scale(var(--Hover-Scale-Standard));
         }
 
         @include SynchronizeStates('.FancyButton-Icon-Container') {
-            border-radius: 64px;
-        }
-
-        @include SynchronizeStates('.FancyButton-Icon') {
-            width: 40%;
-            height: 40%;
+            border-radius: var(--Radius-Round);
+            transform: scale(var(--Hover-Scale-Standard));
         }
     }
 }
@@ -75,7 +66,7 @@
     place-content: space-between;
     
     gap: 8px;
-    padding: 0px 4px 0px 16px;
+    padding: 0px var(--Padding-Small) 0px 16px;
 
     outline: none;
 
@@ -90,13 +81,13 @@
 
     background-color: transparent;
 
-    border-radius: 16px;
+    border-radius: var(--Radius-Standard);
 
     text-align: center;
 }
 
 .FancyButton-Icon-Container {
-    @include CreateTransition(border-radius);
+    @include CreateTransition(border-radius, transform);
     
     display: flex;
     flex-direction: row;
@@ -105,11 +96,14 @@
     
     position: relative;
     
-    height: 80% !important;
+    height: var(--IconContainer-Size) !important;
     width: auto !important;
     aspect-ratio: 1 / 1;
     
-    border-radius: 12px;
+    border-radius: var(--Radius-Sharp);
+    
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     
     overflow: hidden;
 
@@ -121,7 +115,7 @@
 }
 
 .FancyButton-Icon {
-    @include CreateTransition(width, height);
+    @include CreateTransition(width, height, transform);
     
     will-change: transform;
 
@@ -142,23 +136,38 @@
     width: 50%;
 
     &.FancyButton-Icon--Entering {
-        animation: Icon-EnterLeft 1.5s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        animation: Icon-EnterLeft 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
     }
     &.FancyButton-Icon--Exiting {
-        animation: Icon-ExitRight 1.5s cubic-bezier(0.2, 0, 0.2, 1) 0.5s forwards;
+        animation: Icon-ExitRight 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+    &.FancyButton-Icon--OffScreen {
+        transform: translateX(50px);
     }
 }
 
 .FancyButton-Label {
-    @include CreateTransition(font-size);
+    @include CreateTransition(font-size, transform);
     
-    text-align: center;
+    display: flex;
+    place-content: center;
+    place-items: center;
     
-    font-size: var(--Button-FontSize);
+    font-size: var(--FontSize-Standard);
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    line-height: 1.1;
+
+    word-break: break-word;
+    word-wrap: break-word;
+
+    & {
+        display: inline-block;
+        text-align: left;
+        width: auto;
+        max-width: 100%;
+        margin: 0 auto; 
+    }
 }
 
 .FancyButton--Inverted {

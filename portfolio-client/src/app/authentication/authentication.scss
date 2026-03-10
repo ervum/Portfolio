@@ -12,17 +12,14 @@
 
 
 
-
-
-
-
-:host {
-    --Section-Spacing: 0%;
-    --Section-Width: 1200px;
-    --Section-Height: 600px;
-
-    --Edge-Colour: #ffffff;
-    --Edge-Glow: rgba(255, 255, 255, 0.8);
+aurora {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
 }
 
 
@@ -31,25 +28,26 @@
     width: 100vw;
     height: 100vh;
 
-    gap: 64px;
+    display: flex;
+    place-content: center;
+    place-items: center;
+
+    background: transparent;
 }
 
 .Wrapper {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     place-content: center;
     place-items: center;
+    z-index: 10;
 }
 
 .Section-Wrapper {
     width: var(--Section-Width);
     height: var(--Section-Height);
-
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
-    place-content: center;
-    place-items: center;
-
     position: relative;
 
     &::after {
@@ -57,146 +55,90 @@
         --Edge-Glow: rgba(255, 255, 255, 0);
 
         content: '';
-
         position: absolute;
-        z-index: 10;
+        z-index: 15;
         pointer-events: none;
+        inset: -1px;
+        border-radius: 64px;
 
-        width: 50px;
-        height: 1px; 
-    
-        background: linear-gradient(90deg, transparent, var(--Edge-Colour), transparent);
+        border: 1px solid transparent;
+        background: linear-gradient(90deg, transparent, var(--Edge-Colour), transparent) border-box;
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
 
         box-shadow: 0px 0px 15px 1px var(--Edge-Glow);
 
-        filter: blur(1px);
-
-        offset-path: rect(0% 100% 100% 0% round 64px);
-
-        animation: Section-EdgeLighting 2.5s cubic-bezier(0.77, 0, 0.175, 1) infinite;
-        animation-play-state: paused;
-
-        transition:
-            --Edge-Colour 0.5s cubic-bezier(0.77, 0, 0.175, 1),
-            --Edge-Glow 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-
         opacity: 0%;
+        clip-path: inset(0 50%);
+        
+        transition: 
+            --Edge-Colour 0s ease 0.8s,
+            --Edge-Glow 0s ease 0.8s,
+
+            clip-path 0.8s cubic-bezier(0.86, 0, 0.07, 1),
+            opacity 0s ease 0.8s;
     }
 
-    &:not(.Section--Idle)::after {
-        animation-play-state: running;
+    &.Section--Loading::after,
+    &.Section--Success::after,
+    &.Section--Error::after {
+        opacity: 100%;
+        clip-path: inset(0 0);
+        
+        transition: 
+            --Edge-Colour 0.2s ease,
+            --Edge-Glow 0.2s ease,
+
+            clip-path 0.8s cubic-bezier(0.86, 0, 0.07, 1),
+            opacity 0.2s ease;
     }
 
     &.Section--Loading::after {
         --Edge-Colour: #ffffff;
         --Edge-Glow: rgba(255, 255, 255, 0.8);
-
-        opacity: 100%;
     }
 
     &.Section--Success::after {
         --Edge-Colour: #4ade80;
         --Edge-Glow: rgba(34, 197, 94, 0.8);
-
-        opacity: 100%;
     }
 
     &.Section--Error::after {
         --Edge-Colour: #ef4444;
         --Edge-Glow: rgba(220, 38, 38, 0.8);
-
-        opacity: 100%;
     }
-}
 
-.Logo-Section {
-    display: inline-flex;
-    flex-direction: column;
-    place-items: center;
-
-    position: relative;
-    right: 25%;
-
-    background-color: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), 0 25px 50px rgba(0, 0, 0, 0.5);
-
-    height: 100%;
-    aspect-ratio: 1 / 1;
-
-    z-index: 5;
-
-    border-radius: 64px;
+    &.Section--Idle::after {
+        opacity: 0%;
+        clip-path: inset(0 50%);
+    }
 }
 
 .Content-Section-Wrapper {
     display: flex;
-    place-content: flex-end; 
-    place-items: center; 
-
-    position: absolute;
+    flex-direction: column;
+    place-content: center;
+    place-items: center;
 
     border-radius: 64px;
 
-    background-color: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), 0 25px 50px rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 
     width: 100%;
     height: 100%;
 
     box-sizing: border-box;
+    padding: 64px 48px;
 
     overflow: hidden; 
-
-    // &::before,
-    &::after {
-        content: '';
-
-        position: absolute;
-
-        top: 0;
-        left: 0;
-
-        width: 100%;
-        height: 100%;
-
-        background: linear-gradient(
-            120deg, 
-            transparent 30%, 
-            rgba(255, 255, 255, 0.4) 45%, 
-            rgba(255, 255, 255, 0.8) 50%, 
-            rgba(255, 255, 255, 0.4) 55%, 
-            transparent 70%
-        );
-    
-        transform: translateX(-100%) skewX(-20deg);
-
-        pointer-events: none;
-        z-index: 10;
-    
-        filter: blur(50px);
-
-        animation: Section-ShineSwipe 3.0s cubic-bezier(0.86, 0, 0.07, 1) both;
-    
-        padding: 1px;
-    }
-    /* &::before {
-        animation-play-state: paused;
-        animation-iteration-count: infinite;
-    
-        -webkit-mask: 
-            -webkit-linear-gradient(#fff 0 0) content-box, 
-            -webkit-linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-
-        mask:
-            linear-gradient(#fff 0 0) content-box, 
-            linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-    } */
 }
 
 .Content-Section {
@@ -205,150 +147,45 @@
     place-content: center;
     place-items: center;
 
-    border: none !important;
+    gap: 24px;
+
+    width: 100%;
 
     position: relative;
-
-    gap: 16px;
-
-    box-sizing: border-box;
-
-    width: 50%;
-    height: 100%;
-
-    padding: 100px 0px 0px 0px;
-
-    min-width: 0; 
-    min-height: 0;
-
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 5;
 }
 
 .Section-Title {
     font-size: 32px;
-
+    font-weight: 700;
     color: white;
-
-    text-shadow: 0px 3px 10px rgba(255, 255, 255, 1);
+    margin-bottom: 8px;
+    
+    letter-spacing: -0.02em;
+    opacity: 0.6;
 }
 
 .ActionType-Multibutton {
-    width: 500px;
-    height: 40px;
+    width: 100%;
+    height: 48px;
+    margin-bottom: 8px;
 }
 
-.Action-Button {
-    width: 120px;
-    height: 40px;
-}
-
-.NavigateHome-Button {
-    width: 250px;
-    height: 40px;
-}
-
-.Diamond {
-    display: inline-flex;
-    flex-direction: column;
-
-    position: absolute;
-
-    top: 45%;
-    
-    transform: translateY(calc(var(--Section-Height) / -2));
-
-    animation: FadeIn 5.0s ease-in-out both;
-}
-
-.Container {
-    display: inline-flex;
-    flex-direction: row;
-
-    height: 50px;
-
-    .Concave-Border {
-        --Size: 75%;
-    }
-    
-    * {
-        background: white;
-    }
-}
-
-.Rectangle {
+.Buttons-Container {
     display: flex;
+    flex-direction: row;
+    gap: 5%;
+    width: 100%;
+    margin-top: 16px;
     place-content: center;
-    place-items: center;
-
-    width: 200px;
-    height: 100%;
-
-    color: #161616;
 }
 
-.Top.Container .Rectangle {
-    border-radius: 20px 20px 0px 0px;
-}
-
-.Bottom.Container .Rectangle {
-    border-radius: 0px 0px 20px 20px;
-}
-
-
-
-@keyframes FadeIn {
-    0% {
-        opacity: 0%;
-    }
-
-    100% {
-        opacity: 100%;
-    }
-}
-
-@keyframes Section-DrawBorders {
-    0% {
-        -webkit-mask-size: 0% 1%;
-        
-        mask-size: 0% 1%;
-    }
-
-
-    100% {
-        -webkit-mask-size: 150% 100%;
-        
-        mask-size: 150% 100%;
-    }
-}
-
-@keyframes Section-EdgeLighting {
-    0% {
-        offset-distance: 0%;
-
-        opacity: 0%;
-    }
-
-    1% {
-        opacity: 100%;
-    }
-
-    99% {
-        opacity: 100%;
-    }
-
-    100% {
-        offset-distance: 100%;
-
-        opacity: 0%;
-    }
-}
-
-@keyframes Section-ShineSwipe {
-    0% {
-        transform: translateX(-100%) skewX(-20deg);
-    }
+.Action-Button,
+.Guest-Button {
+    width: 45%;
+    height: 52px;
     
-    100% {
-        transform: translateX(100%) skewX(-20deg);
-    }
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }

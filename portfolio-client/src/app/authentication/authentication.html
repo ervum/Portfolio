@@ -1,81 +1,78 @@
 <Aurora/> 
 
 <div class = "Main Wrapper">
-    <div class = "Wrapper">
-        <span class = "Section-Title">🐺⁉️</span>
-                            
-        <FancyMultibutton
-            class = "ActionType-Multibutton"
-                            
-            [Items] = "AuthenticationButtons"
-            DisplayMode = "Text">
-        </FancyMultibutton>
-    </div>
-    
     <div 
         class = "Section-Wrapper"
-        
         [ngClass] = "IsLoading">
-        <FancyContainer class = "Logo-Section">
-        </FancyContainer>
-
+        
         <FancyContainer class = "Content-Section-Wrapper">
             <div class = "Content-Section">
+                <span class = "Section-Title">Portfolio</span>
+
+                <FancyMultibutton
+                    class = "ActionType-Multibutton"
+                    [Items] = "AuthenticationButtons"
+                    DisplayMode = "Text">
+                </FancyMultibutton>
+
                 <ng-container *ngIf = "CurrentFormType() === 'Sign In'">
                     <FancyTextbox #UserIdentifierTextbox
+                        class = "Input-Field"
                         Placeholder = "User Identifier"
-
                         Styled = "Standard"
                         IconStyled = "Standard"
-
-                        Icon = "envelope">
+                        Icon = "user">
                     </FancyTextbox>
                 </ng-container>
 
                 <ng-container *ngIf = "CurrentFormType() === 'Sign Up'">
                     <FancyTextbox #EmailTextbox
+                        class = "Input-Field"
                         Placeholder = "Email"
-
                         Styled = "Standard"
                         IconStyled = "Standard"
-
                         Icon = "envelope">
                     </FancyTextbox>
 
                     <FancyTextbox #PhoneNumberTextbox
+                        class = "Input-Field"
                         Placeholder = "Phone"
-
                         Styled = "Standard"
                         IconStyled = "Standard"
-
                         Icon = "phone">
                     </FancyTextbox>
 
                     <FancyTextbox #UsernameTextbox
+                        class = "Input-Field"
                         Placeholder = "Username"
-
                         Styled = "Standard"
                         IconStyled = "Standard"
-
                         Icon = "user">
                     </FancyTextbox>
                 </ng-container>
 
                 <FancyTextbox #PasswordTextbox
+                    class = "Input-Field"
+                    [IsSensitive] = true
                     Placeholder = "Password"
-
                     Styled = "Standard"
                     IconStyled = "Standard"
-
                     Icon = "lock">
                 </FancyTextbox>
 
-                <FancyButton 
-                    class = "Action-Button"
-                    
-                    [Label] = "CurrentFormType()"
-                    (Up) = "HandleSubmit()">
-                </FancyButton>
+                <div class = "Buttons-Container">
+                    <FancyButton 
+                        class = "Action-Button"
+                        [Label] = "CurrentFormType()"
+                        (Up) = "HandleSubmit()">
+                    </FancyButton>
+
+                    <FancyButton 
+                        class = "Guest-Button"
+                        Label = "Continue as Guest"
+                        (Up) = "NavigateToHome()">
+                    </FancyButton>
+                </div>
             </div>
         </FancyContainer>
     </div>

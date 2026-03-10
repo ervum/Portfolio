@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ import { ContainerComponent } from '../container/container';
   templateUrl: './textbox.html',
   styleUrl: './textbox.scss'
 })
-export class TextboxComponent {
+export class TextboxComponent implements OnInit {
   // #region Configuration & State
 
   private readonly IconsBasePath = '../../../../../assets/icons/';
@@ -46,6 +46,8 @@ export class TextboxComponent {
 
   public InputValue: string = '';
   public FocusState: FancyUIElementFocusStateType = 'Unfocused';
+
+  public IsVisible: boolean = false;
 
   // #endregion
 
@@ -106,6 +108,13 @@ export class TextboxComponent {
   /** Class Getter for `.FancyTextbox` and `.FancyTextbox-Icon`. */
   public get GetInputClasses(): Record<string, boolean> {
     return (this.GetBaseClasses);
+  }
+
+  /** Gets the current visibility icon based on state. */
+  public get VisibilityIconStyle(): string {
+    const IconName = (this.IsVisible ? 'visible' : 'hidden');
+
+    return `url(${this.IconsBasePath}${IconName}.png)`;
   }
 
   /**
@@ -192,6 +201,9 @@ export class TextboxComponent {
 
   @Input() Order: Nullable<FancyTextboxOrderType> = 'Unique';
 
+  @Input() IsSensitive: boolean = false;
+  @Input() InitialVisibility: boolean = false;
+
   // #endregion
 
   // #region Outputs
@@ -260,6 +272,14 @@ export class TextboxComponent {
   public OnKeyUp(): void { this.KeyUp.emit(); }
 
   public OnWheel(): void { this.Wheel.emit(); }
+
+  public ToggleVisibility(): void {
+    this.IsVisible = !(this.IsVisible);
+  }
+
+  ngOnInit(): void {
+    this.IsVisible = this.InitialVisibility;
+  }
 
   // #endregion
 }

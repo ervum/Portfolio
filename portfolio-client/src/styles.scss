@@ -1,5 +1,56 @@
 :root {
-    --Hovering-Strength: 0.9;
+    /* Border Radiuses */
+    --Radius-Standard: 16px;
+    --Radius-Round: 64px;
+    --Radius-Sharp: 12px;
+
+    /* Typography */
+    --FontSize-Standard: 14px;
+    --FontSize-Small: 12px;
+
+    /* Transitions & Animations */
+    --Easing-Standard: cubic-bezier(0.86, 0, 0.07, 1);
+    --Easing-Snap: cubic-bezier(1, 0, 0, 1);
+
+    --Duration-Standard: 0.8s;
+    --Duration-Slow: 1.0s;
+
+    /* Interactive States */
+    --Hover-Scale-Standard: 0.8;
+    --Hover-Scale-Big: 0.9;
+
+    --Hover-MoveY: -5px;
+    
+    /* Visual Effects */
+    --Blur-Standard: 12px;
+
+    /* Route Specifics - Authentication */
+    --Section-Width: 480px;
+    --Section-Height: auto;
+
+    --Edge-Colour: #ffffff;
+    --Edge-Glow: rgba(255, 255, 255, 0.8);
+
+    --Field-Width: 100%;
+
+    /* Component Specifics - Shared */
+    --Padding-Small: 4px;
+    --Control-Height: 45px;
+    
+    --IconContainer-Size: 80%;
+    --Icon-Size-Standard: 60%;
+    --Icon-Size-Small: 45%;
+
+    /* Component Specifics - Fancy Textbox */
+    --Textbox-Width: 350px;
+    --Textbox-Placeholder-Spacing: 47.5%;
+
+    /* Component Specifics - Fancy Multibutton */
+    --Multibutton-Padding: var(--Padding-Small);
+    --Multibutton-IndicatorTrackHeight: var(--FontSize-Standard);
+
+    --Glow-Standard: rgba(255, 255, 255, 0.6);
+    --Glow-Strong: rgba(255, 255, 255, 0.35);
 }
 
 

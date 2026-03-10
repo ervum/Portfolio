@@ -1,14 +1,17 @@
 :host {
     display: inline-flex;
 
-    border-radius: var(--Container-BorderRadius, 16px);
+    border-radius: var(--Container-BorderRadius, var(--Radius-Standard));
 
     background-color: rgba(255, 255, 255, 0.05);
-    -webkit-backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(var(--Blur-Standard));
 
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), 0 10px 20px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(var(--Blur-Standard));
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    // box-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
+    //             0 0 15px rgba(255, 255, 255, 0.4),
+    //             0 0 30px rgba(255, 255, 255, 0.2),
+    //             0 10px 20px rgba(0, 0, 0, 0.5);
     color: white;
 
     box-sizing: border-box;

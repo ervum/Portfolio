@@ -1,13 +1,7 @@
-$ContentPadding: 4px;
-$IndicatorTrackHeight: 14px;
-$IndicatorTweenDuration: 0.75s;
-$IndicatorTweenEasing: cubic-bezier(1, 0, 0, 1);
-$NeonGlowColor: rgba(255, 255, 255, 0.6);
-$NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
+
+
 
 .FancyMultibutton-Wrapper {
-    --multibutton-glow: #{$NeonGlowColor};
-
     display: inline-flex;
     flex-direction: column;
     place-content: center;
@@ -18,11 +12,22 @@ $NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
     width: 100%;
     height: 100%;
 
-    border-radius: 16px;
+    border-radius: var(--Radius-Standard);
+    transition: border-radius var(--Duration-Standard) var(--Easing-Standard);
+
+    &.Hovering--First {
+        border-top-left-radius: var(--Radius-Round);
+        border-bottom-left-radius: var(--Radius-Round);
+    }
+
+    &.Hovering--Last {
+        border-top-right-radius: var(--Radius-Round);
+        border-bottom-right-radius: var(--Radius-Round);
+    }
 
     &.FancyMultibutton--Backgroundless {
         border: none;
-        box-shadow: 0 0 12px var(--multibutton-glow);
+        box-shadow: 0 0 12px var(--Glow-Standard);
     }
 }
 
@@ -34,15 +39,15 @@ $NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
 
     position: relative;
 
-    width: calc(100% - #{$ContentPadding * 2});
-    height: calc(100% - #{$ContentPadding * 2});
+    width: calc(100% - (var(--Multibutton-Padding) * 2));
+    height: calc(100% - (var(--Multibutton-Padding) * 2));
 
-    margin: $ContentPadding;
-    gap: $ContentPadding;
+    margin: var(--Multibutton-Padding);
+    gap: var(--Multibutton-Padding);
 }
 
 .FancyMultibutton-Highlight {
-    $Multibutton-Highlight-Width: calc((100% - (#{$ContentPadding} * (var(--Button-Count) - 1))) / var(--Button-Count));
+    $Multibutton-Highlight-Width: calc((100% - (var(--Multibutton-Padding) * (var(--Button-Count) - 1))) / var(--Button-Count));
 
     position: absolute;
     
@@ -52,19 +57,23 @@ $NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
     top: 0;
 
     width: $Multibutton-Highlight-Width;
-    left: calc((#{$Multibutton-Highlight-Width} + #{$ContentPadding}) * var(--Selected-Index));
+    left: calc((#{$Multibutton-Highlight-Width} + var(--Multibutton-Padding)) * var(--Selected-Index));
 
     height: 100%;
 
-    border-radius: calc(16px - #{$ContentPadding});
+    border-radius: var(--Radius-Sharp);
+
+    &.Hovering--Selected {
+       border-radius: var(--Radius-Round);
+    }
 
     background-color: rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 0 8px $NeonGlowColorStrong !important;
+    box-shadow: 0 0 8px var(--Glow-Strong) !important;
     
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: blur(var(--Blur-Standard)) !important;
+    -webkit-backdrop-filter: blur(var(--Blur-Standard)) !important;
 
-    transition: left $IndicatorTweenDuration $IndicatorTweenEasing;
+    transition: left var(--Duration-Slow) var(--Easing-Snap), border-radius var(--Duration-Standard) var(--Easing-Standard);
 }
 
 .FancyMultibutton {
@@ -87,21 +96,30 @@ $NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
     place-items: center;
 
     flex: 1 1 0;
-
-    border-radius: calc(16px - #{$ContentPadding});
-
     background-color: transparent;
     
     color: white;
 
     white-space: nowrap;
+    border-radius: var(--Radius-Sharp);
+    transition: all var(--Duration-Standard) var(--Easing-Standard);
 
-    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-
-    &:hover {
+    &.Hovering--Self {
         background-color: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 0 10px $NeonGlowColorStrong;
+        box-shadow: 0 0 10px var(--Glow-Strong);
+
+        &.Hovering--First {
+            border-top-left-radius: var(--Radius-Round);
+            border-bottom-left-radius: var(--Radius-Round);
+        }
+
+        &.Hovering--Last {
+            border-top-right-radius: var(--Radius-Round);
+            border-bottom-right-radius: var(--Radius-Round);
+        }
     }
+
+    background-color: transparent;
 }
 
 .FancyMultibutton-Label {
@@ -126,10 +144,10 @@ $NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
 .FancyMultibutton-IndicatorTrack {
     position: relative;
 
-    width: calc(100% - #{$ContentPadding * 2});
-    height: $IndicatorTrackHeight;
+    width: calc(100% - (var(--Multibutton-Padding) * 2));
+    height: var(--Multibutton-IndicatorTrackHeight);
 
-    margin: 8px $ContentPadding $ContentPadding;
+    margin: 8px var(--Multibutton-Padding) var(--Multibutton-Padding);
     flex-shrink: 0;
 }
 
@@ -139,7 +157,7 @@ $NeonGlowColorStrong: rgba(255, 255, 255, 0.35);
     top: 50%;
     transform: translate(-50%, -50%);
 
-    transition: left $IndicatorTweenDuration $IndicatorTweenEasing;
+    transition: left var(--Duration-Slow) var(--Easing-Snap);
 
     &.FancyMultibutton-Indicator--circle {
         width: 8px;

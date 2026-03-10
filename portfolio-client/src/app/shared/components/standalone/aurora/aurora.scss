@@ -107,7 +107,7 @@
     
     mix-blend-mode: screen; 
     
-    filter: blur(60px); 
+    filter: blur(var(--Blur-Standard)); 
     
     will-change: transform, opacity;
     

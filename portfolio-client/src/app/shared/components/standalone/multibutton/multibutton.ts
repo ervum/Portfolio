@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Nullable, FancyUIElementTypeType, FancyUIElementStyleType, FancyMultiButtonDisplayModeType, FancyMultiButtonIndicatorType, FancyMultibuttonItemType } from '@ervum/types';
@@ -16,6 +16,7 @@ import { ContainerComponent } from '../container/container';
 export class MultibuttonComponent {
   /** Currently selected button index. */
   public SelectedIndex: number = 0;
+  public HoveredIndex: WritableSignal<number | null> = signal<number | null>(null);
 
   /** Left position (percent) for the indicator, centered under the selected button. 
   public get IndicatorPositionPercent(): number {
@@ -35,6 +36,14 @@ export class MultibuttonComponent {
     if (item && (item.Action)) {
       item.Action(...((item.ActionArguments) ?? []));
     }
+  }
+
+  public OnHover(Index: number): void {
+    this.HoveredIndex.set(Index);
+  }
+
+  public OnUnhover(): void {
+    this.HoveredIndex.set(null);
   }
 
   public GetIconUrl(IconName: string): string {
