@@ -4,7 +4,9 @@
   [ngClass] = "GetWrapperClasses(false)"
 
   [style.--Icon-URL] = "ButtonIconStyle">
-  <button
+  <FancyContainer
+    role="button"
+    tabindex="0"
     class = "FancyButton"
 
     [ngClass] = "GetButtonClasses(false)" 
@@ -28,7 +30,7 @@
     <span class="FancyButton-Label">{{ Label }}</span>
 
     @if (Icon !== '') {
-      <div
+      <FancyContainer
         class = "FancyButton-Icon-Container"
       
         [ngClass] = "GetIconClasses(true)">
@@ -39,9 +41,9 @@
           
           (animationend) = "OnIconAnimationEnd()">
         </div>
-      </div>
+      </FancyContainer>
     }
-  </button>  
+  </FancyContainer>  
 </div>
 
 <div #InvertedWrapper
@@ -51,14 +53,16 @@
   [ngStyle] = "RippleStyles"
   
   [style.--Icon-URL] = "ButtonIconStyle">
-  <button
+  <FancyContainer
+    role="button"
+    tabindex="0"
     class = "FancyButton"
     
     [ngClass] = "GetButtonClasses(true)">
     <span class="FancyButton-Label">{{ Label }}</span>
 
     @if (Icon !== '') {
-      <div
+      <FancyContainer
         class = "FancyButton-Icon-Container"
       
         [ngClass] = "GetIconClasses(false)">
@@ -69,7 +73,7 @@
 
           (animationend) = "OnIconAnimationEnd()">
         </div>
-      </div>
+      </FancyContainer>
     }
-  </button>
+  </FancyContainer>
 </div>

@@ -1,11 +1,11 @@
-<div
+<FancyContainer
   class = "FancyTextbox-Wrapper"
 
   [attr.Has-Text] = "HasText"
   [attr.Focus-State] = "FocusState"
 
   [style.--Icon-URL] = "TextboxIconStyle">
-  <div
+  <FancyContainer
     class = "FancyTextbox-Icon-Container"
 
     [ngClass] = "GetIconContainerClasses">
@@ -14,24 +14,24 @@
 
       [ngClass] = "GetInputClasses">
     </div>
-  </div>
+  </FancyContainer>
 
   <div
     class = "FancyTextbox-Content"
 
     [ngClass] = "GetContentClasses">
-    <p 
-      class = "FancyTextbox-Placeholder"
-
-      [ngClass] = "GetOverlayClasses">
-      {{ Placeholder }}
-    </p>
-
     <div
       class = "FancyTextbox-Border"
 
       [ngClass] = "GetOverlayClasses">
     </div>
+    
+    <p
+      class = "FancyTextbox-Placeholder"
+
+      [ngClass] = "GetOverlayClasses">
+      {{ Placeholder }}
+    </p>
     
     <input
       class = "FancyTextbox"
@@ -40,7 +40,7 @@
       [ngStyle] = "TextboxStyles"
       [(ngModel)] = "InputValue" 
 
-      [maxlength] = "MaximumLength ?? 30"
+      [attr.maxlength] = "MaximumLength"
 
       (submit) = "OnSubmit()"
 
@@ -61,4 +61,4 @@
       (focus) = "OnFocus()"
       (blur) = "OnUnfocus()">
   </div>
-</div>
+</FancyContainer>

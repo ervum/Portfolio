@@ -76,7 +76,7 @@ export class AuroraComponent implements OnInit, AfterViewInit {
   @ViewChild('Container') ContainerRef!: ElementRef<HTMLDivElement>;
   
   // Input properties for sphere generation configuration
-  @Input() sphereCount: number = 30;
+  @Input() sphereCount: number = 5;
   
   // Size constraints (in vw units)
   @Input() minSize: number = 14;

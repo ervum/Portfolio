@@ -1,11 +1,15 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Nullable, FancyUIElementTypeType, FancyUIElementStyleType, FancyMultiButtonDisplayModeType, FancyMultiButtonIndicatorType } from '@ervum/types';
+import { Nullable, FancyUIElementTypeType, FancyUIElementStyleType, FancyMultiButtonDisplayModeType, FancyMultiButtonIndicatorType, FancyMultibuttonItemType } from '@ervum/types';
+import { ContainerComponent } from '../container/container';
 
 @Component({
   selector: 'FancyMultibutton',
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ContainerComponent
+  ],
   templateUrl: './multibutton.html',
   styleUrl: './multibutton.scss',
 })
@@ -13,18 +17,24 @@ export class MultibuttonComponent {
   /** Currently selected button index. */
   public SelectedIndex: number = 0;
 
-  /** Left position (percent) for the indicator, centered under the selected button. */
+  /** Left position (percent) for the indicator, centered under the selected button. 
   public get IndicatorPositionPercent(): number {
-    const n: number = ((this.Labels?.length) ?? 0);
-
+    const n: number = ((this.Items?.length) ?? 0);
+  
     return (n > 0) ? ((((this.SelectedIndex) + 0.5) / n) * 100) : 0;
-  }
+  } */
 
   public SelectButton(Index: number): void {
     if (Index === this.SelectedIndex) return;
 
     this.SelectedIndex = Index;
     this.selectedIndexChange.emit(Index);
+
+    const item = this.Items[Index];
+
+    if (item && (item.Action)) {
+      item.Action(...((item.ActionArguments) ?? []));
+    }
   }
 
   public GetIconUrl(IconName: string): string {
@@ -40,7 +50,7 @@ export class MultibuttonComponent {
 
   // #region Inputs
 
-  @Input() Labels: string[] = [];
+  @Input() Items: FancyMultibuttonItemType[] = [];
 
   @Input() Type: Nullable<FancyUIElementTypeType> = 'Primary';
   @Input() Styled: Nullable<FancyUIElementStyleType> = 'Standard';
@@ -48,8 +58,8 @@ export class MultibuttonComponent {
 
   @Input() DisplayMode: Nullable<FancyMultiButtonDisplayModeType> = 'Text';
 
-  /** Shape of the selection indicator below the buttons: circle, dash, or arrow. */
-  @Input() Indicator: Nullable<FancyMultiButtonIndicatorType> = 'circle';
+  /** Shape of the selection indicator below the buttons: Circle, Dash, or Arrow.
+  @Input() Indicator: Nullable<FancyMultiButtonIndicatorType> = 'Circle'; */
 
   // #endregion
 

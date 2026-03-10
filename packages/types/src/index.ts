@@ -8,11 +8,11 @@ export type StringBooleanType = ('True' | 'False');
 
 ///          Server Types          \\\
 export type ConfigurationType = {
-    URL: string,
-    Port: number,
+  URL: string,
+  Port: number,
 
-    ProxyURL: string,
-    SlashedProxyURL: string
+  ProxyURL: string,
+  SlashedProxyURL: string
 };
 
 export type DatabaseConfigurationType = {
@@ -28,6 +28,18 @@ export type SecretsType = {
 };
 
 export type ServerConfigurationType = (ConfigurationType & SecretsType);
+
+export interface LoginData {
+  UserIdentifier: string,
+  Password: string
+};
+
+export interface RegisterData {
+  Email: string,
+  PhoneNumber: string,
+  Username: string,
+  Password: string
+};
 
 
 
@@ -50,4 +62,10 @@ export type FancyButtonIconStateType = ('AtCenter' | 'Exiting' | 'OffScreen' | '
 
 /////      Fancy Multibutton     \\\\\
 export type FancyMultiButtonDisplayModeType = ('Text' | 'Icon');
-export type FancyMultiButtonIndicatorType = ('circle' | 'dash' | 'arrow');
+export type FancyMultiButtonIndicatorType = ('Circle' | 'Dash' | 'Arrow');
+
+export interface FancyMultibuttonItemType {
+  Label: string,
+  Action?: AnyFunction,
+  ActionArguments?: any[]
+};

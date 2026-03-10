@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Nullable, FancyUIElementStyleType, FancyUIElementTypeType, FancyTextboxOrderType, FancyTextboxBorderAnimationType, FancyUIElementFocusStateType, StringBooleanType } from '@ervum/types';
+import { ContainerComponent } from '../container/container';
 
 @Component({
   selector: 'FancyTextbox',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ContainerComponent
   ],
   templateUrl: './textbox.html',
   styleUrl: './textbox.scss'
@@ -22,7 +24,7 @@ export class TextboxComponent {
 
   private readonly AnimationDurationIn: number = 2000;
   private readonly AnimationDurationOut: number = 2000;
-  
+
   /**
    * Configuration for animation states based on the boolean mode.
    * - Used to determine if the component is currently in a state that opposes the desired action.
@@ -36,12 +38,12 @@ export class TextboxComponent {
     'True': ['Unfocused', 'Unfocusing', (this.AnimationDurationOut)],
     'False': ['Focused', 'Focusing', (this.AnimationDurationIn)]
   };
-  
+
   private FocusTimeoutID: Nullable<ReturnType<typeof setTimeout>>;
   private AnimationStartTime: number = 0;
 
   public TextboxStyles: { [key: string]: string } = {};
-  
+
   public InputValue: string = '';
   public FocusState: FancyUIElementFocusStateType = 'Unfocused';
 
@@ -96,7 +98,7 @@ export class TextboxComponent {
     return {
       ...(this.GetBaseClasses),
       ...(this.GetOrderClasses),
-      
+
       'FancyTextboxBorder--AnimationBelow': ((this.BorderAnimation) === 'Below')
     };
   }
@@ -116,7 +118,7 @@ export class TextboxComponent {
     if (!(this.Icon)) {
       return '';
     }
-    
+
     return `url(${this.IconsBasePath}${this.Icon}.png)`;
   }
 
@@ -150,7 +152,7 @@ export class TextboxComponent {
   private async AnimateTextbox(Mode: boolean): Promise<void> {
     const AnimationMode: [FancyUIElementFocusStateType, FancyUIElementFocusStateType, number] = this.AnimationModes[this.ParseBoolean(Mode)];
     const InverseAnimationMode: [FancyUIElementFocusStateType, FancyUIElementFocusStateType, number] = this.AnimationModes[this.ParseBoolean(!Mode)];
-  
+
     clearTimeout(this.FocusTimeoutID);
 
     // If current state matches the "Start" or "Transition" phase of the opposing mode
@@ -158,8 +160,8 @@ export class TextboxComponent {
       let AnimationTimeElapsed: number = (performance.now() - (this.AnimationStartTime));
 
       // Wait for the previous animation to finish if interrupted
-      if (AnimationTimeElapsed <= AnimationMode[2]) { 
-        await this.Wait(AnimationMode[2] - AnimationTimeElapsed); 
+      if (AnimationTimeElapsed <= AnimationMode[2]) {
+        await this.Wait(AnimationMode[2] - AnimationTimeElapsed);
       }
 
       // Begin new transition
@@ -177,7 +179,7 @@ export class TextboxComponent {
 
   // #region Inputs
 
-  @Input() MaximumLength: Nullable<number> = 30; 
+  @Input() MaximumLength: Nullable<number> = undefined;
   @Input() Placeholder: Nullable<string> = '';
   @Input() Icon: Nullable<string> = '';
 
@@ -213,33 +215,33 @@ export class TextboxComponent {
 
   @Output() KeyDown: EventEmitter<void> = new EventEmitter<void>();
   @Output() KeyUp: EventEmitter<void> = new EventEmitter<void>();
-  
+
   @Output() Wheel: EventEmitter<void> = new EventEmitter<void>();
- 
+
   // #endregion
 
   // #region Event Handlers
 
   public OnSubmit(): void { this.Submit.emit(); }
 
-  public async OnSelect(): Promise<void> { 
-    this.Select.emit(); 
+  public async OnSelect(): Promise<void> {
+    this.Select.emit();
 
     this.AnimateTextbox(true);
-  
+
   }
   public async OnUnselect(): Promise<void> {
-    this.Unselect.emit(); 
+    this.Unselect.emit();
 
     this.AnimateTextbox(false);
   }
 
-  public OnFocus(): void { 
+  public OnFocus(): void {
     this.Focus.emit();
 
     this.AnimateTextbox(true);
   }
-  public OnUnfocus(): void { 
+  public OnUnfocus(): void {
     this.Unfocus.emit();
 
     this.AnimateTextbox(false);

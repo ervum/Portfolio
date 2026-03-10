@@ -1,0 +1,82 @@
+<Aurora/> 
+
+<div class = "Main Wrapper">
+    <div class = "Wrapper">
+        <span class = "Section-Title">🐺⁉️</span>
+                            
+        <FancyMultibutton
+            class = "ActionType-Multibutton"
+                            
+            [Items] = "AuthenticationButtons"
+            DisplayMode = "Text">
+        </FancyMultibutton>
+    </div>
+    
+    <div 
+        class = "Section-Wrapper"
+        
+        [ngClass] = "IsLoading">
+        <FancyContainer class = "Logo-Section">
+        </FancyContainer>
+
+        <FancyContainer class = "Content-Section-Wrapper">
+            <div class = "Content-Section">
+                <ng-container *ngIf = "CurrentFormType() === 'Sign In'">
+                    <FancyTextbox #UserIdentifierTextbox
+                        Placeholder = "User Identifier"
+
+                        Styled = "Standard"
+                        IconStyled = "Standard"
+
+                        Icon = "envelope">
+                    </FancyTextbox>
+                </ng-container>
+
+                <ng-container *ngIf = "CurrentFormType() === 'Sign Up'">
+                    <FancyTextbox #EmailTextbox
+                        Placeholder = "Email"
+
+                        Styled = "Standard"
+                        IconStyled = "Standard"
+
+                        Icon = "envelope">
+                    </FancyTextbox>
+
+                    <FancyTextbox #PhoneNumberTextbox
+                        Placeholder = "Phone"
+
+                        Styled = "Standard"
+                        IconStyled = "Standard"
+
+                        Icon = "phone">
+                    </FancyTextbox>
+
+                    <FancyTextbox #UsernameTextbox
+                        Placeholder = "Username"
+
+                        Styled = "Standard"
+                        IconStyled = "Standard"
+
+                        Icon = "user">
+                    </FancyTextbox>
+                </ng-container>
+
+                <FancyTextbox #PasswordTextbox
+                    Placeholder = "Password"
+
+                    Styled = "Standard"
+                    IconStyled = "Standard"
+
+                    Icon = "lock">
+                </FancyTextbox>
+
+                <FancyButton 
+                    class = "Action-Button"
+                    
+                    [Label] = "CurrentFormType()"
+                    (Up) = "HandleSubmit()">
+                </FancyButton>
+            </div>
+        </FancyContainer>
+    </div>
+</div>

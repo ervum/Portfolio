@@ -16,13 +16,18 @@ import { ServerConfigurationType } from '@ervum/types';
 
         return {
           type: 'postgres',
+
           host: (Configuration.Database.Host),
           port: (Configuration.Database.Port),
+
           username: (Configuration.Database.User),
           password: (Configuration.Database.Password),
+
           database: (Configuration.Database.Name),
+
           autoLoadEntities: true,
           synchronize: true,
+          dropSchema: true,
         };
       },
     }),

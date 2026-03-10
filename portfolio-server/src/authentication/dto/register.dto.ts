@@ -1,4 +1,7 @@
 export class RegisterDTO {
-  UserIdentifier: string;
+  Email: string;
+  PhoneNumber: string;
+  
+  Username: string;
   Password: string;
 }

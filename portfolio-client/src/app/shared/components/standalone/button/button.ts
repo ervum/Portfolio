@@ -2,26 +2,30 @@ import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit }
 import { CommonModule } from '@angular/common';
 
 import { Nullable, FancyUIElementTypeType, FancyUIElementStyleType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
+import { ContainerComponent } from '../container/container';
 
 
 
 @Component({
   selector: 'FancyButton',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ContainerComponent
+  ],
   templateUrl: './button.html',
   styleUrl: './button.scss'
 })
-export class ButtonComponent implements OnInit {  
+export class ButtonComponent implements OnInit {
   // #region Configuration & State
-  
+
   private readonly IconsBasePath = '../../../../../assets/icons/';
 
   /** Custom cubic-bezier for a "snap" feel on interaction. */
   private readonly TransitionStyle: string = '1.0s cubic-bezier(0.86, 0, 0.07, 1)';
   /** List of SCSS properties to transition upon event. */
   private readonly TransitionProperties: string[] = ['transform', 'border-radius', 'clip-path'];
-  
+
   /** Defines the expansion limit of the ripple effect (in percentage). */
   private readonly MaximumRippleSize: number = 150.0;
 
@@ -35,7 +39,7 @@ export class ButtonComponent implements OnInit {
   public RippleStyles: NGStylesType = {};
 
   public IconStatus: FancyButtonIconStateType = 'AtCenter';
-  
+
   // #endregion
 
   // #region Logic & Helpers
@@ -55,7 +59,7 @@ export class ButtonComponent implements OnInit {
       };
     });
   }
-  
+
   /**
    * Determines the UI theme based on the inversion state.
    * 
@@ -83,7 +87,7 @@ export class ButtonComponent implements OnInit {
 
       if (this.EntryIsQueued) {
         this.EntryIsQueued = false;
-        
+
         requestAnimationFrame(() => (this.IconStatus = 'Entering'));
       }
     } else if ((this.IconStatus) === 'Entering') {
@@ -92,7 +96,7 @@ export class ButtonComponent implements OnInit {
 
       if (this.ExitIsQueued) {
         this.ExitIsQueued = false;
-        
+
         requestAnimationFrame(() => (this.IconStatus = 'Exiting'));
       }
     }
@@ -106,14 +110,14 @@ export class ButtonComponent implements OnInit {
     if (!(this.Icon)) {
       return '';
     }
-    
+
     return `url(${this.IconsBasePath}${this.Icon}.png)`;
   }
 
   public GetWrapperClasses(Inverted: boolean): Record<string, boolean> {
     return {
       ...this.GetTypeClass(Inverted),
-      
+
       'FancyButton--Centered': ((this.Centered) === true)
     };
   }
@@ -129,7 +133,7 @@ export class ButtonComponent implements OnInit {
   public GetIconClasses(Inverted: boolean): Record<string, boolean> {
     return {
       ...this.GetTypeClass(Inverted),
-      
+
       'FancyButton-Icon--Entering': ((this.IconStatus) === 'Entering'),
       'FancyButton-Icon--Exiting': ((this.IconStatus) === 'Exiting'),
 
@@ -149,10 +153,10 @@ export class ButtonComponent implements OnInit {
   @Input() Icon: Nullable<string> = 'next';
 
   @Input() Type: Nullable<FancyUIElementTypeType> = 'Primary';
-  
+
   @Input() Styled: Nullable<FancyUIElementStyleType> = 'Standard';
   @Input() IconStyled: Nullable<FancyUIElementStyleType> = 'Standard';
-  
+
   @Input() Centered: Nullable<boolean> = false;
 
   // #endregion
@@ -170,10 +174,10 @@ export class ButtonComponent implements OnInit {
 
   @Output() Down: EventEmitter<void> = new EventEmitter<void>();
   @Output() Up: EventEmitter<void> = new EventEmitter<void>();
-  
+
   @Output() KeyDown: EventEmitter<void> = new EventEmitter<void>();
   @Output() KeyUp: EventEmitter<void> = new EventEmitter<void>();
-  
+
   @Output() Wheel: EventEmitter<void> = new EventEmitter<void>();
 
   // #endregion
@@ -190,7 +194,7 @@ export class ButtonComponent implements OnInit {
   ngOnInit(): void {
     // Dynamic construction of the transition string for all monitored properties
     this.TransitionProperties.forEach((TransitionProperty, i) => {
-      this.RippleTransition += `${TransitionProperty} ${this.TransitionStyle}`;  
+      this.RippleTransition += `${TransitionProperty} ${this.TransitionStyle}`;
 
       if (i !== (this.TransitionProperties.length - 1)) {
         this.RippleTransition += ', ';
@@ -221,7 +225,7 @@ export class ButtonComponent implements OnInit {
    */
   public OnMove(Event: PointerEvent): void {
     this.Move.emit();
-    
+
     const X: number = (Event.offsetX);
     const Y: number = (Event.offsetY);
     const CirclePosition: string = `at ${X}px ${Y}px`;
@@ -238,7 +242,7 @@ export class ButtonComponent implements OnInit {
         CurrentRippleSize = parseFloat(ClipCircle[1]);
       }
     }
-    
+
     // If ripple is closed, snap the hidden origin to the mouse cursor instantly (no transition) so the next click expands from the correct location.
     if (CurrentRippleSize === 0) {
       this.RippleStyles = {
@@ -310,7 +314,7 @@ export class ButtonComponent implements OnInit {
       this.EntryIsQueued = true;
     }
   }
- 
+
   public OnKeyDown(): void { this.KeyDown.emit(); }
   public OnKeyUp(): void { this.KeyUp.emit(); }
 
