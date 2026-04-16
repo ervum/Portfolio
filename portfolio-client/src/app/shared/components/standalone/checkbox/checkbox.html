@@ -1,0 +1,20 @@
+<div 
+    class = "FancyCheckbox-Wrapper"
+    [class.Label-Left] = "LabelPosition === 'Left'"
+    [class.FancyCheckbox--Primary] = "EffectiveType() === 'Primary'"
+    [class.FancyCheckbox--Secondary] = "EffectiveType() === 'Secondary'"
+
+    (click) = "Toggle()">
+    <FancyContainer class = "FancyCheckbox-IconContainer" [Type] = "EffectiveType()">
+        <div 
+            class = "FancyCheckbox-Icon Animation-Draw"
+            [class.Is-Drawn] = "Checked">
+        </div>
+    </FancyContainer>
+
+    <span 
+        class = "FancyCheckbox-Label"
+        *ngIf = "Label">
+        {{ Label }}
+    </span>
+</div>

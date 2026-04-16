@@ -1,3 +1,22 @@
+@use '../../../styles' as s;
+
+
+
+:host {
+    // Default tracking variables (defaults to center)
+    --Indicator-Dynamic-Offset: 0.5;
+    --Indicator-Static-X: 50%;
+    --Indicator-Static-Y: 50%;
+
+    display: flex;
+    place-content: center;
+    width: 100%;
+}
+
+:host-context(.FancyMultibutton--Vertical),
+:host(.FancyMultibutton--Vertical) {
+    width: auto;
+}
 
 
 
@@ -9,25 +28,54 @@
 
     box-sizing: border-box;
 
-    width: 100%;
+    width: var(--Multibutton-Width, 100%);
     height: 100%;
 
     border-radius: var(--Radius-Standard);
     transition: border-radius var(--Duration-Standard) var(--Easing-Standard);
 
-    &.Hovering--First {
-        border-top-left-radius: var(--Radius-Round);
-        border-bottom-left-radius: var(--Radius-Round);
-    }
+    &:hover {
+        border-radius: var(--Radius-Round);
 
-    &.Hovering--Last {
-        border-top-right-radius: var(--Radius-Round);
-        border-bottom-right-radius: var(--Radius-Round);
+        .FancyMultibutton-Highlight,
+        .FancyMultibutton {
+            border-radius: var(--Radius-Round);
+        }
     }
 
     &.FancyMultibutton--Backgroundless {
         border: none;
         box-shadow: 0 0 12px var(--Glow-Standard);
+    }
+
+    &.FancyMultibutton--Vertical {
+        width: var(--Multibutton-Width, auto);
+
+        --Indicator-Dot-Size: calc(var(--Multibutton-Width, 40px) * 0.2);
+        --Indicator-Dash-Width: 4px; // Must be even to prevent sub-pixel snapping when translated by -50%
+        --Indicator-Dash-Height: calc(var(--Multibutton-Width, 40px) * 0.4);
+
+        .FancyMultibutton-Content {
+            flex-direction: column;
+            overflow: visible;
+        }
+
+        .FancyMultibutton-Highlight {
+            $Multibutton-Highlight-Height: calc((100% - (var(--Multibutton-Padding) * (var(--Button-Count) - 1))) / var(--Button-Count));
+            
+            width: 100%;
+            left: 0;
+            
+            height: $Multibutton-Highlight-Height;
+            top: calc((#{$Multibutton-Highlight-Height} + var(--Multibutton-Padding)) * var(--Selected-Index));
+
+            transition: top var(--Duration-Slow) var(--Easing-Snap), border-radius var(--Duration-Standard) var(--Easing-Standard);
+        }
+
+        .FancyMultibutton {
+            min-width: 0;
+            min-height: 0;
+        }
     }
 }
 
@@ -63,16 +111,6 @@
 
     border-radius: var(--Radius-Sharp);
 
-    &.Hovering--Selected {
-       border-radius: var(--Radius-Round);
-    }
-
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 0 8px var(--Glow-Strong) !important;
-    
-    backdrop-filter: blur(var(--Blur-Standard)) !important;
-    -webkit-backdrop-filter: blur(var(--Blur-Standard)) !important;
-
     transition: left var(--Duration-Slow) var(--Easing-Snap), border-radius var(--Duration-Standard) var(--Easing-Standard);
 }
 
@@ -98,24 +136,32 @@
     flex: 1 1 0;
     background-color: transparent;
     
-    color: white;
+    color: inherit;
 
     white-space: nowrap;
     border-radius: var(--Radius-Sharp);
     transition: all var(--Duration-Standard) var(--Easing-Standard);
 
+    &::before {
+        content: '';
+        position: absolute;
+        
+        inset: 50%;
+        
+        box-shadow: 0 0 8px var(--Glow-Strong); // Synced to 8px to prevent visual bleeding
+
+        backdrop-filter: blur(var(--Blur-Standard)); // Synced with Highlight
+        -webkit-backdrop-filter: blur(var(--Blur-Standard));
+        
+        border-radius: inherit;
+        z-index: -1;
+        
+        transition: inset var(--Duration-Standard) var(--Easing-Standard);
+    }
+
     &.Hovering--Self {
-        background-color: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 0 10px var(--Glow-Strong);
-
-        &.Hovering--First {
-            border-top-left-radius: var(--Radius-Round);
-            border-bottom-left-radius: var(--Radius-Round);
-        }
-
-        &.Hovering--Last {
-            border-top-right-radius: var(--Radius-Round);
-            border-bottom-right-radius: var(--Radius-Round);
+        &::before {
+            inset: 0;
         }
     }
 
@@ -132,69 +178,152 @@
 }
 
 .FancyMultibutton-Icon {
-    width: 1.25em;
-    height: 1.25em;
+    @include s.MaskedIcon(var(--Icon-URL), currentColor);
 
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: var(--Icon-URL);
+    width: 100%;
+    height: 100%;
+    max-width: 24px;
+    max-height: 24px;
 }
 
-.FancyMultibutton-IndicatorTrack {
-    position: relative;
-
-    width: calc(100% - (var(--Multibutton-Padding) * 2));
-    height: var(--Multibutton-IndicatorTrackHeight);
-
-    margin: 8px var(--Multibutton-Padding) var(--Multibutton-Padding);
-    flex-shrink: 0;
-}
-
+// Indicator tracked bounds logic
 .FancyMultibutton-Indicator {
     position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    margin: 0;
 
-    top: 50%;
+    $Slot-Width: calc((100% - (var(--Multibutton-Padding) * (var(--Button-Count) - 1))) / var(--Button-Count));
+    $Slot-Height: calc((100% - (var(--Multibutton-Padding) * (var(--Button-Count) - 1))) / var(--Button-Count));
+
+    // Default (Horizontal) tracking: Dynamic Left, Static Top
+    left: calc((#{$Slot-Width} + var(--Multibutton-Padding)) * var(--Selected-Index) + (#{$Slot-Width} * var(--Indicator-Dynamic-Offset)));
+    top: var(--Indicator-Static-Y);
+    
     transform: translate(-50%, -50%);
+    
+    transition: left var(--Duration-Slow) var(--Easing-Snap), 
+                top var(--Duration-Slow) var(--Easing-Snap);
 
-    transition: left var(--Duration-Slow) var(--Easing-Snap);
+    :host-context(.FancyMultibutton--Vertical) &,
+    :host(.FancyMultibutton--Vertical) & {
+        // Vertical tracking: Static Left, Dynamic Top
+        left: var(--Indicator-Static-X);
+        top: calc((#{$Slot-Height} + var(--Multibutton-Padding)) * var(--Selected-Index) + (#{$Slot-Height} * var(--Indicator-Dynamic-Offset)));
+        
+        transition: top var(--Duration-Slow) var(--Easing-Snap), 
+                    left var(--Duration-Slow) var(--Easing-Snap);
+    }
 
-    &.FancyMultibutton-Indicator--circle {
-        width: 8px;
-        height: 8px;
+    &.FancyMultibutton-Indicator--Dot,
+    &.FancyMultibutton-Indicator--dot {
+        width: var(--Indicator-Dot-Size, 8px);
+        height: var(--Indicator-Dot-Size, 8px);
 
         border-radius: 50%;
 
         background: currentColor;
-
-        color: #fff;
         box-shadow: 0 0 8px currentColor;
     }
 
+    &.FancyMultibutton-Indicator--Dash,
     &.FancyMultibutton-Indicator--dash {
-        width: 20px;
-        height: 3px;
+        width: var(--Indicator-Dash-Width, 4px);
+        height: var(--Indicator-Dash-Height, 16px);
 
         border-radius: 2px;
 
         background: currentColor;
-
-        color: #fff;
         box-shadow: 0 0 8px currentColor;
     }
+}
 
-    &.FancyMultibutton-Indicator--arrow {
-        width: 0;
-        height: 0;
+// Indicator Positioning Logic
+// Centered on the 1px white border (1px border-box starts at 0 and ends at 1px, center is 0.5px inward)
+.IndicatorPosition--Above {
+    --Indicator-Dynamic-Offset: 0.5;
+    --Indicator-Static-X: 50%;
+    --Indicator-Static-Y: 0.5px;
 
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 8px solid currentColor;
+    :host-context(.FancyMultibutton--Vertical) &,
+    :host(.FancyMultibutton--Vertical) & {
+        --Indicator-Dynamic-Offset: 0;
+    }
+}
 
-        color: #fff;
+.IndicatorPosition--Below {
+    --Indicator-Dynamic-Offset: 0.5;
+    --Indicator-Static-X: 50%;
+    --Indicator-Static-Y: calc(100% - 0.5px);
 
-        top: 40%;
-        transform: translate(-50%, -50%) rotate(180deg);
-        filter: drop-shadow(0 0 6px currentColor);
+    :host-context(.FancyMultibutton--Vertical) &,
+    :host(.FancyMultibutton--Vertical) & {
+        --Indicator-Dynamic-Offset: 1;
+    }
+}
+
+.IndicatorPosition--Left {
+    --Indicator-Dynamic-Offset: 0;
+    --Indicator-Static-X: 0.5px;
+    --Indicator-Static-Y: 50%;
+
+    :host-context(.FancyMultibutton--Vertical) &,
+    :host(.FancyMultibutton--Vertical) & {
+        --Indicator-Dynamic-Offset: 0.5;
+    }
+}
+
+.IndicatorPosition--Right {
+    --Indicator-Dynamic-Offset: 1;
+    --Indicator-Static-X: calc(100% - 0.5px);
+    --Indicator-Static-Y: 50%;
+
+    :host-context(.FancyMultibutton--Vertical) &,
+    :host(.FancyMultibutton--Vertical) & {
+        --Indicator-Dynamic-Offset: 0.5;
+    }
+}
+
+// Ensure Dash swaps orientation based on position
+.IndicatorPosition--Above,
+.IndicatorPosition--Below {
+    .FancyMultibutton-Indicator--Dash,
+    .FancyMultibutton-Indicator--dash {
+        width: var(--Indicator-Dash-Height, 16px);
+        height: var(--Indicator-Dash-Width, 4px);
+    }
+}
+
+:host(.FancyMultibutton--Primary) {
+    color: white;
+
+    .FancyMultibutton-Highlight {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 8px var(--Glow-Strong);
+    }
+
+    .FancyMultibutton::before {
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 8px var(--Glow-Strong);
+    }
+}
+
+:host(.FancyMultibutton--Secondary) {
+    color: black;
+
+    .FancyMultibutton-Highlight {
+        background-color: rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .FancyMultibutton::before {
+        background-color: rgba(0, 0, 0, 0.15);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+        
+        /* Reduce blur for secondary theme to prevent "whitish" refraction on dark backgrounds */
+        backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
+        -webkit-backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
     }
 }

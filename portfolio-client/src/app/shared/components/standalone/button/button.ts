@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, inject, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Nullable, FancyUIElementTypeType, FancyUIElementStyleType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
+import { Nullable, Undefinable, FancyUIElementTypeType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
 import { ContainerComponent } from '../container/container';
+
+import { InterfaceService } from '../../../../core/services/interface/interface';
 
 
 
@@ -14,9 +16,14 @@ import { ContainerComponent } from '../container/container';
     ContainerComponent
   ],
   templateUrl: './button.html',
-  styleUrl: './button.scss'
+  styleUrl: './button.scss',
+  host: {
+    '[class.FancyButton--Primary]': 'EffectiveType() === "Primary"',
+    '[class.FancyButton--Secondary]': 'EffectiveType() === "Secondary"'
+  }
 })
 export class ButtonComponent implements OnInit {
+  private InterfaceService = inject(InterfaceService);
   // #region Configuration & State
 
   private readonly IconsBasePath = '../../../../../assets/icons/';
@@ -39,6 +46,8 @@ export class ButtonComponent implements OnInit {
   public RippleStyles: NGStylesType = {};
 
   public IconStatus: FancyButtonIconStateType = 'AtCenter';
+  
+  private Observer!: ResizeObserver;
 
   // #endregion
 
@@ -66,7 +75,7 @@ export class ButtonComponent implements OnInit {
    * - If `Inverted` equals `true`, swaps `Primary` <-> `Secondary`.
    */
   private GetUIType(Inverted: boolean): boolean {
-    let IsOfTypePrimary: boolean = ((this.Type) === 'Primary');
+    let IsOfTypePrimary: boolean = ((this.EffectiveType()) === 'Primary');
 
     return (Inverted ? !IsOfTypePrimary : IsOfTypePrimary);
   }
@@ -124,9 +133,7 @@ export class ButtonComponent implements OnInit {
 
   public GetButtonClasses(Inverted: boolean): Record<string, boolean> {
     return {
-      ...this.GetTypeClass(Inverted),
-
-      [`FancyButton--${this.Styled}`]: true
+      ...this.GetTypeClass(Inverted)
     };
   }
 
@@ -136,9 +143,7 @@ export class ButtonComponent implements OnInit {
 
       'FancyButton-Icon--Entering': ((this.IconStatus) === 'Entering'),
       'FancyButton-Icon--Exiting': ((this.IconStatus) === 'Exiting'),
-      'FancyButton-Icon--OffScreen': ((this.IconStatus) === 'OffScreen'),
-
-      [`FancyButton--${this.IconStyled}`]: true
+      'FancyButton-Icon--OffScreen': ((this.IconStatus) === 'OffScreen')
     };
   }
 
@@ -153,10 +158,14 @@ export class ButtonComponent implements OnInit {
   @Input() Label: Nullable<string> = 'Button';
   @Input() Icon: Nullable<string> = 'next';
 
-  @Input() Type: Nullable<FancyUIElementTypeType> = 'Primary';
+  /** The global interface type signal. */
+  private GlobalType = this.InterfaceService.InterfaceType;
 
-  @Input() Styled: Nullable<FancyUIElementStyleType> = 'Standard';
-  @Input() IconStyled: Nullable<FancyUIElementStyleType> = 'Standard';
+  /** Local type override. */
+  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+
+  /** The final type to use. */
+  public EffectiveType = computed(() => this.Type() ?? this.GlobalType());
 
   @Input() Centered: Nullable<boolean> = false;
 
@@ -191,6 +200,7 @@ export class ButtonComponent implements OnInit {
    * **NOTE: Used to extract current `clip-path` values during interactions.**
    */
   @ViewChild('InvertedWrapper', { static: true }) InvertedWrapperElementReference!: ElementRef<HTMLDivElement>;
+  @ViewChild('ButtonElement', { static: true }) ButtonElementReference!: ElementRef<HTMLDivElement>;
 
   ngOnInit(): void {
     // Dynamic construction of the transition string for all monitored properties
@@ -201,10 +211,10 @@ export class ButtonComponent implements OnInit {
         this.RippleTransition += ', ';
       }
     });
-
+  
     this.RippleStyles = {
       'clip-path': 'circle(0% at center)',
-
+  
       'transition': (this.RippleTransition)
     };
   }

@@ -1,0 +1,84 @@
+@use 'variables' as v;
+
+
+
+/* --- Shape Definitions --- */
+
+$Polygon-Square: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
+
+/* --- Mixins --- */
+
+@mixin ConcaveBorder($Size: 75%, $X: 50%, $Y: 50%, $Smoothness: 1%) {
+    aspect-ratio: 1 / 1;
+    
+    -webkit-mask-image: -webkit-radial-gradient(
+        circle at $X $Y, 
+        black calc($Size - $Smoothness),
+        transparent $Size
+    ), -webkit-linear-gradient(white, white);
+    -webkit-mask-composite: xor;
+
+    mask-image: radial-gradient(
+        circle at $X $Y, 
+        black calc($Size - $Smoothness),
+        transparent $Size
+    ), linear-gradient(white, white);
+    mask-composite: exclude;
+
+    height: 100%;
+}
+
+@mixin ClipShape($Shape: $Polygon-Square) {
+    aspect-ratio: 1 / 1;
+    clip-path: polygon($Shape);
+    height: 10%;
+}
+
+@mixin InvertShape($Shape: $Polygon-Square, $Stroke: -5px) {
+    clip-path: polygon(
+        evenodd,
+        $Stroke $Stroke,
+        calc(100% - $Stroke) $Stroke,
+        calc(100% - $Stroke) calc(100% - $Stroke),
+        $Stroke calc(100% - $Stroke),
+        $Stroke $Stroke,
+        $Shape
+    ) content-box; 
+
+    box-sizing: content-box;
+    padding: calc(-1 * $Stroke);
+}
+
+/* --- Utility Classes (for global availability) --- */
+
+.Concave-Border {
+    --Size: 75%;
+    --X: 50%;
+    --Y: 50%;
+    --Smoothness: 1%;
+    
+    @include ConcaveBorder(var(--Size), var(--X), var(--Y), var(--Smoothness));
+    
+    background: white;
+
+    &.Top { --Y: 0%; }
+    &.Bottom { --Y: 100%; }
+    &.Left { --X: 0%; }
+    &.Right { --X: 100%; }
+}
+
+.Shape {
+    --Shape: #{$Polygon-Square};
+    @include ClipShape(var(--Shape));
+    background: white;
+    border-radius: 5%;
+
+    &.Invert {
+        --Stroke: -5px;
+        @include InvertShape(var(--Shape), var(--Stroke));
+    }
+}
+
+.Square {
+    --Shape: #{$Polygon-Square};
+}

@@ -1,6 +1,10 @@
 ///          Shared Types          \\\
 export type AnyFunction = ((...Arguments: any[]) => (any));
-export type Nullable<T> = (T | undefined);
+export type Void = (null | undefined);
+
+export type Nullable<T> = (T | null)
+export type Undefinable<T> = (T | undefined);
+export type Voidable<T> = (T | Void);
 
 export type StringBooleanType = ('True' | 'False');
 
@@ -53,19 +57,23 @@ export type FancyUIElementLoadStatusType = ('Idle' | 'Loading' | 'Success' | 'Er
 
 export type NGStylesType = { [key: string]: string };
 
-/////        Fancy Textbox       \\\\\
-export type FancyTextboxBorderAnimationType = ('Above' | 'Below');
-export type FancyTextboxOrderType = ('First' | 'Intermediate' | 'Last' | 'Unique');
-
-/////         Fancy Button       \\\\\
-export type FancyButtonIconStateType = ('AtCenter' | 'Exiting' | 'OffScreen' | 'Entering');
-
 /////      Fancy Multibutton     \\\\\
 export type FancyMultiButtonDisplayModeType = ('Text' | 'Icon');
-export type FancyMultiButtonIndicatorType = ('Circle' | 'Dash' | 'Arrow');
+export type FancyMultiButtonIndicatorStyleType = ('Dot' | 'Dash');
+
+export type HorizontalPositionType = ('Left' | 'Right');
+export type VerticalPositionType = ('Above' | 'Below');
 
 export interface FancyMultibuttonItemType {
   Label: string,
   Action?: AnyFunction,
   ActionArguments?: any[]
 };
+
+/////        Fancy Button        \\\\\
+export type FancyButtonIconStateType = ('AtCenter' | 'Exiting' | 'OffScreen' | 'Entering');
+
+/////        Fancy Textbox       \\\\\
+export type FancyTextboxOrderType = ('First' | 'Intermediate' | 'Last' | 'Unique');
+
+/////       Fancy Checkbox       \\\\\

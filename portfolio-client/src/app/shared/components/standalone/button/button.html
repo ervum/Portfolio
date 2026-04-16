@@ -5,9 +5,15 @@
 
   [style.--Icon-URL] = "ButtonIconStyle">
   <FancyContainer
-    role="button"
-    tabindex="0"
+    #ButtonElement
+    
+    role = "button"
+
+    tabindex = "0"
+
     class = "FancyButton"
+
+    [Type] = "EffectiveType()"
 
     [ngClass] = "GetButtonClasses(false)" 
 
@@ -27,11 +33,15 @@
 
     (focus) = "OnFocus()"
     (blur) = "OnUnfocus()">
-    <span class="FancyButton-Label">{{ Label }}</span>
+    <div class = "FancyButton-Label-Wrapper">
+      <span class = "FancyButton-Label">{{ Label }}</span>
+    </div>
 
     @if (Icon !== '') {
       <FancyContainer
         class = "FancyButton-Icon-Container"
+
+        [Type] = "EffectiveType()"
       
         [ngClass] = "GetIconClasses(true)">
         <div
@@ -54,16 +64,24 @@
   
   [style.--Icon-URL] = "ButtonIconStyle">
   <FancyContainer
-    role="button"
-    tabindex="0"
+    role = "button"
+
+    tabindex = "0"
+
     class = "FancyButton"
     
+    [Type] = "EffectiveType()"
+    
     [ngClass] = "GetButtonClasses(true)">
-    <span class="FancyButton-Label">{{ Label }}</span>
+    <div class = "FancyButton-Label-Wrapper">
+      <span class = "FancyButton-Label">{{ Label }}</span>
+    </div>
 
     @if (Icon !== '') {
       <FancyContainer
         class = "FancyButton-Icon-Container"
+      
+        [Type] = "EffectiveType()"
       
         [ngClass] = "GetIconClasses(false)">
         <div

@@ -37,11 +37,11 @@ interface AuroraSphere {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div #Container class="Aurora-Container">
+    <div #Container class = "Aurora-Container">
       <!-- Wave layers for continuous flowing motion -->
-      <div class="Aurora-Wave Aurora-Wave--1"></div>
-      <div class="Aurora-Wave Aurora-Wave--2"></div>
-      <div class="Aurora-Wave Aurora-Wave--3"></div>
+      <div class = "Aurora-Wave Aurora-Wave--1"></div>
+      <div class = "Aurora-Wave Aurora-Wave--2"></div>
+      <div class = "Aurora-Wave Aurora-Wave--3"></div>
       
       <!-- Smaller gradient blobs with enhanced reactivity -->
       @for (Sphere of Spheres; track $index) {
@@ -67,7 +67,7 @@ interface AuroraSphere {
       }
       
       <!-- Optional: A noise texture overlay to add texture/grain to the blur -->
-      <div class="Aurora-Noise"></div>
+      <div class = "Aurora-Noise"></div>
     </div>
   `,
   styleUrls: ['./aurora.scss']

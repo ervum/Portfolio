@@ -1,3 +1,7 @@
+@use '../shared/styles/' as s;
+
+
+
 @property --Edge-Colour {
     syntax: '<color>';
     initial-value: #ffffff;
@@ -33,6 +37,31 @@ aurora {
     place-items: center;
 
     background: transparent;
+}
+
+.Logo-Container {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+
+    .Logo {
+        width: 46px;
+        height: 46px;
+
+        ///@include s.MaskedIcon(url('../../assets/icons/logo.png'), white);
+    }
+}
+
+.RouteSelector-Multibutton {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+
+    --Multibutton-Width: 56px;
+    height: 220px;
 }
 
 .Wrapper {
@@ -166,7 +195,6 @@ aurora {
 }
 
 .ActionType-Multibutton {
-    width: 100%;
     height: 48px;
     margin-bottom: 8px;
 }
@@ -180,9 +208,7 @@ aurora {
     place-content: center;
 }
 
-.Action-Button,
-.Guest-Button {
-    width: 45%;
+.Action-Button {
     height: 52px;
     
     font-weight: 600;

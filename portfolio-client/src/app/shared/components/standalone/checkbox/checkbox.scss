@@ -1,0 +1,60 @@
+@use '../../../styles' as s;
+
+
+
+:host {
+    display: inline-flex;
+    cursor: pointer;
+    
+    /* Make it untappable for text selection */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+
+.FancyCheckbox-Wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--Padding-Medium, 8px);
+    
+    /* Dictating the font-size here allowing elements to scale relatively off it */
+    font-size: var(--FontSize-Standard, 14px);
+}
+
+.FancyCheckboxCheckbox-Wrapper.Label-Left {
+    flex-direction: row-reverse;
+}
+
+.FancyCheckbox-IconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Scaled relatively against the font-size */
+    width: 1.25em;
+    height: 1.25em;
+    flex-shrink: 0;
+}
+
+.FancyCheckbox-Label {
+    display: flex;
+    align-items: center;
+
+    color: inherit;
+}
+
+.FancyCheckbox-Icon {
+    @include s.MaskedIcon(url('../../../../../assets/icons/checkmark.png'), currentColor);
+    
+    width: var(--Icon-Size-Standard, 60%);
+    height: var(--Icon-Size-Standard, 60%);
+}
+
+:host(.FancyCheckbox--Primary) {
+    color: white;
+}
+:host(.FancyCheckbox--Secondary) {
+    color: black;
+}

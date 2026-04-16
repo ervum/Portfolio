@@ -1,5 +1,23 @@
 <Aurora/> 
 
+<div class = "Logo-Container">
+    <div class = "Logo"></div>
+    
+    <FancyButton
+        Label = "Toggle Glow"
+        Icon = ""
+        (Up) = "ToggleTheme()">
+    </FancyButton>
+</div>
+
+<FancyMultibutton
+    class = "RouteSelector-Multibutton"
+    [Items] = "RouteSelectorItems"
+    [Vertical] = "true"
+    [ShowIndicator] = "true"
+    DisplayMode = "Icon">
+</FancyMultibutton>
+
 <div class = "Main Wrapper">
     <div 
         class = "Section-Wrapper"
@@ -12,6 +30,7 @@
                 <FancyMultibutton
                     class = "ActionType-Multibutton"
                     [Items] = "AuthenticationButtons"
+                    [ShowHighlight] = "true"
                     DisplayMode = "Text">
                 </FancyMultibutton>
 
@@ -21,7 +40,7 @@
                         Placeholder = "User Identifier"
                         Styled = "Standard"
                         IconStyled = "Standard"
-                        Icon = "user">
+                        Icon = "at">
                     </FancyTextbox>
                 </ng-container>
 
@@ -47,7 +66,7 @@
                         Placeholder = "Username"
                         Styled = "Standard"
                         IconStyled = "Standard"
-                        Icon = "user">
+                        Icon = "at">
                     </FancyTextbox>
                 </ng-container>
 
@@ -60,17 +79,17 @@
                     Icon = "lock">
                 </FancyTextbox>
 
+                <FancyCheckbox
+                    class = "Input-Field"
+                    Label = "Remember me"
+                    [Checked] = "false">
+                </FancyCheckbox>
+
                 <div class = "Buttons-Container">
                     <FancyButton 
                         class = "Action-Button"
                         [Label] = "CurrentFormType()"
                         (Up) = "HandleSubmit()">
-                    </FancyButton>
-
-                    <FancyButton 
-                        class = "Guest-Button"
-                        Label = "Continue as Guest"
-                        (Up) = "NavigateToHome()">
                     </FancyButton>
                 </div>
             </div>

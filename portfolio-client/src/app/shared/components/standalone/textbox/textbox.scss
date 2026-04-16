@@ -1,3 +1,14 @@
+@use '../../../styles' as s;
+
+
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+
+
 .FancyTextbox-Wrapper {    
     display: flex;
 
@@ -24,16 +35,9 @@
         width: calc(var(--Textbox-Width) * var(--Hover-Scale-Big));
         border-radius: var(--Radius-Round);
 
-        .FancyTextbox-Placeholder {
-            transform:
-                translate(-50%, 0%)
-                scale(var(--Hover-Scale-Standard));
-        }
-
         .FancyTextbox {
-            transform:
-                translate(-50%, 0%)
-                scale(var(--Hover-Scale-Standard));
+            transform: scale(var(--Hover-Scale-Standard));
+            transform-origin: left;
         }
 
         .FancyTextbox-Icon-Container {
@@ -43,19 +47,8 @@
     }
 
     &:has(.FancyTextbox:focus),
-    &[Focus-State="Focusing"] {
+    &[Focus-State = "Focusing"] {
         width: calc(var(--Textbox-Width) * 1.1);
-
-        .FancyTextbox-Placeholder {
-            animation: Fade-Out 0.5s cubic-bezier(0.86, 0, 0.07, 1) forwards !important;
-        }
-
-    }
-
-    &[Has-Text="true"] {
-        .FancyTextbox-Placeholder {
-            opacity: 0% !important;
-        }
     }
 }
 
@@ -80,22 +73,14 @@
     flex-shrink: 0;
     
     border-radius: var(--Radius-Sharp);
-    background-color: rgba(255, 255, 255, 0.1);
+
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .FancyTextbox-Icon {
+    @include s.MaskedIcon(var(--Icon-URL), currentColor);
+
     pointer-events: none;
-
-    -webkit-mask-image: var(--Icon-URL);
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-
-    mask-image: var(--Icon-URL);
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
 
     position: relative;
 
@@ -123,27 +108,31 @@
 
     transition: all var(--Duration-Slow) var(--Easing-Standard);
 
-    &::after {
-        content: '';
+    .Visibility-Toggle-BaseIcon,
+    .Visibility-Toggle-StrikeIcon {
+        @include s.MaskedIcon(none, currentColor);
+        
+        position: absolute;
         width: calc(var(--Icon-Size-Standard) * 0.7);
         height: calc(var(--Icon-Size-Standard) * 0.7);
-        
-        background-color: currentColor;
-        
-        -webkit-mask-image: var(--Icon-URL);
-        -webkit-mask-size: contain;
-        -webkit-mask-repeat: no-repeat;
-        -webkit-mask-position: center;
-
-        mask-image: var(--Icon-URL);
-        mask-size: contain;
-        mask-repeat: no-repeat;
-        mask-position: center;
         
         transition: transform var(--Duration-Slow) var(--Easing-Standard);
     }
 
-    &:hover::after {
+    .Visibility-Toggle-BaseIcon {
+        -webkit-mask-image: url('../../../../../assets/icons/eye.png');
+        mask-image: url('../../../../../assets/icons/eye.png');
+    }
+
+    .Visibility-Toggle-StrikeIcon {
+        -webkit-mask-image: url('../../../../../assets/icons/crossmark.png');
+        mask-image: url('../../../../../assets/icons/crossmark.png');
+        
+        transition: transform var(--Duration-Slow) var(--Easing-Standard), var(--Draw-Transition);
+    }
+
+    &:hover .Visibility-Toggle-BaseIcon,
+    &:hover .Visibility-Toggle-StrikeIcon {
         transform: scale(var(--Hover-Scale-Big));
     }
 }
@@ -157,10 +146,7 @@
     height: 100%;
     
     color: transparent;
-
-    &.FancyTextbox--Standard {
-        gap: 10px;
-    }
+    gap: 10px;
 }
 
 .FancyTextbox-Border {
@@ -168,39 +154,13 @@
 
     position: absolute;
 
-    left: 50%;
-    transform: translate(-50%, 0%);
+    left: 0;
+    transform: none;
 
     width: 100%;
     height: 100%;
 
     transition: all 1.5s cubic-bezier(1, 0, 0, 1);
-
-    &.FancyTextbox--Backgroundless {
-        -webkit-mask-image: -webkit-radial-gradient(
-            ellipse 100% 100% at center,
-            black 0%,
-            black var(--Textbox-Placeholder-Spacing),
-            transparent calc(var(--Textbox-Placeholder-Spacing) + 3%),
-            transparent 100%
-        ), -webkit-linear-gradient(black, black);
-        -webkit-mask-repeat: no-repeat;
-        -webkit-mask-size: 50% 50%, 100% 100%;
-        -webkit-mask-position: 50% 50%, 50% 50%;
-        -webkit-mask-composite: xor;
-
-        mask-image: radial-gradient(
-            ellipse 100% 100% at center,
-            black 0%,
-            black var(--Textbox-Placeholder-Spacing),
-            transparent calc(var(--Textbox-Placeholder-Spacing) + 3%),
-            transparent 100%
-        ), linear-gradient(black, black);
-        mask-repeat: no-repeat;
-        mask-size: 50% 50%, 100%, 100%;
-        mask-position: 50% 50%, 50% 50%;
-        mask-composite: exclude;
-    }
 
     &.FancyTextbox--First {
         border-radius: var(--Radius-Standard) var(--Radius-Standard) 2px 2px;
@@ -218,58 +178,19 @@
     }
 }
 
-.FancyTextbox-Placeholder {
-    pointer-events: none;
-
-    box-shadow: none !important;
-
-    position: absolute;
-
-    z-index: 5;
-
-    left: 50%;
-    transform: translate(-50%, 0%);
-
-    transition:
-        transform var(--Duration-Slow) var(--Easing-Standard),
-        opacity 0.5s ease;
-    animation: Fade-In 0.5s cubic-bezier(0.86, 0, 0.07, 1) both;
-
-    background-color: transparent !important;
-    border-color: transparent !important;
-
-    line-height: 1.1;
-
-    white-space: normal;
-    font-size: inherit; 
-
-    width: auto;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 0 16px;
-    text-align: left;
-
-    word-break: break-word;
-    word-wrap: break-word;
-
-    &:has(+ .FancyTextbox:focus),
-    &:has(~ .FancyTextbox:focus) {
-        animation: Fade-Out 0.5s cubic-bezier(0.86, 0, 0.07, 1) forwards !important;
-    }
-}
-
 .FancyTextbox {
     outline: none;
 
     position: absolute;
     
-    left: 50%;
-    transform: translate(-50%, 0%);
+    left: 0;
+    transform: none;
 
     width: 100%;
     height: 100%;
 
     transition: transform 0.5s var(--Easing-Standard);
+    transform-origin: left;
 
     background-color: transparent !important;
 
@@ -283,127 +204,28 @@
     border-width: 0px !important;
     border-radius: var(--Radius-Sharp);
 
-    text-align: center;
-    text-indent: calc(0px - (var(--Control-Height) + var(--Padding-Small)));
+    text-align: left;
+    text-indent: 0;
 
     font-size: inherit;
 
     &:has(~ .FancyTextbox-Visibility-Toggle) {
         padding-right: calc(var(--Control-Height) + var(--Padding-Small));
-        text-indent: 0; 
+        text-indent: 0; // maybe useless code
     }
 }
 
-.FancyTextbox--Backgroundless {
-    border: solid;
-    border-width: 1px;
-}
+:host(.FancyTextbox--Primary) {
+    color: white;
 
-.FancyTextbox--IconStandard {
-    border-width: 1px !important;
-}
-.FancyTextbox--IconBackgroundless {
-    border-width: 0px 1px 0px 0px !important;
-}
-
-.FancyTextbox--Primary {
-    &.FancyTextbox--Standard {
-        color: white;
-
-        &.FancyTextbox--IconStandard {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-
-            .FancyTextbox-Icon {
-                background-color: white;
-            }
-        }
-        &.FancyTextbox--IconBackgroundless {
-            background-color: transparent !important;
-
-            .FancyTextbox-Icon {
-                background-color: white;
-            }
-        }
-    }
-    &.FancyTextbox--Backgroundless {
-        border-color: white;
-        color: white;
-
-        &.FancyTextbox--IconStandard {
-            background-color: white !important;
-
-            .FancyTextbox-Icon {
-                background-color: black;
-            }
-        }
-        &.FancyTextbox--IconBackgroundless {
-            background-color: transparent !important;
-
-            .FancyTextbox-Icon {
-                background-color: white;
-            }
-        }
+    .FancyTextbox-Icon-Container {
+        background-color: rgba(255, 255, 255, 0.1);
     }
 }
-.FancyTextbox--Secondary {
-    &.FancyTextbox--Standard {
-        background-color: rgba(16, 16, 16, 1);
-        color: white;
+:host(.FancyTextbox--Secondary) {
+    color: black;
 
-        &.FancyTextbox--IconStandard {
-            background-color: white !important;
-
-            .FancyTextbox-Icon {
-                background-color: black;
-            }
-        }
-        &.FancyTextbox--IconBackgroundless {
-            background-color: transparent !important;
-
-            .FancyTextbox-Icon {
-                background-color: white;
-            }
-        }
-    }
-    &.FancyTextbox--Backgroundless {
-        border-color: black;
-        color: white;
-
-        &.FancyTextbox--IconStandard {
-            background-color: black !important;
-
-            .FancyTextbox-Icon {
-                background-color: white;
-            }
-        }
-        &.FancyTextbox--IconBackgroundless {
-            background-color: transparent !important;
-            
-            .FancyTextbox-Icon {
-                background-color: black;
-            }
-        }
-    }
-}
-
-
-
-@keyframes Fade-In {
-    from {
-        opacity: 0%;
-    }
-
-    to {
-        opacity: 100%;
-    }
-}
-
-@keyframes Fade-Out {
-    from {
-        opacity: 100%;
-    }
-
-    to {
-        opacity: 0%;
+    .FancyTextbox-Icon-Container {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 }

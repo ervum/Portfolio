@@ -1,58 +1,60 @@
-@use 'sass:list';
+@use '../../../styles' as s;
 
 
 
-@mixin CreateTransition($Properties ...) {
-    $Duration: var(--Duration-Slow);
-    $Easing: var(--Easing-Standard);
-
-    $Transitions: ();
-
-    @each $Property in $Properties {
-        $SingleTransition: $Property $Duration $Easing;
-
-        $Transitions: list.append($Transitions, $SingleTransition, comma);
-    }
-
-    transition: $Transitions;
-}
-
-@mixin SynchronizeStates($Selector) {
-    #{$Selector}, 
-    ~ .FancyButton-Wrapper.FancyButton--Inverted #{$Selector} {
-        @content;
-    }
+:host {
+    display: flex;
+    place-content: center;
+    position: relative;
+    width: var(--Button-Width, 100%);
+    height: 100%;
 }
 
 
 
 .FancyButton-Wrapper {
-    @include CreateTransition(transform, border-radius);
+    @include s.CreateTransition(transform, border-radius);
     
     outline: none;
 
     position: absolute;
 
-    width: inherit;
-    height: inherit;
+    width: 100%;
+    height: 100%;
 
     background-color: transparent !important;
     color: transparent !important;
 
-    &.FancyButton--Normal:hover,
-    &.FancyButton--Normal:active,
-    &.FancyButton--Normal:has(.FancyButton:focus-visible) {
-        @include SynchronizeStates('.FancyButton') {
+    &.FancyButton--Backgroundless {
+        background-color: transparent !important;
+
+        border: solid;
+        border-width: 1px;
+        
+        &.FancyButton--Primary {
+            border-color: white;
+            color: white;
+        }
+        &.FancyButton--Secondary {
+            border-color: black;
+            color: black;
+        }
+    }
+
+    &:hover,
+    &:active,
+    &:has(.FancyButton:focus-visible) {
+        @include s.SynchronizeStates('.FancyButton') {
             transform: translateY(var(--Hover-MoveY));
 
             border-radius: var(--Radius-Round);
         }
 
-        @include SynchronizeStates('.FancyButton-Label') {
+        @include s.SynchronizeStates('.FancyButton-Label') {
             transform: scale(var(--Hover-Scale-Standard));
         }
 
-        @include SynchronizeStates('.FancyButton-Icon-Container') {
+        @include s.SynchronizeStates('.FancyButton-Icon-Container') {
             border-radius: var(--Radius-Round);
             transform: scale(var(--Hover-Scale-Standard));
         }
@@ -65,8 +67,8 @@
     place-items: center;
     place-content: space-between;
     
-    gap: 8px;
-    padding: 0px var(--Padding-Small) 0px 16px;
+    gap: var(--Padding-Small);
+    padding: 0px var(--Padding-Small) 0px var(--Padding-Medium);
 
     outline: none;
 
@@ -83,11 +85,11 @@
 
     border-radius: var(--Radius-Standard);
 
-    text-align: center;
+    text-align: left;
 }
 
 .FancyButton-Icon-Container {
-    @include CreateTransition(border-radius, transform);
+    @include s.CreateTransition(border-radius, transform);
     
     display: flex;
     flex-direction: row;
@@ -101,8 +103,7 @@
     aspect-ratio: 1 / 1;
     
     border-radius: var(--Radius-Sharp);
-    
-    background-color: rgba(255, 255, 255, 0.1);
+
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     
     overflow: hidden;
@@ -115,21 +116,11 @@
 }
 
 .FancyButton-Icon {
-    @include CreateTransition(width, height, transform);
-    
+    @include s.CreateTransition(width, height, transform);
+    @include s.MaskedIcon(var(--Icon-URL), currentColor);
+
     will-change: transform;
 
-    -webkit-mask-image: var(--Icon-URL);
-    -webkit-mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-
-    mask-image: var(--Icon-URL);
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
-
-    background-color: currentColor;
     border: none !important;
 
     height: 50%;
@@ -146,12 +137,18 @@
     }
 }
 
-.FancyButton-Label {
-    @include CreateTransition(font-size, transform);
-    
+.FancyButton-Label-Wrapper {
+    height: 100%;
+    flex: 1;
     display: flex;
-    place-content: center;
+    place-content: center flex-start;
     place-items: center;
+}
+
+.FancyButton-Label {
+    @include s.CreateTransition(font-size, transform);
+    
+    transform-origin: left;
     
     font-size: var(--FontSize-Standard);
 
@@ -166,7 +163,6 @@
         text-align: left;
         width: auto;
         max-width: 100%;
-        margin: 0 auto; 
     }
 }
 
@@ -200,30 +196,18 @@
     }
 }
 
-.FancyButton--Primary {
+:host(.FancyButton--Primary) {
     color: white;
-}
-.FancyButton--Secondary {
-    color: white;
-}
 
-
-
-@keyframes Icon-EnterLeft {
-    0% {
-        transform: translateX(-50px);
-    }
-
-    100% {
-        transform: translateX(0px);
+    .FancyButton-Icon-Container {
+        background-color: rgba(255, 255, 255, 0.1);
     }
 }
-@keyframes Icon-ExitRight {
-    0% {
-        transform: translateX(0px);
-    }
 
-    100% {
-        transform: translateX(50px);
+:host(.FancyButton--Secondary) {
+    color: black;
+
+    .FancyButton-Icon-Container {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 }

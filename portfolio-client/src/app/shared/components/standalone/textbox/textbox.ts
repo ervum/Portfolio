@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormsModule } from '@angular/forms';
 
-import { Nullable, FancyUIElementStyleType, FancyUIElementTypeType, FancyTextboxOrderType, FancyTextboxBorderAnimationType, FancyUIElementFocusStateType, StringBooleanType } from '@ervum/types';
+import { Undefinable, FancyUIElementTypeType, FancyTextboxOrderType, VerticalPositionType, FancyUIElementFocusStateType, StringBooleanType, Nullable } from '@ervum/types';
 import { ContainerComponent } from '../container/container';
+
+import { InterfaceService } from '../../../../core/services/interface/interface';
 
 @Component({
   selector: 'FancyTextbox',
@@ -15,9 +16,14 @@ import { ContainerComponent } from '../container/container';
     ContainerComponent
   ],
   templateUrl: './textbox.html',
-  styleUrl: './textbox.scss'
+  styleUrl: './textbox.scss',
+  host: {
+    '[class.FancyTextbox--Primary]': 'EffectiveType() === "Primary"',
+    '[class.FancyTextbox--Secondary]': 'EffectiveType() === "Secondary"'
+  }
 })
 export class TextboxComponent implements OnInit {
+  private InterfaceService = inject(InterfaceService);
   // #region Configuration & State
 
   private readonly IconsBasePath = '../../../../../assets/icons/';
@@ -39,7 +45,7 @@ export class TextboxComponent implements OnInit {
     'False': ['Focused', 'Focusing', (this.AnimationDurationIn)]
   };
 
-  private FocusTimeoutID: Nullable<ReturnType<typeof setTimeout>>;
+  private FocusTimeoutID: Undefinable<ReturnType<typeof setTimeout>>;
   private AnimationStartTime: number = 0;
 
   public TextboxStyles: { [key: string]: string } = {};
@@ -62,8 +68,7 @@ export class TextboxComponent implements OnInit {
    */
   private get GetBaseClasses(): Record<string, boolean> {
     return {
-      [`FancyTextbox--${this.Type}`]: true,
-      [`FancyTextbox--${this.Styled}`]: true
+      [`FancyTextbox--${this.EffectiveType()}`]: true
     };
   }
 
@@ -82,17 +87,13 @@ export class TextboxComponent implements OnInit {
   public get GetIconContainerClasses(): Record<string, boolean> {
     return {
       ...(this.GetBaseClasses),
-      ...(this.GetOrderClasses),
-
-      [`FancyTextbox--Icon${this.IconStyled}`]: true
+      ...(this.GetOrderClasses)
     };
   }
 
   /** Class Getter for `.FancyTextbox-Content`. */
   public get GetContentClasses(): Record<string, boolean> {
-    return {
-      [`FancyTextbox--${this.Styled}`]: true
-    };
+    return {};
   }
 
   /** Class Getter for `.FancyTextbox-Placeholder` and `.FancyTextbox-Border`. */
@@ -107,15 +108,12 @@ export class TextboxComponent implements OnInit {
 
   /** Class Getter for `.FancyTextbox` and `.FancyTextbox-Icon`. */
   public get GetInputClasses(): Record<string, boolean> {
-    return (this.GetBaseClasses);
+    return {
+      [`FancyTextbox--${this.EffectiveType()}`]: true
+    };
   }
 
-  /** Gets the current visibility icon based on state. */
-  public get VisibilityIconStyle(): string {
-    const IconName = (this.IsVisible ? 'visible' : 'hidden');
 
-    return `url(${this.IconsBasePath}${IconName}.png)`;
-  }
 
   /**
    * Constructs the background image URL for the icon.
@@ -188,18 +186,22 @@ export class TextboxComponent implements OnInit {
 
   // #region Inputs
 
-  @Input() MaximumLength: Nullable<number> = undefined;
-  @Input() Placeholder: Nullable<string> = '';
-  @Input() Icon: Nullable<string> = '';
+  @Input() MaximumLength: Undefinable<number> = undefined;
 
-  @Input() Type: Nullable<FancyUIElementTypeType> = 'Primary';
+  @Input() Icon: Undefinable<string> = '';
 
-  @Input() Styled: Nullable<FancyUIElementStyleType> = 'Standard';
-  @Input() IconStyled: Nullable<FancyUIElementStyleType> = 'Backgroundless';
+  /** The global interface type signal. */
+  private GlobalType = this.InterfaceService.InterfaceType;
 
-  @Input() BorderAnimation: Nullable<FancyTextboxBorderAnimationType> = 'Above';
+  /** Local type override. */
+  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
-  @Input() Order: Nullable<FancyTextboxOrderType> = 'Unique';
+  /** The final type to use. */
+  public EffectiveType = computed(() => (this.Type() ?? this.GlobalType()));
+
+  @Input() BorderAnimation: Undefinable<VerticalPositionType> = 'Above';
+
+  @Input() Order: Undefinable<FancyTextboxOrderType> = 'Unique';
 
   @Input() IsSensitive: boolean = false;
   @Input() InitialVisibility: boolean = false;

@@ -1,12 +1,16 @@
 <FancyContainer
   class = "FancyTextbox-Wrapper"
 
+  [Type] = "EffectiveType()"
+
   [attr.Has-Text] = "HasText"
   [attr.Focus-State] = "FocusState"
 
   [style.--Icon-URL] = "TextboxIconStyle">
   <FancyContainer
     class = "FancyTextbox-Icon-Container"
+
+    [Type] = "EffectiveType()"
 
     [ngClass] = "GetIconContainerClasses">
     <div
@@ -25,13 +29,6 @@
 
       [ngClass] = "GetOverlayClasses">
     </div>
-    
-    <p
-      class = "FancyTextbox-Placeholder"
-
-      [ngClass] = "GetOverlayClasses">
-      {{ Placeholder }}
-    </p>
     
     <input
       class = "FancyTextbox"
@@ -67,8 +64,9 @@
       class = "FancyTextbox-Visibility-Toggle"
       
       [ngClass] = "GetInputClasses"
-      [style.--Icon-URL] = "VisibilityIconStyle"
       (click) = "ToggleVisibility()">
+      <div class="Visibility-Toggle-BaseIcon"></div>
+      <div class="Visibility-Toggle-StrikeIcon Animation-Draw" [class.Is-Drawn]="!IsVisible"></div>
     </div>
   </div>
 </FancyContainer>

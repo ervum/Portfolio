@@ -1,0 +1,57 @@
+@use 'variables' as v;
+
+
+
+/* --- Utility Animations --- */
+
+.Animation-Draw {
+    --Draw-Transition: clip-path 0.4s var(--Easing-Standard), opacity 0.4s var(--Easing-Standard);
+
+    transition: var(--Draw-Transition);
+
+    /* Start un-drawn and fully transparent */
+    clip-path: inset(0 100% 0 0);
+
+    &.Is-Drawn {
+        /* Drawn and fully opaque */
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+/* --- Shared Keyframes --- */
+
+@keyframes Icon-EnterLeft {
+    0% {
+        transform: translateX(-50px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes Icon-ExitRight {
+    0% {
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(50px);
+    }
+}
+
+@keyframes Icon-EnterRight {
+    0% {
+        transform: translateX(50px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes Icon-ExitLeft {
+    0% {
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(-50px);
+    }
+}

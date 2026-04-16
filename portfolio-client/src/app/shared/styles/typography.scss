@@ -1,0 +1,40 @@
+@use 'variables' as v;
+
+
+
+/* --- Typography System --- */
+
+$Font-Primary: 'Inter', system-ui, -apple-system, sans-serif;
+
+/* --- Global Base Styles --- */
+
+body {
+    font-family: $Font-Primary;
+    margin: 0%;
+    background: #161616;
+    color: white; /* Default color for the application */
+}
+
+input, 
+button {
+    font-family: inherit;
+}
+
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent; 
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* --- Shared Text Styles --- */
+
+.Text-Standard {
+    font-size: var(--FontSize-Standard);
+}
+
+.Text-Small {
+    font-size: var(--FontSize-Small);
+}

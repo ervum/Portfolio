@@ -4,13 +4,15 @@ import { Router } from '@angular/router';
 
 import { FancyUIElementLoadStatusType, LoginData, RegisterData } from '@ervum/types';
 
+import { MultibuttonComponent } from '../shared/components/standalone/multibutton/multibutton';
 import { ButtonComponent } from '../shared/components/standalone/button/button';
 import { TextboxComponent } from '../shared/components/standalone/textbox/textbox';
-import { MultibuttonComponent } from '../shared/components/standalone/multibutton/multibutton';
-import { AuroraComponent } from '../shared/components/standalone/aurora/aurora';
+import { CheckboxComponent } from '../shared/components/standalone/checkbox/checkbox';
 import { ContainerComponent } from '../shared/components/standalone/container/container';
+import { AuroraComponent } from '../shared/components/standalone/aurora/aurora';
 
 import { AuthenticationService } from '../core/services/authentication/authentication';
+import { InterfaceService } from '../core/services/interface/interface';
 
 import { forkJoin, timer } from 'rxjs'; 
 
@@ -22,11 +24,12 @@ import { forkJoin, timer } from 'rxjs';
   imports: [
     CommonModule,
 
+    MultibuttonComponent,
     ButtonComponent,
     TextboxComponent,
-    MultibuttonComponent,
+    CheckboxComponent,
+    ContainerComponent,
     AuroraComponent,
-    ContainerComponent
 ],
   templateUrl: './authentication.html',
   styleUrl: './authentication.scss'
@@ -42,6 +45,7 @@ export class AuthenticationComponent {
 
   private AuthenticationService: AuthenticationService = inject(AuthenticationService);
   private Router: Router = inject(Router);
+  public InterfaceService: InterfaceService = inject(InterfaceService);
 
   public CurrentFormType: WritableSignal<'Sign In' | 'Sign Up'> = signal<'Sign In' | 'Sign Up'>('Sign In');
 
@@ -55,6 +59,11 @@ export class AuthenticationComponent {
       Label: 'Sign Up',
       Action: () => this.CurrentFormType.set('Sign Up')
     }
+  ];
+
+  public RouteSelectorItems = [
+    { Label: 'house', Action: () => console.log('User selected') },
+    { Label: 'user', Action: () => console.log('Envelope selected') },
   ];
   
   public Status: WritableSignal<FancyUIElementLoadStatusType> = signal<FancyUIElementLoadStatusType>('Idle');
@@ -144,5 +153,9 @@ export class AuthenticationComponent {
         setTimeout(() => this.Status.set('Idle'), 3000);
       }
     });
+  }
+
+  public ToggleTheme(): void {
+    this.InterfaceService.ToggleInterfaceType();
   }
 }

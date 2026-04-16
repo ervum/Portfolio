@@ -1,6 +1,8 @@
 <FancyContainer
     class = "FancyMultibutton-Wrapper"
 
+    [Type] = "EffectiveType()"
+
     [class.Hovering--First] = "HoveredIndex() === 0"
     [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1"
 
@@ -12,14 +14,24 @@
         [style.--Button-Count] = "Items.length"
 
         [ngClass] = "GetBaseClasses">
-        <FancyContainer 
-            class="FancyMultibutton-Highlight"
+        @if (ShowHighlight) {
+            <FancyContainer 
+                class = "FancyMultibutton-Highlight"
 
-            [class.Hovering--Selected] = "HoveredIndex() === SelectedIndex"
-            
-            [class.Hovering--First] = "HoveredIndex() === 0 && SelectedIndex === 0"
-            [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1 && SelectedIndex === Items.length - 1">
-        </FancyContainer>
+                [Type] = "EffectiveType()"
+
+                [class.Hovering--Selected] = "HoveredIndex() === SelectedIndex"
+                
+                [class.Hovering--First] = "HoveredIndex() === 0 && SelectedIndex === 0"
+                [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1 && SelectedIndex === Items.length - 1">
+            </FancyContainer>
+        }
+
+        @if (ShowIndicator) {
+            <div class="FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType }}"
+                [style.--Selected-Index]="SelectedIndex"
+                [style.--Button-Count]="Items.length"></div>
+        }
         
         @for (Item of Items; track $index) {
             <button
@@ -37,27 +49,18 @@
                 (click) = "SelectButton($index)"
                 (pointerenter) = "OnHover($index)"
                 (pointerleave) = "OnUnhover()">
-                @if (DisplayMode === 'Text') {
-                    <span class = "FancyMultibutton-Label">{{ Item.Label }}</span>
-                } @else {
+                
+                @if (DisplayMode === 'Icon') {
                     <div
                         class = "FancyMultibutton-Icon"
 
                         [style.--Icon-URL] = "GetIconUrl(Item.Label)">
                     </div>
+                } @else {
+                    <span class = "FancyMultibutton-Label">{{ Item.Label }}</span>
                 }
             </button>
         }
     </div>
 </FancyContainer>
 
-<!-- 
-@if (Items.length) {
-    <div class = "FancyMultibutton-IndicatorTrack">
-        <div
-            class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ Indicator ?? 'Dash' }}"
-
-            [style.left.%] = "IndicatorPositionPercent"></div>
-    </div>
-}
--->
