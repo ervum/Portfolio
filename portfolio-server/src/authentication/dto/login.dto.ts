@@ -1,4 +1,4 @@
 export class LoginDTO {
-  UserIdentifier: string;
-  Password: string;
+  UserIdentifier!: string;
+  Password!: string;
 }

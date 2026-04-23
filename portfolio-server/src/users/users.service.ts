@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 
 import { User } from './users.entity';
 import { RegisterDTO } from '../authentication/dto/register.dto';
@@ -11,7 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
 
-    private UsersRepository: Repository<User>
+    private readonly UsersRepository: Repository<User>
   ) {}
 
   async Create(RegisterDTO: RegisterDTO): Promise<User> {
@@ -20,14 +20,19 @@ export class UsersService {
     return this.UsersRepository.save(NewUser);
   }
 
+  /**
+   * Finds a user by their identifier (Username, Email, PhoneNumber, or numeric ID).
+   */
   async FindByUserIdentifier(Identifier: (string | number)): Promise<User | null> {
-    const Conditions: any[] = [
-      { Username: Identifier },
+    const StringIdentifier = String(Identifier);
+    const Conditions: FindOptionsWhere<User>[] = [
+      { Username: StringIdentifier },
 
-      { Email: Identifier },
-      { PhoneNumber: Identifier }
+      { Email: StringIdentifier },
+      { PhoneNumber: StringIdentifier }
     ];
-    var NumericIdentifier: number = 0;
+    // Attempt to parse the identifier as a number in case it matches an ID
+    let NumericIdentifier: number = 0;
     
     if (typeof Identifier === 'string') {
       NumericIdentifier = parseInt(Identifier);

@@ -1,0 +1,192 @@
+@use '../../../styles' as s;
+
+
+
+:host {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: var(--Button-Width, 100%);
+    height: var(--Button-Height, 50px);
+}
+
+:host(.FancyDropdown--Primary) {
+    color: white;
+
+    .FancyDropdown-Icon-Container {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .FancyDropdown-Item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+:host(.FancyDropdown--Secondary) {
+    color: black;
+
+    .FancyDropdown-Icon {
+        @include s.MaskedIcon(url('/assets/icons/arrow.png'), black);
+    }
+
+    .FancyDropdown-Icon-Container {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .FancyDropdown-Item:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+
+
+.FancyDropdown-Trigger-Wrapper {
+    @include s.CreateTransition(border-radius);
+    
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+
+    outline: none;
+
+    &:hover {
+        @include s.SynchronizeStates('.FancyDropdown-Trigger') {
+            border-radius: var(--Radius-Round);
+        }
+
+        @include s.SynchronizeStates('.FancyDropdown-Icon-Container') {
+            border-radius: var(--Radius-Round);
+            transform: scale(var(--Hover-Scale-Standard));
+        }
+    }
+}
+
+.FancyDropdown-Trigger {
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    place-content: space-between;
+    
+    gap: var(--Padding-Small);
+    padding: 0px var(--Padding-Small) 0px var(--Padding-Medium);
+
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+    border-radius: var(--Radius-Standard);
+    transition: inherit;
+}
+
+.FancyDropdown-Label-Wrapper {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    place-content: center flex-start;
+    place-items: center;
+}
+
+.FancyDropdown-Label, .FancyDropdown-Item-Label {
+    font-size: var(--FontSize-Standard);
+    white-space: normal;
+    line-height: 1.1;
+    word-break: break-word;
+    word-wrap: break-word;
+    display: inline-block;
+    text-align: left;
+    width: auto;
+    max-width: 100%;
+}
+
+.FancyDropdown-Icon-Container {
+    @include s.CreateTransition(border-radius, transform);
+    
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    place-content: center;
+    
+    position: relative;
+    
+    height: var(--IconContainer-Size) !important;
+    width: auto !important;
+    aspect-ratio: 1 / 1;
+    
+    border-radius: var(--Radius-Sharp);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    
+    overflow: hidden;
+    flex-shrink: 0;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.FancyDropdown-Icon {
+    @include s.CreateTransition(transform);
+    @include s.MaskedIcon(url('/assets/icons/arrow.png'), white);
+
+    border: none !important;
+
+    height: 50%;
+    width: 50%;
+    transform: rotate(90deg);
+}
+
+:host(.FancyDropdown--Open) {
+    .FancyDropdown-Icon {
+        transform: rotate(-90deg);
+    }
+}
+
+.FancyDropdown-List-Wrapper {
+    position: absolute;
+    top: calc(100% + var(--Padding-Small, 8px));
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    
+    clip-path: inset(0px 0px -2000px 0px);
+    pointer-events: none;
+    
+    &.Is-Open {
+        pointer-events: all;
+    }
+}
+
+.FancyDropdown-List {
+    @include s.CreateTransition(border-radius, transform);
+    
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: var(--Padding-Medium);
+    gap: var(--Padding-Small);
+
+    border-radius: var(--Radius-Standard);
+    overflow: hidden;
+    
+    transform: translateY(-100%);
+
+    .Is-Open > & {
+        transform: translateY(0%);
+    }
+
+    &:has(.FancyDropdown-Item:hover) {
+        border-radius: min(var(--Radius-Round), calc(var(--Control-Height) / 2));
+    }
+}
+
+.FancyDropdown-Item {
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    
+    padding: var(--Padding-Small) var(--Padding-Medium);
+    cursor: pointer;
+    border-radius: var(--Radius-Round);
+    
+    transition: background-color var(--Duration-Standard) var(--Easing-Standard);
+}

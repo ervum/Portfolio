@@ -5,6 +5,7 @@ import { Nullable, FancyUIElementTypeType, FancyMultiButtonDisplayModeType, Hori
 import { ContainerComponent } from '../container/container';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
+import { TypewriterDirective } from '../../../directives/typewriter/typewriter.directive';
 
 
 
@@ -13,7 +14,8 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
   standalone: true,
   imports: [
     CommonModule,
-    ContainerComponent
+    ContainerComponent,
+    TypewriterDirective
   ],
   templateUrl: './multibutton.html',
   styleUrl: './multibutton.scss',
@@ -24,44 +26,48 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
   }
 })
 export class MultibuttonComponent {
-  private InterfaceService = inject(InterfaceService);
+  private readonly InterfaceService = inject(InterfaceService);
 
   /** Currently selected button index. */
   public SelectedIndex: number = 0;
   public HoveredIndex: WritableSignal<number | null> = signal<number | null>(null);
 
+  /** Selects a button by index and invokes its action if defined. */
   public SelectButton(Index: number): void {
     if (Index === this.SelectedIndex) return;
 
     this.SelectedIndex = Index;
-    this.selectedIndexChange.emit(Index);
+    this.SelectedIndexChange.emit(Index);
 
-    const item = this.Items[Index];
+    const Item = this.Items[Index];
 
-    if (item && (item.Action)) {
-      item.Action(...((item.ActionArguments) ?? []));
+    if (Item && (Item.Action)) {
+      Item.Action(...((Item.ActionArguments) ?? []));
     }
   }
 
+  /** Sets the hovered button index. */
   public OnHover(Index: number): void {
     this.HoveredIndex.set(Index);
   }
 
+  /** Clears the hovered button index. */
   public OnUnhover(): void {
     this.HoveredIndex.set(null);
   }
 
+  /** Constructs a CSS `url()` string for an icon asset. */
   public GetIconUrl(IconName: string): string {
     return `url(assets/icons/${IconName}.png)`;
   }
 
   public get GetBaseClasses(): Record<string, boolean> {
-    const defaultSide = this.Vertical ? 'Left' : 'Below';
-    const activeSide = this.IndicatorSide || defaultSide;
+    const DefaultSide: string = this.Vertical ? 'Left' : 'Below';
+    const ActiveSide: string = this.IndicatorSide || DefaultSide;
 
     return {
       [`FancyMultibutton--Vertical`]: this.Vertical,
-      [`IndicatorPosition--${activeSide}`]: true
+      [`IndicatorPosition--${ActiveSide}`]: true
     };
   }
 
@@ -91,7 +97,7 @@ export class MultibuttonComponent {
 
   // #region Outputs
 
-  @Output() selectedIndexChange = new EventEmitter<number>();
+  @Output() SelectedIndexChange = new EventEmitter<number>();
 
   // #endregion
 }

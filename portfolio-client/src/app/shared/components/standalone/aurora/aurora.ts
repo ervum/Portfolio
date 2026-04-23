@@ -1,34 +1,23 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, Input, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
+import { NGStylesType } from '@ervum/types';
 
+
+
+interface RGBColor {
+  R: number;
+  G: number;
+  B: number;
+}
 
 interface AuroraSphere {
-  top: string;
-  left: string;
-  size: string;
-  
-  // Complexity: Mesh Gradients
-  // We use multiple radial gradients layered to create the "flowy" internal look
-  background: string; 
-  
-  // Parallax Speed: Higher = moves more (closer), Lower = moves less (farther)
-  speed: number;
-  
-  // Rotation speed for dynamic rotation based on mouse angle
-  rotationSpeed: number;
-  
-  // Scale speed for dynamic scaling based on mouse distance
-  scaleSpeed: number;
-  
-  opacity: number;
-  
-  // Wave offset for wave-like positioning pattern
-  waveOffset: number;
-  
-  // Animation delay for staggered floating effect
-  animationDelay: number;
+  /** Pre-computed inline styles (position, size, background, CSS custom properties). */
+  Styles: NGStylesType;
 }
+
+/** Smoothing factor for exponential lerp (0 = no smoothing, 1 = instant). */
+const MOUSE_SMOOTHING: number = 0.12;
 
 
 
@@ -36,268 +25,287 @@ interface AuroraSphere {
   selector: 'Aurora',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div #Container class = "Aurora-Container">
-      <!-- Wave layers for continuous flowing motion -->
-      <div class = "Aurora-Wave Aurora-Wave--1"></div>
-      <div class = "Aurora-Wave Aurora-Wave--2"></div>
-      <div class = "Aurora-Wave Aurora-Wave--3"></div>
-      
-      <!-- Smaller gradient blobs with enhanced reactivity -->
-      @for (Sphere of Spheres; track $index) {
-        <div 
-          class = "Aurora-Sphere"
-
-          [style.top] = "Sphere.top"
-          [style.left] = "Sphere.left"
-
-          [style.width] = "Sphere.size"
-          [style.height] = "Sphere.size"
-
-          [style.background] = "Sphere.background"
-
-          [style.--Sphere-Opacity] = "Sphere.opacity"
-          [style.--Sphere-Speed] = "Sphere.speed"
-          [style.--Sphere-RotationSpeed] = "Sphere.rotationSpeed"
-          [style.--Sphere-ScaleSpeed] = "Sphere.scaleSpeed"
-          [style.--Sphere-WaveOffset] = "Sphere.waveOffset"
-          
-          [style.animation-delay] = "Sphere.animationDelay + 's'">
-        </div>
-      }
-      
-      <!-- Optional: A noise texture overlay to add texture/grain to the blur -->
-      <div class = "Aurora-Noise"></div>
-    </div>
-  `,
+  templateUrl: './aurora.html',
   styleUrls: ['./aurora.scss']
 })
-export class AuroraComponent implements OnInit, AfterViewInit {
+export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('Container') ContainerRef!: ElementRef<HTMLDivElement>;
-  
-  // Input properties for sphere generation configuration
-  @Input() sphereCount: number = 5;
-  
-  // Size constraints (in vw units)
-  @Input() minSize: number = 14;
-  @Input() maxSize: number = 22;
-  
-  // Position constraints (in percentage)
-  @Input() minTop: number = 0;
-  @Input() maxTop: number = 100;
-  @Input() minLeft: number = 0;
-  @Input() maxLeft: number = 100;
-  
-  // Speed constraints
-  @Input() minSpeed: number = -20;
-  @Input() maxSpeed: number = 20;
-  
-  // Rotation speed constraints
-  @Input() minRotationSpeed: number = -0.8;
-  @Input() maxRotationSpeed: number = 0.8;
-  
-  // Scale speed constraints
-  @Input() minScaleSpeed: number = 0.1;
-  @Input() maxScaleSpeed: number = 0.2;
-  
-  // Opacity constraints
-  @Input() minOpacity: number = 0.3;
-  @Input() maxOpacity: number = 0.5;
-  
-  // Wave offset constraints
-  @Input() minWaveOffset: number = 0;
-  @Input() maxWaveOffset: number = 3;
-  
-  // Animation delay constraints (in seconds)
-  @Input() minAnimationDelay: number = 0;
-  @Input() maxAnimationDelay: number = 4;
-  
-  private rafId: number | null = null;
-  private mouseX: number = 0;
-  private mouseY: number = 0;
-  private lastMouseX: number = 0;
-  private lastMouseY: number = 0;
-  private mouseVelocity: number = 0;
-  private lastTime: number = Date.now();
-  private readonly isBrowser: boolean;
 
-  // Dynamically generated spheres
+  // #region Inputs
+
+  /** Number of gradient spheres to generate. */
+  @Input() SphereCount: number = 5;
+
+  /** Minimum sphere diameter (in vw units). */
+  @Input() MinimumSize: number = 14;
+  /** Maximum sphere diameter (in vw units). */
+  @Input() MaximumSize: number = 22;
+
+  /** Minimum vertical position (in percentage). */
+  @Input() MinimumTop: number = 0;
+  /** Maximum vertical position (in percentage). */
+  @Input() MaximumTop: number = 100;
+  /** Minimum horizontal position (in percentage). */
+  @Input() MinimumLeft: number = 0;
+  /** Maximum horizontal position (in percentage). */
+  @Input() MaximumLeft: number = 100;
+
+  /** Minimum parallax speed. */
+  @Input() MinimumSpeed: number = -20;
+  /** Maximum parallax speed. */
+  @Input() MaximumSpeed: number = 20;
+
+  /** Minimum rotation speed. */
+  @Input() MinimumRotationSpeed: number = -0.8;
+  /** Maximum rotation speed. */
+  @Input() MaximumRotationSpeed: number = 0.8;
+
+  /** Minimum scale speed. */
+  @Input() MinimumScaleSpeed: number = 0.1;
+  /** Maximum scale speed. */
+  @Input() MaximumScaleSpeed: number = 0.2;
+
+  /** Minimum sphere opacity. */
+  @Input() MinimumOpacity: number = 0.3;
+  /** Maximum sphere opacity. */
+  @Input() MaximumOpacity: number = 0.5;
+
+  /** Minimum wave offset. */
+  @Input() MinimumWaveOffset: number = 0;
+  /** Maximum wave offset. */
+  @Input() MaximumWaveOffset: number = 3;
+
+  /** Minimum animation delay (in seconds). */
+  @Input() MinimumAnimationDelay: number = 0;
+  /** Maximum animation delay (in seconds). */
+  @Input() MaximumAnimationDelay: number = 4;
+
+  // #endregion
+
+  // #region State
+
   public Spheres: AuroraSphere[] = [];
-  
-  // Color palette for random gradient generation
-  private readonly colorPalette = [
-    // Purple/Pink variations
-    { r: 139, g: 92, b: 246 },   // Purple
-    { r: 236, g: 72, b: 153 },   // Pink
-    { r: 124, g: 58, b: 237 },   // Deep Purple
-    { r: 79, g: 70, b: 229 },    // Indigo
-    { r: 219, g: 39, b: 119 },   // Magenta
-    // Cyan/Blue variations
-    { r: 6, g: 182, b: 212 },    // Cyan
-    { r: 59, g: 130, b: 246 },   // Blue
-    { r: 14, g: 165, b: 233 },   // Sky Blue
+
+  /** CSS classes for each wave layer (data-driven instead of hardcoded HTML). */
+  public readonly WaveLayers: string[] = [
+    'Aurora-Wave Aurora-Wave--1',
+    'Aurora-Wave Aurora-Wave--2',
+    'Aurora-Wave Aurora-Wave--3'
   ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
+  private readonly IsBrowser: boolean;
+
+  /** Raw mouse position (normalized -1 to +1). Updated instantly on mousemove. */
+  private RawMouseX: number = 0;
+  private RawMouseY: number = 0;
+
+  /** Smoothed mouse position (lerped toward raw). Used for CSS variable output. */
+  private SmoothedX: number = 0;
+  private SmoothedY: number = 0;
+
+  /** Smoothed angle that handles ±π wrap-around. Stored in radians. */
+  private SmoothedAngle: number = 0;
+
+  /** Active render loop handle for cancellation. */
+  private AnimationFrameID: number | null = null;
+
+  // #endregion
+
+  // #region Color Palette
+
+  /** Color palette for random gradient generation. */
+  private readonly ColorPalette: RGBColor[] = [
+    { R: 139, G: 92,  B: 246 },   // Purple
+    { R: 236, G: 72,  B: 153 },   // Pink
+    { R: 124, G: 58,  B: 237 },   // Deep Purple
+    { R: 79,  G: 70,  B: 229 },   // Indigo
+    { R: 219, G: 39,  B: 119 },   // Magenta
+    { R: 6,   G: 182, B: 212 },   // Cyan
+    { R: 59,  G: 130, B: 246 },   // Blue
+    { R: 14,  G: 165, B: 233 },   // Sky Blue
+  ];
+
+  // #endregion
+
+
+
+  constructor(@Inject(PLATFORM_ID) private PlatformID: object) {
+    this.IsBrowser = isPlatformBrowser(this.PlatformID);
   }
 
-  /**
-   * Generate random spheres based on input constraints
-   */
   ngOnInit(): void {
-    this.generateSpheres();
+    this.GenerateSpheres();
   }
 
-  /**
-   * Generate random spheres with properties within the specified min/max bounds
-   */
-  private generateSpheres(): void {
-    this.Spheres = [];
-    
-    for (let i = 0; i < this.sphereCount; i++) {
-      const sphere: AuroraSphere = {
-        top: `${this.randomBetween(this.minTop, this.maxTop)}%`,
-        left: `${this.randomBetween(this.minLeft, this.maxLeft)}%`,
-        size: `${this.randomBetween(this.minSize, this.maxSize)}vw`,
-        speed: this.randomBetween(this.minSpeed, this.maxSpeed),
-        rotationSpeed: this.randomBetween(this.minRotationSpeed, this.maxRotationSpeed),
-        scaleSpeed: this.randomBetween(this.minScaleSpeed, this.maxScaleSpeed),
-        opacity: this.randomBetween(this.minOpacity, this.maxOpacity),
-        waveOffset: this.randomBetween(this.minWaveOffset, this.maxWaveOffset),
-        animationDelay: this.randomBetween(this.minAnimationDelay, this.maxAnimationDelay),
-        background: this.generateRandomGradient()
-      };
-      
-      this.Spheres.push(sphere);
-    }
-  }
-
-  /**
-   * Generate a random number between min and max (inclusive)
-   */
-  private randomBetween(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-  }
-
-  /**
-   * Generate a random gradient background using colors from the palette
-   */
-  private generateRandomGradient(): string {
-    const gradientType = Math.random();
-    const color1 = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
-    const color2 = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
-    const color3 = this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)];
-    
-    // Random opacity for colors (between 0.4 and 0.8)
-    const opacity1 = this.randomBetween(0.4, 0.8);
-    const opacity2 = this.randomBetween(0.4, 0.8);
-    const opacity3 = this.randomBetween(0.3, 0.6);
-    
-    // Random positions for gradient stops
-    const pos1 = Math.floor(this.randomBetween(20, 40));
-    const pos2 = Math.floor(this.randomBetween(50, 70));
-    const pos3 = Math.floor(this.randomBetween(60, 80));
-    
-    if (gradientType < 0.5) {
-      // Radial gradient (most common)
-      return `
-        radial-gradient(circle at ${pos1}% ${pos1}%, rgba(${color1.r}, ${color1.g}, ${color1.b}, ${opacity1}), transparent ${pos2}%),
-        radial-gradient(circle at ${pos3}% ${100 - pos3}%, rgba(${color2.r}, ${color2.g}, ${color2.b}, ${opacity2}), transparent ${pos3}%)
-      `;
-    } else if (gradientType < 0.8) {
-      // Conic gradient
-      const angle = Math.floor(this.randomBetween(0, 360));
-      return `
-        conic-gradient(from ${angle}deg, rgba(${color1.r}, ${color1.g}, ${color1.b}, ${opacity1}), rgba(${color2.r}, ${color2.g}, ${color2.b}, ${opacity2}), rgba(${color1.r}, ${color1.g}, ${color1.b}, ${opacity1}))
-      `;
-    } else {
-      // Triple radial gradient for more complexity
-      return `
-        radial-gradient(circle at ${pos1}% ${pos1}%, rgba(${color1.r}, ${color1.g}, ${color1.b}, ${opacity1}), transparent ${pos2}%),
-        radial-gradient(circle at ${pos3}% ${pos1}%, rgba(${color2.r}, ${color2.g}, ${color2.b}, ${opacity2}), transparent ${pos3}%),
-        radial-gradient(circle at ${100 - pos1}% ${100 - pos1}%, rgba(${color3.r}, ${color3.g}, ${color3.b}, ${opacity3}), transparent ${pos2}%)
-      `;
-    }
-  }
-
-  /**
-   * Initialize mouse position on view init to ensure parallax works immediately
-   */
   ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
-    
-    if (this.ContainerRef?.nativeElement) {
-      // Initialize mouse position to center (0, 0)
-      this.lastMouseX = 0;
-      this.lastMouseY = 0;
-      this.lastTime = Date.now();
-      this.updateMousePosition(0, 0);
+    if (!this.IsBrowser) return;
+
+    this.StartRenderLoop();
+  }
+
+  ngOnDestroy(): void {
+    this.StopRenderLoop();
+  }
+
+  // #region Render Loop
+
+  /**
+   * Starts a continuous render loop that smoothly lerps CSS variables toward the target mouse position.
+   * This decouples the animation frame rate from the mouse event rate.
+   */
+  private StartRenderLoop(): void {
+    if (!this.IsBrowser) return;
+
+    const Loop = (): void => {
+      this.UpdateSmoothedValues();
+      this.ApplyCSSVariables();
+
+      this.AnimationFrameID = requestAnimationFrame(Loop);
+    };
+
+    this.AnimationFrameID = requestAnimationFrame(Loop);
+  }
+
+  /** Cancels the active render loop. */
+  private StopRenderLoop(): void {
+    if (this.AnimationFrameID !== null) {
+      cancelAnimationFrame(this.AnimationFrameID);
+      this.AnimationFrameID = null;
     }
   }
 
   /**
-   * Updates CSS variables with normalized mouse position and enhanced metrics.
-   * Uses requestAnimationFrame for smooth 60fps updates.
+   * Exponentially smooths the current position toward the raw mouse position.
+   * Also smooths the angle with wrap-around handling to prevent 360° snaps.
    */
-  private updateMousePosition(x: number, y: number): void {
-    if (!this.isBrowser || !this.ContainerRef?.nativeElement) return;
+  private UpdateSmoothedValues(): void {
+    this.SmoothedX += (this.RawMouseX - this.SmoothedX) * MOUSE_SMOOTHING;
+    this.SmoothedY += (this.RawMouseY - this.SmoothedY) * MOUSE_SMOOTHING;
 
-    // Calculate velocity
-    const now = Date.now();
-    const deltaTime = Math.max(now - this.lastTime, 1);
-    const deltaX = x - this.lastMouseX;
-    const deltaY = y - this.lastMouseY;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    this.mouseVelocity = distance / deltaTime * 1000; // pixels per second
-    
-    // Calculate distance from center (normalized 0 to ~1.414)
-    const distanceFromCenter = Math.sqrt(x * x + y * y);
-    
-    // Calculate angle from center to mouse position
-    const angle = Math.atan2(y, x);
+    const TargetAngle: number = Math.atan2(this.SmoothedY, this.SmoothedX);
 
-    this.mouseX = x;
-    this.mouseY = y;
-    this.lastMouseX = x;
-    this.lastMouseY = y;
-    this.lastTime = now;
+    // Compute the shortest angular delta, wrapping around ±π.
+    let AngleDelta: number = (TargetAngle - this.SmoothedAngle);
+    AngleDelta = AngleDelta - Math.round(AngleDelta / (2 * Math.PI)) * (2 * Math.PI);
 
-    // Cancel any pending animation frame
-    if (this.rafId !== null && typeof cancelAnimationFrame !== 'undefined') {
-      cancelAnimationFrame(this.rafId);
-    }
+    this.SmoothedAngle += AngleDelta * MOUSE_SMOOTHING;
+  }
 
-    // Use requestAnimationFrame for smooth updates
-    if (typeof requestAnimationFrame !== 'undefined') {
-      this.rafId = requestAnimationFrame(() => {
-        const container = this.ContainerRef.nativeElement;
-        container.style.setProperty('--Mouse-X', x.toString());
-        container.style.setProperty('--Mouse-Y', y.toString());
-        container.style.setProperty('--Mouse-Distance', distanceFromCenter.toString());
-        container.style.setProperty('--Mouse-Angle', angle.toString());
-        container.style.setProperty('--Mouse-Velocity', this.mouseVelocity.toString());
-        this.rafId = null;
+  /** Writes the current smoothed values to the container's CSS custom properties. */
+  private ApplyCSSVariables(): void {
+    const Container: HTMLDivElement | undefined = this.ContainerRef?.nativeElement;
+    if (!Container) return;
+
+    const DistanceSquared: number = (this.SmoothedX * this.SmoothedX) + (this.SmoothedY * this.SmoothedY);
+
+    Container.style.setProperty('--Mouse-X', this.SmoothedX.toFixed(4));
+    Container.style.setProperty('--Mouse-Y', this.SmoothedY.toFixed(4));
+    Container.style.setProperty('--Mouse-Distance', Math.sqrt(DistanceSquared).toFixed(4));
+    Container.style.setProperty('--Mouse-Angle', this.SmoothedAngle.toFixed(4));
+  }
+
+  // #endregion
+
+  // #region Mouse Tracking
+
+  /**
+   * Updates the raw target position on every mouse move.
+   * The render loop handles smoothing — this just sets the target.
+   * On re-entry after leaving the viewport, the lerp naturally
+   * smooths from the current sphere position to the new mouse position.
+   */
+  @HostListener('window:mousemove', ['$event'])
+  OnMouseMove(Event: MouseEvent): void {
+    if (!this.IsBrowser) return;
+
+    this.RawMouseX = ((Event.clientX / window.innerWidth) * 2) - 1;
+    this.RawMouseY = ((Event.clientY / window.innerHeight) * 2) - 1;
+  }
+
+  // #endregion
+
+  // #region Sphere Generation
+
+  /**
+   * Populates `Spheres` with randomized styles within the configured bounds.
+   * All per-sphere visual properties are packed into a single `Styles` object
+   * that the template applies via `[ngStyle]`.
+   */
+  private GenerateSpheres(): void {
+    this.Spheres = [];
+
+    for (let i = 0; i < this.SphereCount; i++) {
+      this.Spheres.push({
+        Styles: {
+          'top':                      `${this.RandomBetween(this.MinimumTop, this.MaximumTop)}%`,
+          'left':                     `${this.RandomBetween(this.MinimumLeft, this.MaximumLeft)}%`,
+          'width':                    `${this.RandomBetween(this.MinimumSize, this.MaximumSize)}vw`,
+          'height':                   `${this.RandomBetween(this.MinimumSize, this.MaximumSize)}vw`,
+          'background':               this.GenerateRandomGradient(),
+          'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay, this.MaximumAnimationDelay).toFixed(2)}s`,
+          '--Sphere-Opacity':         `${this.RandomBetween(this.MinimumOpacity, this.MaximumOpacity).toFixed(3)}`,
+          '--Sphere-Speed':           `${this.RandomBetween(this.MinimumSpeed, this.MaximumSpeed).toFixed(2)}`,
+          '--Sphere-RotationSpeed':   `${this.RandomBetween(this.MinimumRotationSpeed, this.MaximumRotationSpeed).toFixed(3)}`,
+          '--Sphere-ScaleSpeed':      `${this.RandomBetween(this.MinimumScaleSpeed, this.MaximumScaleSpeed).toFixed(3)}`,
+          '--Sphere-WaveOffset':      `${this.RandomBetween(this.MinimumWaveOffset, this.MaximumWaveOffset).toFixed(2)}`
+        }
       });
     }
   }
 
-  /**
-   * Tracks mouse movement and updates CSS Variables.
-   * We do NOT update Angular variables here to avoid Change Detection cycles.
-   * We update the DOM styles directly for 60fps performance.
-   */
-  @HostListener('window:mousemove', ['$event'])
-  onMouseMove(e: MouseEvent): void {
-    if (!this.isBrowser || !this.ContainerRef?.nativeElement) return;
+  // #endregion
 
-    // Calculate normalized mouse position (-1 to +1)
-    // -1 = Left/Top, 0 = Center, +1 = Right/Bottom
-    // Using window dimensions for consistent behavior across viewport sizes
-    const X: number = (e.clientX / window.innerWidth) * 2 - 1;
-    const Y: number = (e.clientY / window.innerHeight) * 2 - 1;
+  // #region Gradient Generation
 
-    // Update mouse position with throttling via requestAnimationFrame
-    this.updateMousePosition(X, Y);
+  /** Returns a random number between `Minimum` and `Maximum`. */
+  private RandomBetween(Minimum: number, Maximum: number): number {
+    return (Math.random() * (Maximum - Minimum)) + Minimum;
   }
+
+  /** Returns a random color from the palette. */
+  private RandomColor(): RGBColor {
+    return this.ColorPalette[(Math.random() * this.ColorPalette.length) | 0];
+  }
+
+  /** Formats an RGBColor into an `rgba()` CSS string. */
+  private RGBA(Color: RGBColor, Opacity: number): string {
+    return `rgba(${Color.R}, ${Color.G}, ${Color.B}, ${Opacity.toFixed(2)})`;
+  }
+
+  /** Builds a randomized CSS gradient string using colors from `ColorPalette`. */
+  private GenerateRandomGradient(): string {
+    const Roll: number = Math.random();
+
+    const Color1: RGBColor = this.RandomColor();
+    const Color2: RGBColor = this.RandomColor();
+    const Opacity1: number = this.RandomBetween(0.4, 0.8);
+    const Opacity2: number = this.RandomBetween(0.4, 0.8);
+
+    const Position1: number = (this.RandomBetween(20, 40)) | 0;
+    const Position2: number = (this.RandomBetween(50, 70)) | 0;
+    const Position3: number = (this.RandomBetween(60, 80)) | 0;
+
+    if (Roll < 0.5) {
+      return `
+        radial-gradient(circle at ${Position1}% ${Position1}%, ${this.RGBA(Color1, Opacity1)}, transparent ${Position2}%),
+        radial-gradient(circle at ${Position3}% ${100 - Position3}%, ${this.RGBA(Color2, Opacity2)}, transparent ${Position3}%)
+      `;
+    }
+
+    if (Roll < 0.8) {
+      const Angle: number = (this.RandomBetween(0, 360)) | 0;
+      return `conic-gradient(from ${Angle}deg, ${this.RGBA(Color1, Opacity1)}, ${this.RGBA(Color2, Opacity2)}, ${this.RGBA(Color1, Opacity1)})`;
+    }
+
+    const Color3: RGBColor = this.RandomColor();
+    const Opacity3: number = this.RandomBetween(0.3, 0.6);
+
+    return `
+      radial-gradient(circle at ${Position1}% ${Position1}%, ${this.RGBA(Color1, Opacity1)}, transparent ${Position2}%),
+      radial-gradient(circle at ${Position3}% ${Position1}%, ${this.RGBA(Color2, Opacity2)}, transparent ${Position3}%),
+      radial-gradient(circle at ${100 - Position1}% ${100 - Position1}%, ${this.RGBA(Color3, Opacity3)}, transparent ${Position2}%)
+    `;
+  }
+
+  // #endregion
 }

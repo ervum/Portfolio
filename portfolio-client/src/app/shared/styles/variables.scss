@@ -1,9 +1,10 @@
 /* --- Design Tokens --- */
 
 /* Border Radiuses */
+$Radius-Sharpest: 6px;
+$Radius-Sharp: 12px;
 $Radius-Standard: 16px;
 $Radius-Round: 64px;
-$Radius-Sharp: 12px;
 
 /* Typography */
 $FontSize-Standard: 14px;
@@ -60,11 +61,14 @@ $Button-Width: 100%;
 $Glow-Standard: rgba(255, 255, 255, 0.6);
 $Glow-Strong: rgba(255, 255, 255, 0.35);
 
+
+
 /* --- CSS Variables Export --- */
 :root {
+    --Radius-Sharpest: #{$Radius-Sharpest};
+    --Radius-Sharp: #{$Radius-Sharp};
     --Radius-Standard: #{$Radius-Standard};
     --Radius-Round: #{$Radius-Round};
-    --Radius-Sharp: #{$Radius-Sharp};
 
     --FontSize-Standard: #{$FontSize-Standard};
     --FontSize-Small: #{$FontSize-Small};

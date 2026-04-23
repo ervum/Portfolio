@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, inject, input, computed } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, OnChanges, SimpleChanges, inject, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Nullable, Undefinable, FancyUIElementTypeType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
 import { ContainerComponent } from '../container/container';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
+import { TypewriterAnimator } from '../../../utilities/typewriter';
 
 
 
@@ -22,8 +23,8 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
     '[class.FancyButton--Secondary]': 'EffectiveType() === "Secondary"'
   }
 })
-export class ButtonComponent implements OnInit {
-  private InterfaceService = inject(InterfaceService);
+export class ButtonComponent implements OnInit, OnChanges {
+  private readonly InterfaceService = inject(InterfaceService);
   // #region Configuration & State
 
   private readonly IconsBasePath = '../../../../../assets/icons/';
@@ -156,6 +157,12 @@ export class ButtonComponent implements OnInit {
   @Input() Padding: Nullable<number> = -3.0;
 
   @Input() Label: Nullable<string> = 'Button';
+
+  /** The label text actually rendered in the template (animated). */
+  public DisplayLabel: string = 'Button';
+
+  /** Shared typewriter animator for label transitions. */
+  private LabelTypewriter = new TypewriterAnimator();
   @Input() Icon: Nullable<string> = 'next';
 
   /** The global interface type signal. */
@@ -217,6 +224,22 @@ export class ButtonComponent implements OnInit {
   
       'transition': (this.RippleTransition)
     };
+
+    this.DisplayLabel = this.Label ?? 'Button';
+  }
+
+  ngOnChanges(Changes: SimpleChanges): void {
+    if (Changes['Label'] && !Changes['Label'].firstChange) {
+      const OldLabel = Changes['Label'].previousValue ?? 'Button';
+      const NewLabel = Changes['Label'].currentValue ?? 'Button';
+
+      this.LabelTypewriter.Animate(
+        OldLabel,
+        NewLabel,
+        (Text: string) => { this.DisplayLabel = Text; },
+        this.InterfaceService.Typewriter()
+      );
+    }
   }
 
   // #endregion

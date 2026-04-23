@@ -1,25 +1,24 @@
-
 import { Controller, Post, Body } from '@nestjs/common';
-import { AuthenticationService } from './authentication.service';
 import { UsersService } from '../users/users.service';
 import { RegisterDTO } from './dto/register.dto';
 import { LoginDTO } from './dto/login.dto';
+import { User } from '../users/users.entity';
 
 @Controller('authentication')
 export class AuthenticationController {
-  constructor(private UsersService: UsersService) {}
+  constructor(private readonly UsersService: UsersService) {}
 
   @Post('register')
-  async Register(@Body() RegisterDTO: RegisterDTO) {
-    return this.UsersService.Create(RegisterDTO);
+  async Register(@Body() Data: RegisterDTO): Promise<User> {
+    return this.UsersService.Create(Data);
   }
 
   @Post('login')
-  async Login(@Body() LoginDTO: LoginDTO) {
-    const User = await this.UsersService.FindByUserIdentifier(LoginDTO.UserIdentifier);
+  async Login(@Body() Data: LoginDTO): Promise<User | { error: string }> {
+    const FoundUser: User | null = await this.UsersService.FindByUserIdentifier(Data.UserIdentifier);
     
-    if (User && ((User.Password) === (LoginDTO.Password))) {
-      return User;
+    if (FoundUser && ((FoundUser.Password) === (Data.Password))) {
+      return FoundUser;
     }
     
     return {

@@ -9,5 +9,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title: WritableSignal<unknown> = signal('portfolio-client');
+  protected readonly title: WritableSignal<string> = signal('portfolio-client');
 }

@@ -6,19 +6,23 @@ import { ClientConfiguration as Configuration } from '@ervum/shared-configuratio
 
 import { LoginData, RegisterData } from '@ervum/types';
 
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private HTTP: HttpClient = inject(HttpClient);
+  private readonly HTTP: HttpClient = inject(HttpClient);
 
-  private DatabaseURL: string = (Configuration.SlashedProxyURL);
+  private readonly DatabaseURL: string = (Configuration.SlashedProxyURL);
 
-  Login(UserData: LoginData): Observable<LoginData> {
+  /** Sends a login request to the server. */
+  public Login(UserData: LoginData): Observable<LoginData> {
     return this.HTTP.post<LoginData>(`${this.DatabaseURL}/authentication/login`, UserData);
   }
 
-  Register(UserData: RegisterData): Observable<RegisterData> {
+  /** Sends a registration request to the server. */
+  public Register(UserData: RegisterData): Observable<RegisterData> {
     return this.HTTP.post<RegisterData>(`${this.DatabaseURL}/authentication/register`, UserData);
   }
 }

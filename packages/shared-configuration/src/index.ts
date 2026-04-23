@@ -25,7 +25,7 @@ async function GetSecrets(): Promise<SecretsType> {
     const { Secrets: DynamicSecrets } = await import('./secrets.js');
     
     return { ...DefaultSecrets, ...DynamicSecrets };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log("Optional 'secrets.ts' not found, using default configuration.");
 
     return DefaultSecrets;

@@ -3,8 +3,13 @@
 <div class = "Logo-Container">
     <div class = "Logo"></div>
     
+    <FancyDropdown
+        [Items] = "LanguageItems()"
+        style = "width: 150px; margin-right: 1rem;">
+    </FancyDropdown>
+
     <FancyButton
-        Label = "Toggle Glow"
+        [Label] = "InterfaceService.T().ToggleGlow"
         Icon = ""
         (Up) = "ToggleTheme()">
     </FancyButton>
@@ -25,70 +30,59 @@
         
         <FancyContainer class = "Content-Section-Wrapper">
             <div class = "Content-Section">
-                <span class = "Section-Title">Portfolio</span>
+                <span
+                    class = "Section-Title"
+                    [FancyTypewriter] = "(InterfaceService.T().Portfolio)">
+                </span>
 
                 <FancyMultibutton
                     class = "ActionType-Multibutton"
-                    [Items] = "AuthenticationButtons"
+                    [Items] = "AuthenticationButtons()"
                     [ShowHighlight] = "true"
                     DisplayMode = "Text">
                 </FancyMultibutton>
 
-                <ng-container *ngIf = "CurrentFormType() === 'Sign In'">
-                    <FancyTextbox #UserIdentifierTextbox
-                        class = "Input-Field"
-                        Placeholder = "User Identifier"
-                        Styled = "Standard"
-                        IconStyled = "Standard"
-                        Icon = "at">
-                    </FancyTextbox>
-                </ng-container>
+                <div class = "Form-Fields-Wrapper" [class.Is-SignUp] = "CurrentFormType() === 'Sign Up'">
+                    <div class = "Extra-Fields-Container">
+                        <FancyTextbox #EmailTextbox
+                            class = "Input-Field"
+                            [Placeholder] = "InterfaceService.T().Email"
+                            Icon = "envelope">
+                        </FancyTextbox>
 
-                <ng-container *ngIf = "CurrentFormType() === 'Sign Up'">
-                    <FancyTextbox #EmailTextbox
-                        class = "Input-Field"
-                        Placeholder = "Email"
-                        Styled = "Standard"
-                        IconStyled = "Standard"
-                        Icon = "envelope">
-                    </FancyTextbox>
+                        <FancyTextbox #PhoneNumberTextbox
+                            class = "Input-Field"
+                            [Placeholder] = "InterfaceService.T().PhoneNumber"
+                            Icon = "phone">
+                        </FancyTextbox>
+                    </div>
 
-                    <FancyTextbox #PhoneNumberTextbox
-                        class = "Input-Field"
-                        Placeholder = "Phone"
-                        Styled = "Standard"
-                        IconStyled = "Standard"
-                        Icon = "phone">
-                    </FancyTextbox>
+                    <div class = "Main-Fields-Container">
+                        <FancyTextbox #IdentifierTextbox
+                            class = "Input-Field"
+                            [Placeholder] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
+                            Icon = "at">
+                        </FancyTextbox>
 
-                    <FancyTextbox #UsernameTextbox
-                        class = "Input-Field"
-                        Placeholder = "Username"
-                        Styled = "Standard"
-                        IconStyled = "Standard"
-                        Icon = "at">
-                    </FancyTextbox>
-                </ng-container>
-
-                <FancyTextbox #PasswordTextbox
-                    class = "Input-Field"
-                    [IsSensitive] = true
-                    Placeholder = "Password"
-                    Styled = "Standard"
-                    IconStyled = "Standard"
-                    Icon = "lock">
-                </FancyTextbox>
+                        <FancyTextbox #PasswordTextbox
+                            class = "Input-Field"
+                            [Placeholder] = "InterfaceService.T().Password"
+                            [IsSensitive] = "true"
+                            Icon = "lock">
+                        </FancyTextbox>
+                    </div>
+                </div>
 
                 <FancyCheckbox
                     class = "Input-Field"
-                    Label = "Remember me"
+                    [Label] = "InterfaceService.T().RememberMe"
                     [Checked] = "false">
                 </FancyCheckbox>
 
                 <div class = "Buttons-Container">
                     <FancyButton 
                         class = "Action-Button"
-                        [Label] = "CurrentFormType()"
+                        [Label] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp"
                         (Up) = "HandleSubmit()">
                     </FancyButton>
                 </div>

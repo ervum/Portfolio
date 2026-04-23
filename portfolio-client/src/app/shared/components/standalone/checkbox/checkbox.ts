@@ -6,6 +6,8 @@ import { ContainerComponent } from '../container/container';
 import { FancyUIElementTypeType, HorizontalPositionType, Undefinable } from '@ervum/types';
 import { InterfaceService } from '../../../../core/services/interface/interface';
 
+import { TypewriterDirective } from '../../../directives/typewriter/typewriter.directive';
+
 
 
 @Component({
@@ -13,7 +15,8 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
   standalone: true,
   imports: [
     CommonModule,
-    ContainerComponent
+    ContainerComponent,
+    TypewriterDirective
   ],
   templateUrl: './checkbox.html',
   styleUrl: './checkbox.scss',
@@ -23,7 +26,7 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
   }
 })
 export class CheckboxComponent {
-  private InterfaceService = inject(InterfaceService);
+  private readonly InterfaceService = inject(InterfaceService);
 
   @Input() Checked: boolean = false;
   

@@ -34,7 +34,7 @@
     (focus) = "OnFocus()"
     (blur) = "OnUnfocus()">
     <div class = "FancyButton-Label-Wrapper">
-      <span class = "FancyButton-Label">{{ Label }}</span>
+      <span class = "FancyButton-Label">{{ DisplayLabel }}</span>
     </div>
 
     @if (Icon !== '') {
@@ -74,7 +74,7 @@
     
     [ngClass] = "GetButtonClasses(true)">
     <div class = "FancyButton-Label-Wrapper">
-      <span class = "FancyButton-Label">{{ Label }}</span>
+      <span class = "FancyButton-Label">{{ DisplayLabel }}</span>
     </div>
 
     @if (Icon !== '') {

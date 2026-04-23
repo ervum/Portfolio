@@ -22,7 +22,6 @@
     --Mouse-Y: 0;
     --Mouse-Distance: 0;
     --Mouse-Angle: 0;
-    --Mouse-Velocity: 0;
 }
 
 .Aurora-Wave {
@@ -130,10 +129,6 @@
         translate(var(--Parallax-X), var(--Parallax-Y))
         rotate(var(--Rotation))
         scale(var(--Scale));
-
-    transition: 
-        transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-        opacity 0.3s ease;
 
     opacity: clamp(0.2, calc(var(--Sphere-Opacity, 0.4) * (1 + var(--Mouse-Distance) * 0.15)), 0.8);
     z-index: 4;

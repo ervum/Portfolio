@@ -67,7 +67,7 @@ export type VerticalPositionType = ('Above' | 'Below');
 export interface FancyMultibuttonItemType {
   Label: string,
   Action?: AnyFunction,
-  ActionArguments?: any[]
+  ActionArguments?: unknown[]
 };
 
 /////        Fancy Button        \\\\\
@@ -76,4 +76,12 @@ export type FancyButtonIconStateType = ('AtCenter' | 'Exiting' | 'OffScreen' | '
 /////        Fancy Textbox       \\\\\
 export type FancyTextboxOrderType = ('First' | 'Intermediate' | 'Last' | 'Unique');
 
-/////       Fancy Checkbox       \\\\\
+/////       Fancy Dropdown       \\\\\
+export interface FancyDropdownItemType {
+  ID?: string,
+  Label: string,
+  Action?: AnyFunction,
+  ActionArguments?: unknown[]
+};
+
+/////       Fancy Checkbox       \\\\\

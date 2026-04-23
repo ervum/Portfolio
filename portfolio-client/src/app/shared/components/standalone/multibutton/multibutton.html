@@ -28,9 +28,11 @@
         }
 
         @if (ShowIndicator) {
-            <div class="FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType }}"
-                [style.--Selected-Index]="SelectedIndex"
-                [style.--Button-Count]="Items.length"></div>
+            <div 
+                class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType }}"
+                [style.--Selected-Index] = "SelectedIndex"
+                [style.--Button-Count] = "(Items.length)">
+            </div>
         }
         
         @for (Item of Items; track $index) {
@@ -57,7 +59,10 @@
                         [style.--Icon-URL] = "GetIconUrl(Item.Label)">
                     </div>
                 } @else {
-                    <span class = "FancyMultibutton-Label">{{ Item.Label }}</span>
+                    <span 
+                        class = "FancyMultibutton-Label"
+                        [FancyTypewriter] = "(Item.Label)">
+                    </span>
                 }
             </button>
         }

@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject, input, computed } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, inject, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Undefinable, FancyUIElementTypeType, FancyTextboxOrderType, VerticalPositionType, FancyUIElementFocusStateType, StringBooleanType, Nullable } from '@ervum/types';
+import { Undefinable, FancyUIElementTypeType, FancyTextboxOrderType, VerticalPositionType, FancyUIElementFocusStateType, StringBooleanType, Nullable, NGStylesType } from '@ervum/types';
 import { ContainerComponent } from '../container/container';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
+import { TypewriterAnimator } from '../../../utilities/typewriter';
 
 @Component({
   selector: 'FancyTextbox',
@@ -22,8 +23,8 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
     '[class.FancyTextbox--Secondary]': 'EffectiveType() === "Secondary"'
   }
 })
-export class TextboxComponent implements OnInit {
-  private InterfaceService = inject(InterfaceService);
+export class TextboxComponent implements OnInit, OnChanges {
+  private readonly InterfaceService = inject(InterfaceService);
   // #region Configuration & State
 
   private readonly IconsBasePath = '../../../../../assets/icons/';
@@ -48,7 +49,7 @@ export class TextboxComponent implements OnInit {
   private FocusTimeoutID: Undefinable<ReturnType<typeof setTimeout>>;
   private AnimationStartTime: number = 0;
 
-  public TextboxStyles: { [key: string]: string } = {};
+  public TextboxStyles: NGStylesType = {};
 
   public InputValue: string = '';
   public FocusState: FancyUIElementFocusStateType = 'Unfocused';
@@ -206,6 +207,10 @@ export class TextboxComponent implements OnInit {
   @Input() IsSensitive: boolean = false;
   @Input() InitialVisibility: boolean = false;
 
+  @Input() Placeholder: string = '';
+  public DisplayPlaceholder: string = '';
+  private PlaceholderAnimator = new TypewriterAnimator();
+
   // #endregion
 
   // #region Outputs
@@ -281,6 +286,23 @@ export class TextboxComponent implements OnInit {
 
   ngOnInit(): void {
     this.IsVisible = this.InitialVisibility;
+    this.DisplayPlaceholder = this.Placeholder;
+  }
+
+  ngOnChanges(Changes: SimpleChanges): void {
+    if (Changes['Placeholder'] && !Changes['Placeholder'].firstChange) {
+      const OldText = Changes['Placeholder'].previousValue ?? '';
+      const NewText = Changes['Placeholder'].currentValue ?? '';
+
+      this.PlaceholderAnimator.Animate(
+        OldText,
+        NewText,
+        (Text: string) => { this.DisplayPlaceholder = Text; },
+        this.InterfaceService.Typewriter()
+      );
+    } else if (Changes['Placeholder'] && Changes['Placeholder'].firstChange) {
+      this.DisplayPlaceholder = this.Placeholder;
+    }
   }
 
   // #endregion

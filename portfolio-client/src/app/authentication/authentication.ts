@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, inject, signal, ViewChild, WritableSignal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -10,9 +10,12 @@ import { TextboxComponent } from '../shared/components/standalone/textbox/textbo
 import { CheckboxComponent } from '../shared/components/standalone/checkbox/checkbox';
 import { ContainerComponent } from '../shared/components/standalone/container/container';
 import { AuroraComponent } from '../shared/components/standalone/aurora/aurora';
+import { DropdownComponent } from '../shared/components/standalone/dropdown/dropdown';
 
 import { AuthenticationService } from '../core/services/authentication/authentication';
 import { InterfaceService } from '../core/services/interface/interface';
+import { Translations, type TranslationDictionary } from '../core/internationalization';
+import { TypewriterDirective } from '../shared/directives/typewriter/typewriter.directive';
 
 import { forkJoin, timer } from 'rxjs'; 
 
@@ -30,17 +33,16 @@ import { forkJoin, timer } from 'rxjs';
     CheckboxComponent,
     ContainerComponent,
     AuroraComponent,
+    DropdownComponent,
+    TypewriterDirective
 ],
   templateUrl: './authentication.html',
   styleUrl: './authentication.scss'
 })
 export class AuthenticationComponent {
-  @ViewChild('UserIdentifierTextbox') private UserIdentifierTextbox!: TextboxComponent;
-  
+  @ViewChild('IdentifierTextbox') private IdentifierTextbox!: TextboxComponent;
   @ViewChild('EmailTextbox') private EmailTextbox!: TextboxComponent;
   @ViewChild('PhoneNumberTextbox') private PhoneNumberTextbox!: TextboxComponent;
-
-  @ViewChild('UsernameTextbox') private UsernameTextbox!: TextboxComponent;
   @ViewChild('PasswordTextbox') private PasswordTextbox!: TextboxComponent;
 
   private AuthenticationService: AuthenticationService = inject(AuthenticationService);
@@ -49,22 +51,29 @@ export class AuthenticationComponent {
 
   public CurrentFormType: WritableSignal<'Sign In' | 'Sign Up'> = signal<'Sign In' | 'Sign Up'>('Sign In');
 
-  public AuthenticationButtons = [
+  public AuthenticationButtons = computed(() => [
     {
-      Label: 'Sign In',
+      Label: this.InterfaceService.T().SignIn,
       Action: () => this.CurrentFormType.set('Sign In')
     },
-
     {
-      Label: 'Sign Up',
+      Label: this.InterfaceService.T().SignUp,
       Action: () => this.CurrentFormType.set('Sign Up')
     }
-  ];
+  ]);
 
   public RouteSelectorItems = [
     { Label: 'house', Action: () => console.log('User selected') },
     { Label: 'user', Action: () => console.log('Envelope selected') },
   ];
+
+  public LanguageItems = computed(() => {
+    return Object.keys(Translations).map(Language => ({
+      ID: Language,
+      Label: this.InterfaceService.T()[`LanguageName_${Language}` as keyof TranslationDictionary] as string,
+      Action: () => this.InterfaceService.SetLanguage(Language)
+    }));
+  });
   
   public Status: WritableSignal<FancyUIElementLoadStatusType> = signal<FancyUIElementLoadStatusType>('Idle');
   
@@ -74,13 +83,15 @@ export class AuthenticationComponent {
     };
   }
   
-  NavigateToHome(): void {
+  /** Navigates back to the home page. */
+  public NavigateToHome(): void {
     console.log('Navigating to Home Page from the Authentication Component!');
     
     this.Router.navigate(['/']);
   }
   
-  HandleSubmit(): void {
+  /** Delegates to the appropriate sign-in or sign-up handler based on the current form type. */
+  public HandleSubmit(): void {
     if (this.CurrentFormType() === 'Sign In') {
       this.HandleSignIn();
     } else {
@@ -88,13 +99,14 @@ export class AuthenticationComponent {
     }
   }
 
-  HandleSignIn(): void {
+  /** Sends a sign-in request with the current form values. */
+  public HandleSignIn(): void {
     console.log('Sign-In attempt initiated from the Authentication Component!');
     
     this.Status.set('Loading');
     
     const UserPayload: LoginData = {
-      UserIdentifier: ((this.UserIdentifierTextbox?.InputValue) ?? ''),
+      UserIdentifier: ((this.IdentifierTextbox?.InputValue) ?? ''),
       Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 
@@ -103,15 +115,15 @@ export class AuthenticationComponent {
 
       timer(300)
     ]).subscribe({
-      next: (Response) => {
+      next: (Response: [LoginData, number]) => {
         console.log('Successfully signed in:', Response);
 
         this.Status.set('Success');
         
         setTimeout(() => this.Status.set('Idle'), 3000);
       },
-      error: (Error) => {
-        console.error('Error signing in:', Error);
+      error: (Err: unknown) => {
+        console.error('Error signing in:', Err);
 
         this.Status.set('Error');
 
@@ -120,7 +132,8 @@ export class AuthenticationComponent {
     });
   }
 
-  HandleSignUp(): void {
+  /** Sends a sign-up request with the current form values. */
+  public HandleSignUp(): void {
     console.log('Sign-Up attempt initiated from the Authentication Component!');
     
     this.Status.set('Loading');
@@ -129,7 +142,7 @@ export class AuthenticationComponent {
       Email: ((this.EmailTextbox?.InputValue) ?? ''),
       PhoneNumber: ((this.PhoneNumberTextbox?.InputValue) ?? ''),
 
-      Username: ((this.UsernameTextbox?.InputValue) ?? ''),
+      Username: ((this.IdentifierTextbox?.InputValue) ?? ''),
       Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 
@@ -138,15 +151,15 @@ export class AuthenticationComponent {
 
       timer(300)
     ]).subscribe({
-      next: (Response) => {
+      next: (Response: [RegisterData, number]) => {
         console.log('Successfully signed up:', Response);
 
         this.Status.set('Success');
 
         setTimeout(() => this.Status.set('Idle'), 3000);
       },
-      error: (Error) => {
-        console.error('Error signing up:', Error);
+      error: (Err: unknown) => {
+        console.error('Error signing up:', Err);
 
         this.Status.set('Error');
 
@@ -155,6 +168,7 @@ export class AuthenticationComponent {
     });
   }
 
+  /** Toggles the global interface theme between Primary and Secondary. */
   public ToggleTheme(): void {
     this.InterfaceService.ToggleInterfaceType();
   }

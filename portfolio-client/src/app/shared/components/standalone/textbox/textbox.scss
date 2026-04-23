@@ -35,11 +35,6 @@
         width: calc(var(--Textbox-Width) * var(--Hover-Scale-Big));
         border-radius: var(--Radius-Round);
 
-        .FancyTextbox {
-            transform: scale(var(--Hover-Scale-Standard));
-            transform-origin: left;
-        }
-
         .FancyTextbox-Icon-Container {
             transform: scale(var(--Hover-Scale-Standard));
             border-radius: var(--Radius-Round);
@@ -145,7 +140,6 @@
     width: 100%;
     height: 100%;
     
-    color: transparent;
     gap: 10px;
 }
 
@@ -208,6 +202,7 @@
     text-indent: 0;
 
     font-size: inherit;
+    color: inherit;
 
     &:has(~ .FancyTextbox-Visibility-Toggle) {
         padding-right: calc(var(--Control-Height) + var(--Padding-Small));

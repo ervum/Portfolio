@@ -19,7 +19,7 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
     }
 })
 export class ContainerComponent {
-    private InterfaceService = inject(InterfaceService);
+    private readonly InterfaceService = inject(InterfaceService);
 
     /** The global interface type signal. */
     private GlobalType = this.InterfaceService.InterfaceType;

@@ -3,7 +3,10 @@ import { AppModule } from './app.module';
 import { INestApplication, Logger } from '@nestjs/common';
 import { ServerConfiguration } from '@ervum/shared-configuration';
 
-async function bootstrap() {
+/**
+ * Initializes and starts the NestJS server application, applying global configuration such as port and proxy prefixes.
+ */
+async function bootstrap(): Promise<void> {
   const Application: INestApplication = await NestFactory.create(AppModule);
   
   const Configuration = await ServerConfiguration;

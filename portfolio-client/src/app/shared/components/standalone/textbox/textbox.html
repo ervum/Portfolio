@@ -36,6 +36,7 @@
       [ngClass] = "GetInputClasses"
       [ngStyle] = "TextboxStyles"
       [(ngModel)] = "InputValue" 
+      [placeholder] = "DisplayPlaceholder"
 
       [type] = "IsSensitive ? (IsVisible ? 'text' : 'password') : 'text'"
       [attr.maxlength] = "MaximumLength"
@@ -65,8 +66,11 @@
       
       [ngClass] = "GetInputClasses"
       (click) = "ToggleVisibility()">
-      <div class="Visibility-Toggle-BaseIcon"></div>
-      <div class="Visibility-Toggle-StrikeIcon Animation-Draw" [class.Is-Drawn]="!IsVisible"></div>
+      <div class = "Visibility-Toggle-BaseIcon"></div>
+      <div
+        class = "Visibility-Toggle-StrikeIcon Animation-Draw"
+        [class.Is-Drawn] = "!IsVisible">
+      </div>
     </div>
   </div>
 </FancyContainer>
