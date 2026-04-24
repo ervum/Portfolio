@@ -17,7 +17,7 @@ interface AuroraSphere {
 }
 
 /** Smoothing factor for exponential lerp (0 = no smoothing, 1 = instant). */
-const MOUSE_SMOOTHING: number = 0.12;
+const MouseSmoothing: number = 0.12;
 
 
 
@@ -179,8 +179,8 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
    * Also smooths the angle with wrap-around handling to prevent 360° snaps.
    */
   private UpdateSmoothedValues(): void {
-    this.SmoothedX += (this.RawMouseX - this.SmoothedX) * MOUSE_SMOOTHING;
-    this.SmoothedY += (this.RawMouseY - this.SmoothedY) * MOUSE_SMOOTHING;
+    this.SmoothedX += (this.RawMouseX - this.SmoothedX) * MouseSmoothing;
+    this.SmoothedY += (this.RawMouseY - this.SmoothedY) * MouseSmoothing;
 
     const TargetAngle: number = Math.atan2(this.SmoothedY, this.SmoothedX);
 
@@ -188,7 +188,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     let AngleDelta: number = (TargetAngle - this.SmoothedAngle);
     AngleDelta = AngleDelta - Math.round(AngleDelta / (2 * Math.PI)) * (2 * Math.PI);
 
-    this.SmoothedAngle += AngleDelta * MOUSE_SMOOTHING;
+    this.SmoothedAngle += AngleDelta * MouseSmoothing;
   }
 
   /** Writes the current smoothed values to the container's CSS custom properties. */

@@ -8,4 +8,6 @@ export const Translations: Record<string, TranslationDictionary> = {
   'Spanish': SpanishDictionary,
 };
 
+
+
 export type { TranslationDictionary };

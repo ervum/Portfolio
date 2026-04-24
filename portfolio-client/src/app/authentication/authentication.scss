@@ -16,18 +16,6 @@
 
 
 
-aurora {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    pointer-events: none;
-}
-
-
-
 .Main {
     width: 100vw;
     height: 100vh;
@@ -41,16 +29,27 @@ aurora {
 
 .Logo-Container {
     position: fixed;
+
     top: 10px;
-    left: 10px;
+    right: 10px;
+
     z-index: 100;
 
     .Logo {
         width: 46px;
         height: 46px;
 
-        ///@include s.MaskedIcon(url('../../assets/icons/logo.png'), white);
+        //>>> @include s.MaskedIcon(url('../../assets/icons/logo.png'), white);
     }
+}
+
+.Language-Dropdown {
+    position: fixed;
+
+    top: 10px;
+    left: 10px;
+
+    width: 150px;
 }
 
 .RouteSelector-Multibutton {
@@ -62,6 +61,13 @@ aurora {
 
     --Multibutton-Width: 56px;
     height: 220px;
+}
+
+.Theme-Toggle-Minibutton {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
 }
 
 .Wrapper {

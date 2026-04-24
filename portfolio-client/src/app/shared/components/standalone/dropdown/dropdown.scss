@@ -109,8 +109,8 @@
     
     position: relative;
     
-    height: var(--IconContainer-Size) !important;
-    width: auto !important;
+    height: var(--IconContainer-Size);
+    width: auto;
     aspect-ratio: 1 / 1;
     
     border-radius: var(--Radius-Sharp);
@@ -128,7 +128,7 @@
     @include s.CreateTransition(transform);
     @include s.MaskedIcon(url('/assets/icons/arrow.png'), white);
 
-    border: none !important;
+    border: none;
 
     height: 50%;
     width: 50%;
@@ -143,12 +143,12 @@
 
 .FancyDropdown-List-Wrapper {
     position: absolute;
-    top: calc(100% + var(--Padding-Small, 8px));
+    top: 0;
     left: 0;
     width: 100%;
     z-index: 1;
     
-    clip-path: inset(0px 0px -2000px 0px);
+    clip-path: inset(20% 0px -2000px 0px);
     pointer-events: none;
     
     &.Is-Open {
@@ -162,7 +162,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: var(--Padding-Medium);
+    padding: calc(var(--Button-Height, 50px) + var(--Padding-Medium)) var(--Padding-Medium) var(--Padding-Medium) var(--Padding-Medium);
     gap: var(--Padding-Small);
 
     border-radius: var(--Radius-Standard);

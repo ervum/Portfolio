@@ -71,6 +71,44 @@ export class MultibuttonComponent {
     };
   }
 
+  public get GetWrapperClasses(): Record<string, boolean> {
+    return {
+      'Hovering--First': this.HoveredIndex() === 0,
+      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items.length - 1,
+      ...this.GetBaseClasses
+    };
+  }
+
+  public get GetContentStyles(): Record<string, number> {
+    return {
+      '--Selected-Index': this.SelectedIndex,
+      '--Button-Count': this.Items.length
+    };
+  }
+
+  public get GetHighlightClasses(): Record<string, boolean> {
+    return {
+      'Hovering--Selected': this.HoveredIndex() === this.SelectedIndex,
+      'Hovering--First': this.HoveredIndex() === 0 && this.SelectedIndex === 0,
+      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items.length - 1 && this.SelectedIndex === this.Items.length - 1
+    };
+  }
+
+  public GetButtonClasses(Index: number): Record<string, boolean> {
+    return {
+      'FancyMultibutton--Selected': this.SelectedIndex === Index,
+      'Hovering--Self': this.HoveredIndex() === Index,
+      'Hovering--First': Index === 0,
+      'Hovering--Last': Index === this.Items.length - 1
+    };
+  }
+
+  public GetIconStyles(Label: string): Record<string, string> {
+    return {
+      '--Icon-URL': this.GetIconUrl(Label)
+    };
+  }
+
   // #region Inputs
 
   @Input() Items: FancyMultibuttonItemType[] = [];

@@ -1,0 +1,57 @@
+@use '../../../styles' as s;
+
+
+
+:host {
+    display: inline-flex;
+    cursor: pointer;
+}
+
+
+
+.Minibutton-Container {
+    display: flex;
+    place-content: center;
+    place-items: center;
+    
+    width: var(--Minibutton-Width, 48px);
+    height: var(--Minibutton-Height, 48px);
+    border-radius: var(--Radius-Standard);
+    
+    transition: 
+        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+        border-radius 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-color 0.3s ease, 
+        border-color 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-5px) scale(var(--Hover-Scale-Big));
+
+        border-radius: var(--Radius-Round);
+    }
+}
+
+.Minibutton-Icon {
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    
+    -webkit-mask-size: cover;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-image: var(--Icon);
+
+    mask-size: cover;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-image: var(--Icon);
+
+    transition: background-color 0.3s ease;
+}
+
+.Minibutton-Label {
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: color 0.3s ease;
+}

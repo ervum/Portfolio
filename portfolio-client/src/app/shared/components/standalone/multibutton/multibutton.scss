@@ -13,6 +13,39 @@
     width: 100%;
 }
 
+:host(.FancyMultibutton--Primary) {
+    color: white;
+
+    .FancyMultibutton-Highlight {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 8px var(--Glow-Strong);
+    }
+
+    .FancyMultibutton::before {
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 8px var(--Glow-Strong);
+    }
+}
+:host(.FancyMultibutton--Secondary) {
+    color: black;
+
+    .FancyMultibutton-Highlight {
+        background-color: rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .FancyMultibutton::before {
+        background-color: rgba(0, 0, 0, 0.15);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+        
+        /* Reduce blur for secondary theme to prevent "whitish" refraction on dark backgrounds */
+        backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
+        -webkit-backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
+    }
+}
+
 :host-context(.FancyMultibutton--Vertical),
 :host(.FancyMultibutton--Vertical) {
     width: auto;
@@ -35,11 +68,11 @@
     transition: border-radius var(--Duration-Standard) var(--Easing-Standard);
 
     &:hover {
-        border-radius: var(--Radius-Round);
+        border-radius: var(--Radius-Roundiest);
 
         .FancyMultibutton-Highlight,
         .FancyMultibutton {
-            border-radius: var(--Radius-Round);
+            border-radius: var(--Radius-Roundiest);
         }
     }
 
@@ -291,39 +324,5 @@
     .FancyMultibutton-Indicator--dash {
         width: var(--Indicator-Dash-Height, 16px);
         height: var(--Indicator-Dash-Width, 4px);
-    }
-}
-
-:host(.FancyMultibutton--Primary) {
-    color: white;
-
-    .FancyMultibutton-Highlight {
-        background-color: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        box-shadow: 0 0 8px var(--Glow-Strong);
-    }
-
-    .FancyMultibutton::before {
-        background-color: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 8px var(--Glow-Strong);
-    }
-}
-
-:host(.FancyMultibutton--Secondary) {
-    color: black;
-
-    .FancyMultibutton-Highlight {
-        background-color: rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(0, 0, 0, 0.8);
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .FancyMultibutton::before {
-        background-color: rgba(0, 0, 0, 0.15);
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-        
-        /* Reduce blur for secondary theme to prevent "whitish" refraction on dark backgrounds */
-        backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
-        -webkit-backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
     }
 }

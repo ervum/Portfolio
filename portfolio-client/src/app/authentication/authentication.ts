@@ -11,6 +11,7 @@ import { CheckboxComponent } from '../shared/components/standalone/checkbox/chec
 import { ContainerComponent } from '../shared/components/standalone/container/container';
 import { AuroraComponent } from '../shared/components/standalone/aurora/aurora';
 import { DropdownComponent } from '../shared/components/standalone/dropdown/dropdown';
+import { MinibuttonComponent } from '../shared/components/standalone/minibutton/minibutton';
 
 import { AuthenticationService } from '../core/services/authentication/authentication';
 import { InterfaceService } from '../core/services/interface/interface';
@@ -34,7 +35,8 @@ import { forkJoin, timer } from 'rxjs';
     ContainerComponent,
     AuroraComponent,
     DropdownComponent,
-    TypewriterDirective
+    TypewriterDirective,
+    MinibuttonComponent
 ],
   templateUrl: './authentication.html',
   styleUrl: './authentication.scss'
@@ -75,6 +77,12 @@ export class AuthenticationComponent {
     }));
   });
   
+  public ThemeIcon = computed(() => {
+    return this.InterfaceService.InterfaceType() === 'Primary' 
+      ? 'assets/icons/sun.png' 
+      : 'assets/icons/moon.png';
+  });
+  
   public Status: WritableSignal<FancyUIElementLoadStatusType> = signal<FancyUIElementLoadStatusType>('Idle');
   
   public get IsLoading(): Record<string, boolean> {
@@ -83,6 +91,14 @@ export class AuthenticationComponent {
     };
   }
   
+  
+  /** Classes for the form fields wrapper (sign-up expanded state). */
+  public get GetFormFieldsClasses(): Record<string, boolean> {
+    return {
+      'Is-SignUp': (this.CurrentFormType() === 'Sign Up')
+    };
+  }
+
   /** Navigates back to the home page. */
   public NavigateToHome(): void {
     console.log('Navigating to Home Page from the Authentication Component!');
@@ -168,8 +184,8 @@ export class AuthenticationComponent {
     });
   }
 
-  /** Toggles the global interface theme between Primary and Secondary. */
-  public ToggleTheme(): void {
-    this.InterfaceService.ToggleInterfaceType();
+  /** Toggles the global interface theme with a circular ripple transition from the click origin. */
+  public ToggleTheme(Event: MouseEvent): void {
+    this.InterfaceService.ToggleInterfaceTypeWithTransition(Event.clientX, Event.clientY);
   }
 }

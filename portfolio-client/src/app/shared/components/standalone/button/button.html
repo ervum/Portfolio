@@ -1,26 +1,26 @@
 <div
-  class = "FancyButton-Wrapper FancyButton--Normal"
+  class = "FancyButton-Wrapper"
 
-  [ngClass] = "GetWrapperClasses(false)"
+  [ngClass] = "(GetWrapperClasses())"
 
-  [style.--Icon-URL] = "ButtonIconStyle">
+  [ngStyle] = "(GetWrapperStyles)">
   <FancyContainer
     #ButtonElement
-    
+
     role = "button"
 
     tabindex = "0"
 
     class = "FancyButton"
 
-    [Type] = "EffectiveType()"
+    [Type] = "(EffectiveType())"
 
-    [ngClass] = "GetButtonClasses(false)" 
+    [ngClass] = "(GetButtonClasses())"
 
     (pointerenter) = "OnHover()"
     (pointermove) = "OnMove($event)"
     (pointerleave) = "OnUnhover()"
-    
+
     (pointercancel) = "OnCancel()"
 
     (pointerdown) = "OnDown($event)"
@@ -41,53 +41,13 @@
       <FancyContainer
         class = "FancyButton-Icon-Container"
 
-        [Type] = "EffectiveType()"
-      
-        [ngClass] = "GetIconClasses(true)">
+        [Type] = "(EffectiveType())"
+
+        [ngClass] = "(GetIconClasses())">
         <div
           class = "FancyButton-Icon"
-      
-          [ngClass] = "GetIconClasses(false)"
-          
-          (animationend) = "OnIconAnimationEnd()">
-        </div>
-      </FancyContainer>
-    }
-  </FancyContainer>  
-</div>
 
-<div #InvertedWrapper
-  class = "FancyButton-Wrapper FancyButton--Inverted"
-
-  [ngClass] = "GetWrapperClasses(true)"
-  [ngStyle] = "RippleStyles"
-  
-  [style.--Icon-URL] = "ButtonIconStyle">
-  <FancyContainer
-    role = "button"
-
-    tabindex = "0"
-
-    class = "FancyButton"
-    
-    [Type] = "EffectiveType()"
-    
-    [ngClass] = "GetButtonClasses(true)">
-    <div class = "FancyButton-Label-Wrapper">
-      <span class = "FancyButton-Label">{{ DisplayLabel }}</span>
-    </div>
-
-    @if (Icon !== '') {
-      <FancyContainer
-        class = "FancyButton-Icon-Container"
-      
-        [Type] = "EffectiveType()"
-      
-        [ngClass] = "GetIconClasses(false)">
-        <div
-          class = "FancyButton-Icon"
-      
-          [ngClass] = "GetIconClasses(true)"
+          [ngClass] = "(GetIconClasses())"
 
           (animationend) = "OnIconAnimationEnd()">
         </div>

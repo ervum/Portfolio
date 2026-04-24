@@ -7,6 +7,21 @@
     width: 100%;
 }
 
+:host(.FancyTextbox--Primary) {
+    color: white;
+
+    .FancyTextbox-Icon-Container {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+:host(.FancyTextbox--Secondary) {
+    color: black;
+
+    .FancyTextbox-Icon-Container {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
 
 
 .FancyTextbox-Wrapper {    
@@ -33,11 +48,11 @@
 
     &:hover {
         width: calc(var(--Textbox-Width) * var(--Hover-Scale-Big));
-        border-radius: var(--Radius-Round);
+        border-radius: var(--Radius-Roundiest);
 
         .FancyTextbox-Icon-Container {
             transform: scale(var(--Hover-Scale-Standard));
-            border-radius: var(--Radius-Round);
+            border-radius: var(--Radius-Roundiest);
         }
     }
 
@@ -60,8 +75,8 @@
 
     z-index: 3;
 
-    height: var(--IconContainer-Size) !important;
-    width: auto !important;
+    height: var(--IconContainer-Size);
+    width: auto;
 
     transition: all var(--Duration-Slow) var(--Easing-Standard);
 
@@ -88,7 +103,7 @@
 }
 
 .FancyTextbox-Visibility-Toggle {
-    position: absolute !important;
+    position: absolute;
     right: var(--Padding-Small);
 
     height: 100%;
@@ -186,7 +201,7 @@
     transition: transform 0.5s var(--Easing-Standard);
     transform-origin: left;
 
-    background-color: transparent !important;
+    background-color: transparent;
 
     cursor: pointer;
 
@@ -195,7 +210,7 @@
     box-sizing: border-box;
 
     border: none;
-    border-width: 0px !important;
+    border-width: 0px;
     border-radius: var(--Radius-Sharp);
 
     text-align: left;
@@ -207,20 +222,5 @@
     &:has(~ .FancyTextbox-Visibility-Toggle) {
         padding-right: calc(var(--Control-Height) + var(--Padding-Small));
         text-indent: 0; // maybe useless code
-    }
-}
-
-:host(.FancyTextbox--Primary) {
-    color: white;
-
-    .FancyTextbox-Icon-Container {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-}
-:host(.FancyTextbox--Secondary) {
-    color: black;
-
-    .FancyTextbox-Icon-Container {
-        background-color: rgba(0, 0, 0, 0.1);
     }
 }

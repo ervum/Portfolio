@@ -1,11 +1,12 @@
 import { TranslationDictionary } from './default';
 
+
+
 export const SpanishDictionary: TranslationDictionary = {
   Portfolio: 'Portfolio',
   SignIn: 'Iniciar sesión',
   SignUp: 'Registrarse',
   RememberMe: 'Recuérdame',
-  ToggleGlow: 'Alternar brillo',
 
   Email: 'Correo electrónico',
   PhoneNumber: 'Número de teléfono',

@@ -1,65 +1,53 @@
 <FancyContainer
     class = "FancyMultibutton-Wrapper"
 
-    [Type] = "EffectiveType()"
+    [Type] = "(EffectiveType())"
 
-    [class.Hovering--First] = "HoveredIndex() === 0"
-    [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1"
-
-    [ngClass] = "GetBaseClasses">
+    [ngClass] = "(GetWrapperClasses)">
     <div
         class = "FancyMultibutton-Content"
 
-        [style.--Selected-Index] = "SelectedIndex"
-        [style.--Button-Count] = "Items.length"
+        [ngStyle] = "(GetContentStyles)"
 
-        [ngClass] = "GetBaseClasses">
+        [ngClass] = "(GetBaseClasses)">
         @if (ShowHighlight) {
-            <FancyContainer 
+            <FancyContainer
                 class = "FancyMultibutton-Highlight"
 
-                [Type] = "EffectiveType()"
+                [Type] = "(EffectiveType())"
 
-                [class.Hovering--Selected] = "HoveredIndex() === SelectedIndex"
-                
-                [class.Hovering--First] = "HoveredIndex() === 0 && SelectedIndex === 0"
-                [class.Hovering--Last] = "HoveredIndex() !== null && HoveredIndex() === Items.length - 1 && SelectedIndex === Items.length - 1">
+                [ngClass] = "(GetHighlightClasses)">
             </FancyContainer>
         }
 
         @if (ShowIndicator) {
-            <div 
+            <div
                 class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType }}"
-                [style.--Selected-Index] = "SelectedIndex"
-                [style.--Button-Count] = "(Items.length)">
+
+                [ngStyle] = "(GetContentStyles)">
             </div>
         }
-        
+
         @for (Item of Items; track $index) {
             <button
                 type = "button"
 
                 class = "FancyMultibutton"
 
-                [class.FancyMultibutton--Selected] = "SelectedIndex === $index"
-
-                [class.Hovering--Self] = "HoveredIndex() === $index"
-
-                [class.Hovering--First] = "$index === 0"
-                [class.Hovering--Last] = "$index === Items.length - 1"
+                [ngClass] = "(GetButtonClasses($index))"
 
                 (click) = "SelectButton($index)"
                 (pointerenter) = "OnHover($index)"
                 (pointerleave) = "OnUnhover()">
-                
+
                 @if (DisplayMode === 'Icon') {
                     <div
                         class = "FancyMultibutton-Icon"
 
-                        [style.--Icon-URL] = "GetIconUrl(Item.Label)">
+                        [ngStyle] = "(GetIconStyles(Item.Label))">
                     </div>
                 } @else {
-                    <span 
+                    <span
                         class = "FancyMultibutton-Label"
                         [FancyTypewriter] = "(Item.Label)">
                     </span>
@@ -68,4 +56,3 @@
         }
     </div>
 </FancyContainer>
-

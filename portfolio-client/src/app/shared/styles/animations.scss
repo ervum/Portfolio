@@ -55,3 +55,53 @@
         transform: translateX(-50px);
     }
 }
+
+/* --- Continuous Animations --- */
+
+@keyframes Aurora-WaveFlow {
+    0%, 100% {
+        transform: translateY(calc(0px + var(--Mouse-Offset-Y))) translateX(calc(0px + var(--Mouse-Offset-X)));
+        opacity: 0.4;
+    }
+
+    25% {
+        transform: translateY(calc(-30px + var(--Mouse-Offset-Y))) translateX(calc(20px + var(--Mouse-Offset-X)));
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateY(calc(20px + var(--Mouse-Offset-Y))) translateX(calc(-15px + var(--Mouse-Offset-X)));
+        opacity: 0.35;
+    }
+
+    75% {
+        transform: translateY(calc(-15px + var(--Mouse-Offset-Y))) translateX(calc(10px + var(--Mouse-Offset-X)));
+        opacity: 0.45;
+    }
+}
+
+@keyframes Aurora-BlobFloat {
+    0%, 100% {
+        transform: 
+            translate(var(--Parallax-X), var(--Parallax-Y))
+            rotate(var(--Rotation))
+            scale(var(--Scale))
+            translate(0px, 0px);
+    }
+
+    33% {
+        transform: 
+            translate(var(--Parallax-X), var(--Parallax-Y))
+            rotate(var(--Rotation))
+            scale(var(--Scale))
+            translate(10px, -15px);
+    }
+
+    66% {
+        transform: 
+            translate(var(--Parallax-X), var(--Parallax-Y))
+            rotate(var(--Rotation))
+            scale(var(--Scale))
+            translate(-8px, 10px);
+    }
+}

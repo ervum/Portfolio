@@ -4,7 +4,8 @@
 $Radius-Sharpest: 6px;
 $Radius-Sharp: 12px;
 $Radius-Standard: 16px;
-$Radius-Round: 64px;
+$Radius-Round: 24px;
+$Radius-Roundiest: 64px;
 
 /* Typography */
 $FontSize-Standard: 14px;
@@ -69,6 +70,7 @@ $Glow-Strong: rgba(255, 255, 255, 0.35);
     --Radius-Sharp: #{$Radius-Sharp};
     --Radius-Standard: #{$Radius-Standard};
     --Radius-Round: #{$Radius-Round};
+    --Radius-Roundiest: #{$Radius-Roundiest};
 
     --FontSize-Standard: #{$FontSize-Standard};
     --FontSize-Small: #{$FontSize-Small};

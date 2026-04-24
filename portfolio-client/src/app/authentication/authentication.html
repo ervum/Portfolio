@@ -1,33 +1,36 @@
-<Aurora/> 
+<Aurora/>
 
 <div class = "Logo-Container">
     <div class = "Logo"></div>
-    
-    <FancyDropdown
-        [Items] = "LanguageItems()"
-        style = "width: 150px; margin-right: 1rem;">
-    </FancyDropdown>
-
-    <FancyButton
-        [Label] = "InterfaceService.T().ToggleGlow"
-        Icon = ""
-        (Up) = "ToggleTheme()">
-    </FancyButton>
 </div>
+
+<FancyDropdown
+    class = "Language-Dropdown"
+    [Items] = "(LanguageItems())">
+</FancyDropdown>
+
+<FancyMinibutton
+    class = "Theme-Toggle-Minibutton"
+    [Icon] = "ThemeIcon()"
+    (click) = "ToggleTheme($event)">
+</FancyMinibutton>
 
 <FancyMultibutton
     class = "RouteSelector-Multibutton"
-    [Items] = "RouteSelectorItems"
+
+    [Items] = "(RouteSelectorItems)"
     [Vertical] = "true"
     [ShowIndicator] = "true"
+
     DisplayMode = "Icon">
 </FancyMultibutton>
 
 <div class = "Main Wrapper">
-    <div 
+    <div
         class = "Section-Wrapper"
-        [ngClass] = "IsLoading">
-        
+
+        [ngClass] = "(IsLoading)">
+
         <FancyContainer class = "Content-Section-Wrapper">
             <div class = "Content-Section">
                 <span
@@ -37,36 +40,45 @@
 
                 <FancyMultibutton
                     class = "ActionType-Multibutton"
-                    [Items] = "AuthenticationButtons()"
+
+                    [Items] = "(AuthenticationButtons())"
                     [ShowHighlight] = "true"
+
                     DisplayMode = "Text">
                 </FancyMultibutton>
 
-                <div class = "Form-Fields-Wrapper" [class.Is-SignUp] = "CurrentFormType() === 'Sign Up'">
+                <div
+                    class = "Form-Fields-Wrapper"
+
+                    [ngClass] = "(GetFormFieldsClasses)">
                     <div class = "Extra-Fields-Container">
-                        <FancyTextbox #EmailTextbox
+                        <FancyTextbox
+                            #EmailTextbox
                             class = "Input-Field"
-                            [Placeholder] = "InterfaceService.T().Email"
+                            [Placeholder] = "(InterfaceService.T().Email)"
                             Icon = "envelope">
                         </FancyTextbox>
 
-                        <FancyTextbox #PhoneNumberTextbox
+                        <FancyTextbox
+                            #PhoneNumberTextbox
                             class = "Input-Field"
-                            [Placeholder] = "InterfaceService.T().PhoneNumber"
+                            [Placeholder] = "(InterfaceService.T().PhoneNumber)"
                             Icon = "phone">
                         </FancyTextbox>
                     </div>
 
                     <div class = "Main-Fields-Container">
-                        <FancyTextbox #IdentifierTextbox
+                        <FancyTextbox
+                            #IdentifierTextbox
                             class = "Input-Field"
-                            [Placeholder] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
+                            [Placeholder] = "(CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username)"
                             Icon = "at">
                         </FancyTextbox>
 
-                        <FancyTextbox #PasswordTextbox
+                        <FancyTextbox
+                            #PasswordTextbox
                             class = "Input-Field"
-                            [Placeholder] = "InterfaceService.T().Password"
+                            [Placeholder] = "(InterfaceService.T().Password)"
                             [IsSensitive] = "true"
                             Icon = "lock">
                         </FancyTextbox>
@@ -75,14 +87,14 @@
 
                 <FancyCheckbox
                     class = "Input-Field"
-                    [Label] = "InterfaceService.T().RememberMe"
+                    [Label] = "(InterfaceService.T().RememberMe)"
                     [Checked] = "false">
                 </FancyCheckbox>
 
                 <div class = "Buttons-Container">
-                    <FancyButton 
+                    <FancyButton
                         class = "Action-Button"
-                        [Label] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp"
+                        [Label] = "(CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp)"
                         (Up) = "HandleSubmit()">
                     </FancyButton>
                 </div>

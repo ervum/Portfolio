@@ -11,6 +11,13 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+:host(.FancyCheckbox--Primary) {
+    color: white;
+}
+:host(.FancyCheckbox--Secondary) {
+    color: black;
+}
+
 
 
 .FancyCheckbox-Wrapper {
@@ -36,6 +43,8 @@
     width: 1.25em;
     height: 1.25em;
     flex-shrink: 0;
+
+    transition: all var(--Duration-Standard) var(--Easing-Standard);
 }
 
 .FancyCheckbox-Label {
@@ -52,9 +61,9 @@
     height: var(--Icon-Size-Standard, 60%);
 }
 
-:host(.FancyCheckbox--Primary) {
-    color: white;
-}
-:host(.FancyCheckbox--Secondary) {
-    color: black;
+/* Hover Interaction */
+.FancyCheckbox-Wrapper:hover {
+    .FancyCheckbox-IconContainer {
+        transform: scale(var(--Hover-Scale-Big));
+    }
 }

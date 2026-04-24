@@ -5,14 +5,12 @@
 :host {
     display: inline-flex;
 
-    border-radius: var(--Container-BorderRadius, var(--Radius-Standard));
+    border-radius: var(--Radius-Sharpest, var(--Radius-Standard));
     -webkit-backdrop-filter: blur(var(--Blur-Standard));
     backdrop-filter: blur(var(--Blur-Standard));
 
     box-sizing: border-box;
     transition: inherit;
-
-    /* Shared shadow logic if needed */
 }
 
 :host(.FancyContainer--Primary) {

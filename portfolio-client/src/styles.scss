@@ -1,1 +1,16 @@
 @use 'app/shared/styles' as s;
+
+
+
+/* View Transition: Circular theme toggle ripple */
+
+::view-transition-old(root) {
+    animation: none;
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+    z-index: 9999;
+}

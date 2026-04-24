@@ -1,0 +1,13 @@
+<FancyContainer class = "Minibutton-Container">
+    @if (Icon()) {
+        <div
+            class = "Minibutton-Icon" 
+            
+            [style.--Icon] = "'url(' + Icon() + ')'">
+        </div>
+    }
+
+    @if (Label()) {
+        <span class = "Minibutton-Label">{{ Label() }}</span>
+    }
+</FancyContainer>

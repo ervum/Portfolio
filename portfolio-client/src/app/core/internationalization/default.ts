@@ -3,7 +3,6 @@ export const DefaultDictionary = {
   SignIn: 'Sign In',
   SignUp: 'Sign Up',
   RememberMe: 'Remember me',
-  ToggleGlow: 'Toggle Glow',
 
   Email: 'Email',
   PhoneNumber: 'Phone number',
@@ -14,5 +13,7 @@ export const DefaultDictionary = {
   LanguageName_English: 'English',
   LanguageName_Spanish: 'Spanish',
 };
+
+
 
 export type TranslationDictionary = typeof DefaultDictionary;
