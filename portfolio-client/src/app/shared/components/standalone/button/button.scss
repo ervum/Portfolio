@@ -132,7 +132,7 @@
 
 .FancyButton-Icon {
     @include s.CreateTransition(width, height, transform);
-    @include s.MaskedIcon(var(--Icon-URL), currentColor);
+    @include s.MaskedIcon(var(--icon-url), currentColor);
 
     will-change: transform;
 

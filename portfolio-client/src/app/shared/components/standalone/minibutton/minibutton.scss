@@ -39,12 +39,12 @@
     -webkit-mask-size: cover;
     -webkit-mask-position: center;
     -webkit-mask-repeat: no-repeat;
-    -webkit-mask-image: var(--Icon);
+    -webkit-mask-image: var(--icon);
 
     mask-size: cover;
     mask-position: center;
     mask-repeat: no-repeat;
-    mask-image: var(--Icon);
+    mask-image: var(--icon);
 
     transition: background-color 0.3s ease;
 }

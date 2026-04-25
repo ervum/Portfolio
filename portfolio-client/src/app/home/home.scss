@@ -1,1 +1,105 @@
-@use '.././shared/styles/' as s;
+@use '../shared/styles/' as s;
+
+.Main {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    place-content: center;
+    place-items: center;
+
+    background: transparent;
+    overflow: hidden;
+}
+
+.Logo-Container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+
+    .Logo {
+        width: 46px;
+        height: 46px;
+    }
+}
+
+.Language-Dropdown {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 150px;
+}
+
+.RouteSelector-Multibutton {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+
+    --Multibutton-Width: 56px;
+    height: 220px;
+}
+
+.Theme-Toggle-Minibutton {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
+}
+
+.Wrapper {
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    place-items: center;
+    z-index: 10;
+}
+
+.Section-Wrapper {
+    width: var(--Section-Width);
+    height: var(--Section-Height);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.Content-Section-Wrapper {
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    place-items: center;
+
+    border-radius: 64px;
+
+    background-color: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+    width: 100%;
+    height: 100%;
+
+    box-sizing: border-box;
+    padding: 64px 48px;
+
+    overflow: hidden; 
+}
+
+.Content-Section {
+    display: flex;
+    flex-direction: column; 
+    place-content: center;
+    place-items: center;
+
+    gap: 24px;
+
+    width: 100%;
+
+    position: relative;
+    z-index: 5;
+}

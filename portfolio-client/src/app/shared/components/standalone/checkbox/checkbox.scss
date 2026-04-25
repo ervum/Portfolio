@@ -65,5 +65,6 @@
 .FancyCheckbox-Wrapper:hover {
     .FancyCheckbox-IconContainer {
         transform: scale(var(--Hover-Scale-Big));
+        border-radius: var(--Radius-Round);
     }
 }

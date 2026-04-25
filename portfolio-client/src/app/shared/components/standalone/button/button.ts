@@ -93,7 +93,7 @@ export class ButtonComponent implements OnInit, OnChanges {
   /** Inline styles for the normal wrapper (icon URL). */
   public get GetWrapperStyles(): NGStylesType {
     return {
-      '--Icon-URL': this.ButtonIconStyle
+      '--icon-url': this.ButtonIconStyle
     };
   }
 

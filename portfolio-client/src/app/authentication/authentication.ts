@@ -1,6 +1,7 @@
-import { Component, inject, signal, ViewChild, WritableSignal, computed } from '@angular/core';
+import { Component, inject, signal, ViewChild, WritableSignal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { FancyUIElementLoadStatusType, LoginData, RegisterData } from '@ervum/types';
 
@@ -39,9 +40,21 @@ import { forkJoin, timer } from 'rxjs';
     MinibuttonComponent
 ],
   templateUrl: './authentication.html',
-  styleUrl: './authentication.scss'
+  styleUrl: './authentication.scss',
+  animations: [
+    trigger('SlideUpDown', [
+      state('In', style({ transform: 'translateY(0)', opacity: 1 })),
+      state('Out', style({ transform: 'translateY(100vh)', opacity: 0 })),
+      transition('* => In', [
+        animate('0.8s cubic-bezier(0.86, 0, 0.07, 1)')
+      ]),
+      transition('In => Out', [
+        animate('0.8s cubic-bezier(0.86, 0, 0.07, 1)')
+      ]),
+    ])
+  ]
 })
-export class AuthenticationComponent {
+export class AuthenticationComponent implements OnInit {
   @ViewChild('IdentifierTextbox') private IdentifierTextbox!: TextboxComponent;
   @ViewChild('EmailTextbox') private EmailTextbox!: TextboxComponent;
   @ViewChild('PhoneNumberTextbox') private PhoneNumberTextbox!: TextboxComponent;
@@ -49,7 +62,10 @@ export class AuthenticationComponent {
 
   private AuthenticationService: AuthenticationService = inject(AuthenticationService);
   private Router: Router = inject(Router);
+  private ActivatedRoute: ActivatedRoute = inject(ActivatedRoute);
   public InterfaceService: InterfaceService = inject(InterfaceService);
+
+  public CurrentAnimationState: WritableSignal<'In' | 'Out'> = signal<'In' | 'Out'>('In');
 
   public CurrentFormType: WritableSignal<'Sign In' | 'Sign Up'> = signal<'Sign In' | 'Sign Up'>('Sign In');
 
@@ -65,8 +81,8 @@ export class AuthenticationComponent {
   ]);
 
   public RouteSelectorItems = [
-    { Label: 'house', Action: () => console.log('User selected') },
-    { Label: 'user', Action: () => console.log('Envelope selected') },
+    { Label: 'house', Action: () => this.NavigateWithAnimation('home') },
+    { Label: 'user', Action: () => this.NavigateWithAnimation('authentication') },
   ];
 
   public LanguageItems = computed(() => {
@@ -101,9 +117,34 @@ export class AuthenticationComponent {
 
   /** Navigates back to the home page. */
   public NavigateToHome(): void {
-    console.log('Navigating to Home Page from the Authentication Component!');
+    this.NavigateWithAnimation('home');
+  }
+
+  public ngOnInit(): void {
+    // Only animate if the redirect query parameter is present
+    const RedirectSource = this.ActivatedRoute.snapshot.queryParamMap.get('redirect');
     
-    this.Router.navigate(['/']);
+    if (RedirectSource) {
+      this.CurrentAnimationState.set('Out');
+      setTimeout(() => this.CurrentAnimationState.set('In'), 0);
+    } else {
+      this.CurrentAnimationState.set('In');
+    }
+  }
+
+  /** Triggers the exit animation before navigating to the target route. */
+  public NavigateWithAnimation(Target: string): void {
+    const CurrentPath = this.Router.url.split('?')[0];
+    const TargetPath = `/${Target}`;
+    
+    // Exact match or root redirect check
+    if (CurrentPath === TargetPath || (Target === 'home' && CurrentPath === '/')) return;
+
+    this.CurrentAnimationState.set('Out');
+
+    setTimeout(() => {
+      this.Router.navigate([`/${Target}`], { queryParams: { redirect: 'authentication' } });
+    }, 600); // Wait for the core part of the animation to complete
   }
   
   /** Delegates to the appropriate sign-in or sign-up handler based on the current form type. */

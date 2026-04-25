@@ -29,7 +29,7 @@ export class MultibuttonComponent {
   private readonly InterfaceService = inject(InterfaceService);
 
   /** Currently selected button index. */
-  public SelectedIndex: number = 0;
+  @Input() public SelectedIndex: number = 0;
   public HoveredIndex: WritableSignal<number | null> = signal<number | null>(null);
 
   /** Selects a button by index and invokes its action if defined. */
@@ -81,8 +81,8 @@ export class MultibuttonComponent {
 
   public get GetContentStyles(): Record<string, number> {
     return {
-      '--Selected-Index': this.SelectedIndex,
-      '--Button-Count': this.Items.length
+      '--selected-index': this.SelectedIndex,
+      '--button-count': this.Items.length
     };
   }
 
@@ -105,7 +105,7 @@ export class MultibuttonComponent {
 
   public GetIconStyles(Label: string): Record<string, string> {
     return {
-      '--Icon-URL': this.GetIconUrl(Label)
+      '--icon-url': this.GetIconUrl(Label)
     };
   }
 
