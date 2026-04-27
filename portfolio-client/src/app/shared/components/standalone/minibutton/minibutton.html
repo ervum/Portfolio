@@ -1,9 +1,19 @@
-<FancyContainer class = "Minibutton-Container">
+<FancyContainer
+    class = "Minibutton-IconContainer"
+    (pointerdown) = "OnDown()"
+    (pointerup) = "OnUp()"
+    (pointerleave) = "OnUp()"
+    (pointercancel) = "OnUp()">
+
     @if (Icon()) {
         <div
             class = "Minibutton-Icon" 
+            [class.Minibutton-Icon--Entering] = "IconStatus === 'Entering'"
+            [class.Minibutton-Icon--Exiting] = "IconStatus === 'Exiting'"
+            [class.Minibutton-Icon--OffScreen] = "IconStatus === 'OffScreen'"
             
-            [style.--icon] = "'url(' + Icon() + ')'">
+            [style.--icon] = "'url(' + Icon() + ')'"
+            (animationend) = "OnIconAnimationEnd()">
         </div>
     }
 

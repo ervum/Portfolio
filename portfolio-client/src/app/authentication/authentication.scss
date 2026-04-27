@@ -28,49 +28,6 @@
     overflow: hidden;
 }
 
-.Logo-Container {
-    position: fixed;
-
-    top: 10px;
-    right: 10px;
-
-    z-index: 100;
-
-    .Logo {
-        width: 46px;
-        height: 46px;
-
-        //>>> @include s.MaskedIcon(url('../../assets/icons/logo.png'), white);
-    }
-}
-
-.Language-Dropdown {
-    position: fixed;
-
-    top: 10px;
-    left: 10px;
-
-    width: 150px;
-}
-
-.RouteSelector-Multibutton {
-    position: fixed;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-
-    --Multibutton-Width: 56px;
-    height: 220px;
-}
-
-.Theme-Toggle-Minibutton {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    z-index: 100;
-}
-
 .Wrapper {
     display: flex;
     flex-direction: column;
@@ -208,19 +165,41 @@
 
 .Buttons-Container {
     display: flex;
-    flex-direction: row;
-    gap: 5%;
+    flex-direction: column;
+    gap: 16px;
     width: 100%;
     margin-top: 16px;
-    place-content: center;
 }
 
 .Action-Button {
+    width: 100%;
     height: 52px;
     
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+}
+
+.Secondary-Actions-Container {
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.Secondary-Action-Button {
+    width: 50%;
+    height: 44px;
+
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.RememberMe-Checkbox {
+    width: fit-content;
 }
 
 

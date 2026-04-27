@@ -1,35 +1,7 @@
-<Aurora/>
-
-<div class = "Logo-Container">
-    <div class = "Logo"></div>
-</div>
-
-<FancyDropdown
-    class = "Language-Dropdown"
-    [Items] = "(LanguageItems())">
-</FancyDropdown>
-
-<FancyMinibutton
-    class = "Theme-Toggle-Minibutton"
-    [Icon] = "ThemeIcon()"
-    (click) = "ToggleTheme($event)">
-</FancyMinibutton>
-
-<FancyMultibutton
-    class = "RouteSelector-Multibutton"
-
-    [Items] = "RouteSelectorItems"
-    [SelectedIndex] = "1"
-    [Vertical] = "true"
-    [ShowIndicator] = "true"
-
-    DisplayMode = "Icon">
-</FancyMultibutton>
-
 <div class = "Main Wrapper">
     <div
         class = "Section-Wrapper"
-        [@SlideUpDown] = "CurrentAnimationState()"
+        FancySlideUpDown
         [ngClass] = "(IsLoading)">
 
         <FancyContainer class = "Content-Section-Wrapper">
@@ -86,18 +58,26 @@
                     </div>
                 </div>
 
-                <FancyCheckbox
-                    class = "Input-Field"
-                    [Label] = "(InterfaceService.T().RememberMe)"
-                    [Checked] = "false">
-                </FancyCheckbox>
-
                 <div class = "Buttons-Container">
                     <FancyButton
                         class = "Action-Button"
                         [Label] = "(CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp)"
                         (Up) = "HandleSubmit()">
                     </FancyButton>
+
+                    <div class = "Secondary-Actions-Container">
+                        <FancyButton
+                            class = "Secondary-Action-Button"
+                            [Label] = "(InterfaceService.T().AccountRecovery)"
+                            (Up) = "HandleAccountRecovery()">
+                        </FancyButton>
+
+                        <FancyCheckbox
+                            class = "RememberMe-Checkbox"
+                            [Label] = "(InterfaceService.T().RememberMe)"
+                            [Checked] = "false">
+                        </FancyCheckbox>
+                    </div>
                 </div>
             </div>
         </FancyContainer>

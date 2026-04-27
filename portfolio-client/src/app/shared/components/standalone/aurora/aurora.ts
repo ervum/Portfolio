@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, Input, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
-import { NGStylesType } from '@ervum/types';
+import { Nullable, Undefinable, NGStylesType } from '@ervum/types';
 
 
 
@@ -107,7 +107,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private SmoothedAngle: number = 0;
 
   /** Active render loop handle for cancellation. */
-  private AnimationFrameID: number | null = null;
+  private AnimationFrameID: Nullable<number> = null;
 
   // #endregion
 
@@ -193,7 +193,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Writes the current smoothed values to the container's CSS custom properties. */
   private ApplyCSSVariables(): void {
-    const Container: HTMLDivElement | undefined = this.ContainerRef?.nativeElement;
+    const Container: Undefinable<HTMLDivElement> = this.ContainerRef?.nativeElement;
     if (!Container) return;
 
     const DistanceSquared: number = (this.SmoothedX * this.SmoothedX) + (this.SmoothedY * this.SmoothedY);

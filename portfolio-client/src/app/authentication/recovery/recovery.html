@@ -1,0 +1,39 @@
+<div class = "Main Wrapper">
+    <div
+        class = "Section-Wrapper"
+        FancySlideUpDown>
+
+        <FancyContainer class = "Content-Section-Wrapper">
+            <div class = "Content-Section">
+                <div class = "Section-Title-Container">
+                    <span
+                        class = "Section-Title"
+                        [FancyTypewriter] = "(InterfaceService.T().RecoveryIntro)">
+                    </span>
+
+                    <FancyDropdown
+                        class = "Recovery-Dropdown"
+                        [Items] = "(RecoveryOptions())">
+                    </FancyDropdown>
+                </div>
+
+                <div class = "Form-Fields-Wrapper">
+                    <FancyTextbox
+                        class = "Input-Field"
+                        [Placeholder] = "(InterfaceService.T().Email)"
+                        Icon = "envelope">
+                    </FancyTextbox>
+                </div>
+
+                <div class = "Buttons-Container">
+                    <FancyButton
+                        class = "Action-Button"
+                        [Label] = "(InterfaceService.T().Continue)"
+                        (Up) = "null">
+                    </FancyButton>
+
+                </div>
+            </div>
+        </FancyContainer>
+    </div>
+</div>

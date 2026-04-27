@@ -9,7 +9,7 @@
 
 
 
-.Minibutton-Container {
+.Minibutton-IconContainer {
     display: flex;
     place-content: center;
     place-items: center;
@@ -23,6 +23,8 @@
         border-radius 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
         background-color 0.3s ease, 
         border-color 0.3s ease;
+        
+    overflow: hidden;
     
     &:hover {
         transform: translateY(-5px) scale(var(--Hover-Scale-Big));
@@ -47,6 +49,16 @@
     mask-image: var(--icon);
 
     transition: background-color 0.3s ease;
+    
+    &.Minibutton-Icon--Entering {
+        animation: Icon-EnterLeft 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+    &.Minibutton-Icon--Exiting {
+        animation: Icon-ExitRight 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+    &.Minibutton-Icon--OffScreen {
+        transform: translateX(50px);
+    }
 }
 
 .Minibutton-Label {

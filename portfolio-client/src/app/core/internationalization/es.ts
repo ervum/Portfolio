@@ -16,4 +16,9 @@ export const SpanishDictionary: TranslationDictionary = {
 
   LanguageName_English: 'Inglés',
   LanguageName_Spanish: 'Español',
+
+  AccountRecovery: 'Recuperación de cuenta',
+  Recover: 'recuperar',
+  Continue: 'Continuar',
+  RecoveryIntro: 'Me gustaría recuperar mi',
 };

@@ -10,9 +10,14 @@ export const DefaultDictionary = {
   UserIdentifier: 'User Identifier',
   Password: 'Password',
 
-  LanguageName_English: 'English',
-  LanguageName_Spanish: 'Spanish',
-};
+   LanguageName_English: 'English',
+   LanguageName_Spanish: 'Spanish',
+ 
+   AccountRecovery: 'Account recovery',
+   Recover: 'recover',
+   Continue: 'Continue',
+   RecoveryIntro: "I'd like to recover my",
+ };
 
 
 

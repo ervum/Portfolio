@@ -1,1 +1,73 @@
 @use 'shared/styles' as s;
+
+
+
+.Logo-Container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+
+    .Logo {
+        width: 46px;
+        height: 46px;
+    }
+}
+
+.Language-Dropdown {
+    position: fixed;
+    top: 10px;
+    left: 66px;
+    width: 150px;
+    z-index: 100;
+    transition: left 0.5s cubic-bezier(0.86, 0, 0.07, 1), transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+    transition-delay: 0s; // Move immediately when LEAVING home
+
+    &.Home {
+        left: 10px;
+        transition-delay: 0.1s; // Delay when GOING to home (wait for minibutton)
+    }
+}
+
+.RouteSelector-Multibutton {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+
+    --Multibutton-Width: 56px;
+    height: 220px;
+}
+
+.Theme-Toggle-Minibutton {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
+}
+
+.Back-Minibutton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+
+    --Minibutton-Width: 46px;
+    --Minibutton-Height: 46px;
+
+    transform: rotate(180deg);
+    transition: left 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+    transition-delay: 0.15s; // Delay when LEAVING home (wait for dropdown)
+
+    &.Home {
+        left: -60px;
+        transition-delay: 0s; // Move immediately when GOING to home
+    }
+
+    ::ng-deep .Minibutton-IconContainer {
+        &:hover {
+            transform: translateY(5px) scale(var(--Hover-Scale-Big));
+        }
+    }
+}

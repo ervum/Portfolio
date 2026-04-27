@@ -1,7 +1,6 @@
 import { Component, inject, signal, ViewChild, WritableSignal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { FancyUIElementLoadStatusType, LoginData, RegisterData } from '@ervum/types';
 
@@ -10,14 +9,13 @@ import { ButtonComponent } from '../shared/components/standalone/button/button';
 import { TextboxComponent } from '../shared/components/standalone/textbox/textbox';
 import { CheckboxComponent } from '../shared/components/standalone/checkbox/checkbox';
 import { ContainerComponent } from '../shared/components/standalone/container/container';
-import { AuroraComponent } from '../shared/components/standalone/aurora/aurora';
-import { DropdownComponent } from '../shared/components/standalone/dropdown/dropdown';
-import { MinibuttonComponent } from '../shared/components/standalone/minibutton/minibutton';
+
+import { TypewriterDirective } from '../shared/directives/typewriter/typewriter.directive';
+import { SlideUpDownDirective } from '../shared/directives/slide-up-down/slide-up-down.directive';
 
 import { AuthenticationService } from '../core/services/authentication/authentication';
 import { InterfaceService } from '../core/services/interface/interface';
-import { Translations, type TranslationDictionary } from '../core/internationalization';
-import { TypewriterDirective } from '../shared/directives/typewriter/typewriter.directive';
+import { NavigationService } from '../core/services/navigation/navigation';
 
 import { forkJoin, timer } from 'rxjs'; 
 
@@ -34,25 +32,12 @@ import { forkJoin, timer } from 'rxjs';
     TextboxComponent,
     CheckboxComponent,
     ContainerComponent,
-    AuroraComponent,
-    DropdownComponent,
+
     TypewriterDirective,
-    MinibuttonComponent
+    SlideUpDownDirective
 ],
   templateUrl: './authentication.html',
-  styleUrl: './authentication.scss',
-  animations: [
-    trigger('SlideUpDown', [
-      state('In', style({ transform: 'translateY(0)', opacity: 1 })),
-      state('Out', style({ transform: 'translateY(100vh)', opacity: 0 })),
-      transition('* => In', [
-        animate('0.8s cubic-bezier(0.86, 0, 0.07, 1)')
-      ]),
-      transition('In => Out', [
-        animate('0.8s cubic-bezier(0.86, 0, 0.07, 1)')
-      ]),
-    ])
-  ]
+  styleUrl: './authentication.scss'
 })
 export class AuthenticationComponent implements OnInit {
   @ViewChild('IdentifierTextbox') private IdentifierTextbox!: TextboxComponent;
@@ -64,8 +49,7 @@ export class AuthenticationComponent implements OnInit {
   private Router: Router = inject(Router);
   private ActivatedRoute: ActivatedRoute = inject(ActivatedRoute);
   public InterfaceService: InterfaceService = inject(InterfaceService);
-
-  public CurrentAnimationState: WritableSignal<'In' | 'Out'> = signal<'In' | 'Out'>('In');
+  private NavigationService: NavigationService = inject(NavigationService);
 
   public CurrentFormType: WritableSignal<'Sign In' | 'Sign Up'> = signal<'Sign In' | 'Sign Up'>('Sign In');
 
@@ -79,25 +63,6 @@ export class AuthenticationComponent implements OnInit {
       Action: () => this.CurrentFormType.set('Sign Up')
     }
   ]);
-
-  public RouteSelectorItems = [
-    { Label: 'house', Action: () => this.NavigateWithAnimation('home') },
-    { Label: 'user', Action: () => this.NavigateWithAnimation('authentication') },
-  ];
-
-  public LanguageItems = computed(() => {
-    return Object.keys(Translations).map(Language => ({
-      ID: Language,
-      Label: this.InterfaceService.T()[`LanguageName_${Language}` as keyof TranslationDictionary] as string,
-      Action: () => this.InterfaceService.SetLanguage(Language)
-    }));
-  });
-  
-  public ThemeIcon = computed(() => {
-    return this.InterfaceService.InterfaceType() === 'Primary' 
-      ? 'assets/icons/sun.png' 
-      : 'assets/icons/moon.png';
-  });
   
   public Status: WritableSignal<FancyUIElementLoadStatusType> = signal<FancyUIElementLoadStatusType>('Idle');
   
@@ -117,36 +82,12 @@ export class AuthenticationComponent implements OnInit {
 
   /** Navigates back to the home page. */
   public NavigateToHome(): void {
-    this.NavigateWithAnimation('home');
+    this.NavigationService.NavigateWithAnimation('home');
   }
 
   public ngOnInit(): void {
-    // Only animate if the redirect query parameter is present
-    const RedirectSource = this.ActivatedRoute.snapshot.queryParamMap.get('redirect');
-    
-    if (RedirectSource) {
-      this.CurrentAnimationState.set('Out');
-      setTimeout(() => this.CurrentAnimationState.set('In'), 0);
-    } else {
-      this.CurrentAnimationState.set('In');
-    }
   }
 
-  /** Triggers the exit animation before navigating to the target route. */
-  public NavigateWithAnimation(Target: string): void {
-    const CurrentPath = this.Router.url.split('?')[0];
-    const TargetPath = `/${Target}`;
-    
-    // Exact match or root redirect check
-    if (CurrentPath === TargetPath || (Target === 'home' && CurrentPath === '/')) return;
-
-    this.CurrentAnimationState.set('Out');
-
-    setTimeout(() => {
-      this.Router.navigate([`/${Target}`], { queryParams: { redirect: 'authentication' } });
-    }, 600); // Wait for the core part of the animation to complete
-  }
-  
   /** Delegates to the appropriate sign-in or sign-up handler based on the current form type. */
   public HandleSubmit(): void {
     if (this.CurrentFormType() === 'Sign In') {
@@ -154,6 +95,11 @@ export class AuthenticationComponent implements OnInit {
     } else {
       this.HandleSignUp();
     }
+  }
+
+  /** Initiates the account recovery flow. */
+  public HandleAccountRecovery(): void {
+    this.NavigationService.NavigateWithAnimation('authentication/recovery');
   }
 
   /** Sends a sign-in request with the current form values. */

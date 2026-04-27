@@ -3,11 +3,29 @@
 
 
 :host {
+    @include s.CreateTransition(transform);
+
     display: flex;
     flex-direction: column;
     position: relative;
     width: var(--Button-Width, 100%);
     height: var(--Button-Height, 50px);
+
+    /* Improve scaling quality to prevent graying/blurring of thin borders */
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-font-smoothing: antialiased;
+    will-change: transform;
+
+    &:hover {
+        transform: scale(var(--Hover-Scale-Big)) translateZ(0);
+        --Container-Border-Color: white;
+    }
+
+    &:has(.FancyDropdown-Item:hover) {
+        transform: scale(1) translateZ(0);
+        --Container-Border-Color: initial;
+    }
 }
 
 :host(.FancyDropdown--Primary) {
@@ -56,19 +74,18 @@
 
         @include s.SynchronizeStates('.FancyDropdown-Icon-Container') {
             border-radius: var(--Radius-Round);
-            transform: scale(var(--Hover-Scale-Standard));
         }
     }
 }
 
 .FancyDropdown-Trigger {
+    @include s.CreateTransition(border-radius, transform, border-color);
+
     display: flex;
     flex-direction: row;
     place-items: center;
-    place-content: space-between;
-    
-    gap: var(--Padding-Small);
-    padding: 0px var(--Padding-Small) 0px var(--Padding-Medium);
+    justify-content: space-between;
+    padding: 0px var(--Padding-Medium);
 
     position: relative;
     width: 100%;
@@ -76,12 +93,10 @@
 
     cursor: pointer;
     border-radius: var(--Radius-Standard);
-    transition: inherit;
 }
 
 .FancyDropdown-Label-Wrapper {
     height: 100%;
-    flex: 1;
     display: flex;
     place-content: center flex-start;
     place-items: center;
@@ -130,8 +145,9 @@
 
     border: none;
 
-    height: 50%;
-    width: 50%;
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
     transform: rotate(90deg);
 }
 
@@ -144,11 +160,14 @@
 .FancyDropdown-List-Wrapper {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 1px;
+    right: 1px;
+    width: auto;
     z-index: 1;
     
-    clip-path: inset(20% 0px -2000px 0px);
+    clip-path: inset(0px 0px -2000px 0px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - var(--Radius-Standard, 16px)), black var(--Button-Height, 50px));
+    mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - var(--Radius-Standard, 16px)), black var(--Button-Height, 50px));
     pointer-events: none;
     
     &.Is-Open {
@@ -166,6 +185,7 @@
     gap: var(--Padding-Small);
 
     border-radius: var(--Radius-Standard);
+    border-top: none !important;
     overflow: hidden;
     
     transform: translateY(-100%);
@@ -180,6 +200,8 @@
 }
 
 .FancyDropdown-Item {
+    @include s.CreateTransition(background-color, transform);
+
     display: flex;
     flex-direction: row;
     place-items: center;
@@ -187,6 +209,8 @@
     padding: var(--Padding-Small) var(--Padding-Medium);
     cursor: pointer;
     border-radius: var(--Radius-Round);
-    
-    transition: background-color var(--Duration-Standard) var(--Easing-Standard);
+
+    &:hover {
+        transform: scale(var(--Hover-Scale-Big));
+    }
 }

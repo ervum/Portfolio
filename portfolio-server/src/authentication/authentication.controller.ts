@@ -1,8 +1,12 @@
 import { Controller, Post, Body } from '@nestjs/common';
+
 import { UsersService } from '../users/users.service';
 import { RegisterDTO } from './dto/register.dto';
 import { LoginDTO } from './dto/login.dto';
 import { User } from '../users/users.entity';
+
+import { Nullable } from '@ervum/types';
+
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -15,7 +19,7 @@ export class AuthenticationController {
 
   @Post('login')
   async Login(@Body() Data: LoginDTO): Promise<User | { error: string }> {
-    const FoundUser: User | null = await this.UsersService.FindByUserIdentifier(Data.UserIdentifier);
+    const FoundUser: Nullable<User> = await this.UsersService.FindByUserIdentifier(Data.UserIdentifier);
     
     if (FoundUser && ((FoundUser.Password) === (Data.Password))) {
       return FoundUser;

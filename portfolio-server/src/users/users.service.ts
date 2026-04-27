@@ -23,7 +23,7 @@ export class UsersService {
   /**
    * Finds a user by their identifier (Username, Email, PhoneNumber, or numeric ID).
    */
-  async FindByUserIdentifier(Identifier: (string | number)): Promise<User | null> {
+  async FindByUserIdentifier(Identifier: (string | number)): Promise<Nullable<User>> {
     const StringIdentifier = String(Identifier);
     const Conditions: FindOptionsWhere<User>[] = [
       { Username: StringIdentifier },

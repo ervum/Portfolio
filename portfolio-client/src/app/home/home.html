@@ -1,38 +1,15 @@
-<Aurora/>
-
-<div class = "Logo-Container">
-    <div class = "Logo"></div>
-</div>
-
-<FancyDropdown
-    class = "Language-Dropdown"
-    [Items] = "(LanguageItems())">
-</FancyDropdown>
-
-<FancyMinibutton
-    class = "Theme-Toggle-Minibutton"
-    [Icon] = "ThemeIcon()"
-    (click) = "ToggleTheme($event)">
-</FancyMinibutton>
-
-<FancyMultibutton
-    class = "RouteSelector-Multibutton"
-
-    [Items] = "RouteSelectorItems"
-    [SelectedIndex] = "0"
-    [Vertical] = "true"
-    [ShowIndicator] = "true"
-
-    DisplayMode = "Icon">
-</FancyMultibutton>
-
 <div class = "Main Wrapper">
     <div
         class = "Section-Wrapper"
-        [@SlideUpDown] = "CurrentAnimationState()">
+        FancySlideUpDown>
 
         <FancyContainer class = "Content-Section-Wrapper">
             <div class = "Content-Section">
+                <span
+                    class = "Section-Title"
+                    style = "font-size: 32px; font-weight: 700; color: white; opacity: 0.6;">
+                    HOME
+                </span>
                 <!-- Home Content Goes Here -->
             </div>
         </FancyContainer>

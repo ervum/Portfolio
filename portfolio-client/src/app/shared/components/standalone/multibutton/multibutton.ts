@@ -30,7 +30,7 @@ export class MultibuttonComponent {
 
   /** Currently selected button index. */
   @Input() public SelectedIndex: number = 0;
-  public HoveredIndex: WritableSignal<number | null> = signal<number | null>(null);
+  public HoveredIndex: WritableSignal<Nullable<number>> = signal<number | null>(null);
 
   /** Selects a button by index and invokes its action if defined. */
   public SelectButton(Index: number): void {

@@ -1,7 +1,7 @@
 import { Injectable, signal, WritableSignal, computed, type Signal, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-import { FancyUIElementTypeType } from '@ervum/types';
+import { Nullable, FancyUIElementTypeType } from '@ervum/types';
 
 import { Translations, type TranslationDictionary } from '../../internationalization';
 
@@ -28,6 +28,18 @@ export class InterfaceService {
 
   /** The duration (in ms) for the global interface theme transition */
   public ThemeTransitionDuration: WritableSignal<number> = signal<number>(3000);
+
+  /** Shared data passed between routes during navigation */
+  private NavigationData: WritableSignal<any> = signal<any>(null);
+
+  /** Signal used to trigger exit animations in the active component before route changes */
+  public RouteTransitionRequest: WritableSignal<Nullable<string>> = signal<string | null>(null);
+
+  /** Whether the app has completed its initial page load (used to skip animation on first render / refresh) */
+  public IsAppInitialized: boolean = false;
+
+  /** Whether a manual navigation (NavigateWithAnimation) is in progress (exit animation already handled) */
+  public IsManualNavigation: boolean = false;
 
   /** Active translation dictionary */
   public readonly T: Signal<TranslationDictionary> = computed(() => (Translations[this.Language()] || Translations['English']));
@@ -95,5 +107,23 @@ export class InterfaceService {
    */
   public SetThemeTransitionDuration(Duration: number): void {
     this.ThemeTransitionDuration.set(Duration);
+  }
+
+  /**
+   * Sets the shared data for the next navigation.
+   */
+  public SetNavigationData(Data: any): void {
+    this.NavigationData.set(Data);
+  }
+
+  /**
+   * Retrieves and clears the shared navigation data.
+   */
+  public GetAndClearNavigationData(): any {
+    const Data = this.NavigationData();
+    
+    this.NavigationData.set(null);
+
+    return Data;
   }
 }
