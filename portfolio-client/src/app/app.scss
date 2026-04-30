@@ -9,15 +9,15 @@
     z-index: 100;
 
     .Logo {
-        width: 46px;
-        height: 46px;
+        width: 50px;
+        height: 50px;
     }
 }
 
 .Language-Dropdown {
     position: fixed;
     top: 10px;
-    left: 66px;
+    left: 70px;
     width: 150px;
     z-index: 100;
     transition: left 0.5s cubic-bezier(0.86, 0, 0.07, 1), transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
@@ -45,6 +45,9 @@
     bottom: 10px;
     left: 10px;
     z-index: 100;
+
+    --Minibutton-Width: 50px;
+    --Minibutton-Height: 50px;
 }
 
 .Back-Minibutton {
@@ -53,8 +56,8 @@
     left: 10px;
     z-index: 100;
 
-    --Minibutton-Width: 46px;
-    --Minibutton-Height: 46px;
+    --Minibutton-Width: 50px;
+    --Minibutton-Height: 50px;
 
     transform: rotate(180deg);
     transition: left 0.5s cubic-bezier(0.86, 0, 0.07, 1);

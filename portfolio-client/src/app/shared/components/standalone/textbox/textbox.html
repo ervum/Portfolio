@@ -16,7 +16,12 @@
     <div
       class = "FancyTextbox-Icon"
 
-      [ngClass] = "GetInputClasses">
+      [ngClass] = "{ 
+        'Icon-ExitUp': IconAnimationState === 'Exiting', 
+        'Icon-EnterDown': IconAnimationState === 'Entering',
+        'FancyTextbox--Primary': EffectiveType() === 'Primary',
+        'FancyTextbox--Secondary': EffectiveType() === 'Secondary'
+      }">
     </div>
   </FancyContainer>
 

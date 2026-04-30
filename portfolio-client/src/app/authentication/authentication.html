@@ -42,10 +42,10 @@
 
                     <div class = "Main-Fields-Container">
                         <FancyTextbox
-                            #IdentifierTextbox
+                            #MainIdentifierTextbox
                             class = "Input-Field"
                             [Placeholder] = "(CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username)"
-                            Icon = "at">
+                            [Icon] = "(CurrentFormType() === 'Sign In' ? 'user' : 'at')">
                         </FancyTextbox>
 
                         <FancyTextbox

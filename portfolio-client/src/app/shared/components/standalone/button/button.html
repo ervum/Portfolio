@@ -34,7 +34,10 @@
     (focus) = "OnFocus()"
     (blur) = "OnUnfocus()">
     <div class = "FancyButton-Label-Wrapper">
-      <span class = "FancyButton-Label">{{ DisplayLabel }}</span>
+      <span 
+        class = "FancyButton-Label"
+        [FancyTypewriter] = "Label ?? ''">
+      </span>
     </div>
 
     @if (Icon !== '') {

@@ -21,4 +21,6 @@ export const SpanishDictionary: TranslationDictionary = {
   Recover: 'recuperar',
   Continue: 'Continuar',
   RecoveryIntro: 'Me gustaría recuperar mi',
+  Home: 'INICIO',
+  OR: 'O',
 };

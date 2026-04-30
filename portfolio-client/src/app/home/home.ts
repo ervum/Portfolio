@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ContainerComponent } from '../shared/components/standalone/container/container';
 import { InterfaceService } from '../core/services/interface/interface';
 import { SlideUpDownDirective } from '../shared/directives/slide-up-down/slide-up-down.directive';
+import { TypewriterDirective } from '../shared/directives/typewriter/typewriter.directive';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,8 @@ import { SlideUpDownDirective } from '../shared/directives/slide-up-down/slide-u
   imports: [
     CommonModule,
     ContainerComponent,
-    SlideUpDownDirective
+    SlideUpDownDirective,
+    TypewriterDirective
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'

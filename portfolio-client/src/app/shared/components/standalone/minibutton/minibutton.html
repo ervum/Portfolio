@@ -18,6 +18,9 @@
     }
 
     @if (Label()) {
-        <span class = "Minibutton-Label">{{ Label() }}</span>
+        <span 
+            class = "Minibutton-Label"
+            [FancyTypewriter] = "Label() ?? ''">
+        </span>
     }
 </FancyContainer>

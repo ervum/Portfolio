@@ -4,8 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FancyDropdownItemType, FancyUIElementTypeType, Undefinable } from '@ervum/types';
 
 import { ContainerComponent } from '../container/container';
+
 import { InterfaceService } from '../../../../core/services/interface/interface';
-import { TypewriterAnimator } from '../../../utilities/typewriter';
+import { TypewriterDirective } from '../../../directives/typewriter/typewriter.directive';
 
 
 
@@ -14,7 +15,8 @@ import { TypewriterAnimator } from '../../../utilities/typewriter';
   standalone: true,
   imports: [
     CommonModule,
-    ContainerComponent
+    ContainerComponent,
+    TypewriterDirective
   ],
   templateUrl: './dropdown.html',
   styleUrl: './dropdown.scss',
@@ -39,37 +41,33 @@ export class DropdownComponent implements OnInit, OnChanges {
   public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
   public EffectiveType = computed(() => this.Type() ?? this.GlobalType());
 
-  /** Displayed text for the trigger label (animated). */
-  public TriggerDisplayLabel: string = 'Select';
+  /** Displayed text for the trigger label. */
+  public TriggerLabel: string = 'Select';
 
-  /** Displayed text for each list item (animated). Keyed by item reference. */
-  public ItemDisplayLabels: Map<FancyDropdownItemType, string> = new Map();
-
-  /** Typewriter animator for the trigger label. */
-  private TriggerTypewriter = new TypewriterAnimator();
-
-  /** Typewriter animators for list item labels, keyed by item. */
-  private ItemTypewriters: Map<FancyDropdownItemType, TypewriterAnimator> = new Map();
+  /** Displayed text for each list item. Keyed by item reference. */
+  public ItemLabels: Map<FancyDropdownItemType, string> = new Map();
 
   ngOnInit(): void {
     if (!this.SelectedItem && this.Items.length > 0) {
       this.SelectedItem = this.Items[0];
     }
 
-    this.TriggerDisplayLabel = this.SelectedItem?.Label ?? 'Select';
+    this.TriggerLabel = this.SelectedItem?.Label ?? 'Select';
 
     for (const Item of this.Items) {
-      this.ItemDisplayLabels.set(Item, Item.Label);
-      this.ItemTypewriters.set(Item, new TypewriterAnimator());
+      this.ItemLabels.set(Item, Item.Label);
     }
   }
 
   ngOnChanges(Changes: SimpleChanges): void {
+    if (Changes['SelectedItem'] && this.SelectedItem) {
+      this.TriggerLabel = this.SelectedItem.Label;
+    }
+
     if (Changes['Items'] && !Changes['Items'].firstChange) {
       for (const Item of this.Items) {
-        if (!this.ItemDisplayLabels.has(Item)) {
-          this.ItemDisplayLabels.set(Item, Item.Label);
-          this.ItemTypewriters.set(Item, new TypewriterAnimator());
+        if (!this.ItemLabels.has(Item)) {
+          this.ItemLabels.set(Item, Item.Label);
         }
       }
 
@@ -81,21 +79,13 @@ export class DropdownComponent implements OnInit, OnChanges {
 
         if (MatchingItem) {
           this.SelectedItem = MatchingItem;
-
-          if (this.TriggerDisplayLabel !== MatchingItem.Label) {
-            this.TriggerTypewriter.Animate(
-              this.TriggerDisplayLabel,
-              MatchingItem.Label,
-              (Text: string) => { this.TriggerDisplayLabel = Text; },
-              this.InterfaceService.Typewriter()
-            );
-          }
+          this.TriggerLabel = MatchingItem.Label;
         } else if (this.Items.length > 0) {
           this.SelectedItem = this.Items[0];
-          this.TriggerDisplayLabel = this.SelectedItem.Label;
+          this.TriggerLabel = this.SelectedItem.Label;
         } else {
           this.SelectedItem = undefined;
-          this.TriggerDisplayLabel = 'Select';
+          this.TriggerLabel = 'Select';
         }
       }
     }
@@ -106,7 +96,7 @@ export class DropdownComponent implements OnInit, OnChanges {
     this.IsOpen = !this.IsOpen;
   }
 
-  /** Selects an item, closes the dropdown, and animates the label transition. */
+  /** Selects an item, closes the dropdown, and updates labels. */
   public Select(Item: FancyDropdownItemType): void {
     const PreviousItem = this.SelectedItem;
 
@@ -119,30 +109,21 @@ export class DropdownComponent implements OnInit, OnChanges {
       Item.Action(...(Item.ActionArguments ?? []));
     }
 
-    // Animate trigger: delete old label, type new label.
-    this.TriggerTypewriter.Animate(
-      this.TriggerDisplayLabel,
-      Item.Label,
-      (Text: string) => { this.TriggerDisplayLabel = Text; },
-      this.InterfaceService.Typewriter()
-    );
+    // Update trigger label to trigger directive animation.
+    this.TriggerLabel = Item.Label;
 
-    // Animate the previously selected item appearing in the list.
+    // Animate the previously selected item appearing back in the list.
     if (PreviousItem) {
-      const Typewriter = this.ItemTypewriters.get(PreviousItem) ?? new TypewriterAnimator();
-
-      Typewriter.Animate(
-        '',
-        PreviousItem.Label,
-        (Text: string) => { this.ItemDisplayLabels.set(PreviousItem, Text); },
-        this.InterfaceService.Typewriter()
-      );
+      this.ItemLabels.set(PreviousItem, '');
+      requestAnimationFrame(() => {
+        this.ItemLabels.set(PreviousItem, PreviousItem.Label);
+      });
     }
   }
 
-  /** Returns the animated display label for a given item. */
-  public GetItemDisplayLabel(Item: FancyDropdownItemType): string {
-    return this.ItemDisplayLabels.get(Item) ?? Item.Label;
+  /** Returns the label for a given item. */
+  public GetItemLabel(Item: FancyDropdownItemType): string {
+    return this.ItemLabels.get(Item) ?? Item.Label;
   }
 
   /** Closes the dropdown when clicking outside of it. */

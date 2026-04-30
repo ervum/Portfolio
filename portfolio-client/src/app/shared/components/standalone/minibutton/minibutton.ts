@@ -1,10 +1,12 @@
 import { Component, input, inject, InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Undefinable } from '@ervum/types';
+import { Undefinable, FancyButtonIconStateType } from '@ervum/types';
 
 import { ContainerComponent } from '../container/container';
+
 import { InterfaceService } from '../../../../core/services/interface/interface';
+import { TypewriterDirective } from '../../../directives/typewriter/typewriter.directive';
 
 
 
@@ -15,7 +17,7 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
 @Component({
   selector: 'FancyMinibutton',
   standalone: true,
-  imports: [CommonModule, ContainerComponent],
+  imports: [CommonModule, ContainerComponent, TypewriterDirective],
   templateUrl: './minibutton.html',
   styleUrl: './minibutton.scss',
 })
@@ -33,7 +35,7 @@ export class MinibuttonComponent {
   public Animated: InputSignal<boolean> = input<boolean>(true);
 
   /** Current state of the icon animation. */
-  public IconStatus: 'AtCenter' | 'Entering' | 'Exiting' | 'OffScreen' = 'AtCenter';
+  public IconStatus: FancyButtonIconStateType = 'AtCenter';
 
   /** Whether an entry animation is queued. */
   private EntryIsQueued: boolean = false;

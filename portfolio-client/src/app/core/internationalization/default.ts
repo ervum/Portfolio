@@ -17,6 +17,8 @@ export const DefaultDictionary = {
    Recover: 'recover',
    Continue: 'Continue',
    RecoveryIntro: "I'd like to recover my",
+   Home: 'HOME',
+   OR: 'OR',
  };
 
 

@@ -73,6 +73,8 @@
     display: block;
     place-content: center;
 
+    overflow: hidden;
+
     z-index: 3;
 
     height: var(--IconContainer-Size);
@@ -100,6 +102,23 @@
     height: var(--Icon-Size-Standard);
 
     transition: transform var(--Duration-Slow) var(--Easing-Standard);
+
+    &.Icon-ExitUp {
+        animation: Icon-ExitUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    &.Icon-EnterDown {
+        animation: Icon-EnterDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+}
+
+@keyframes Icon-ExitUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-30px); opacity: 0; }
+}
+
+@keyframes Icon-EnterDown {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 
 .FancyTextbox-Visibility-Toggle {

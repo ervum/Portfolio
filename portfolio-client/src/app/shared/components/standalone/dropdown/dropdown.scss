@@ -19,7 +19,7 @@
 
     &:hover {
         transform: scale(var(--Hover-Scale-Big)) translateZ(0);
-        --Container-Border-Color: white;
+        --Container-Border-Color: currentColor;
     }
 
     &:has(.FancyDropdown-Item:hover) {

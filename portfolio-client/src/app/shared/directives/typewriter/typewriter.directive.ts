@@ -1,4 +1,5 @@
 import { Directive, ElementRef, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+
 import { TypewriterAnimator } from '../../utilities/typewriter';
 import { InterfaceService } from '../../../core/services/interface/interface';
 

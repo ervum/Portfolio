@@ -40,7 +40,7 @@ import { forkJoin, timer } from 'rxjs';
   styleUrl: './authentication.scss'
 })
 export class AuthenticationComponent implements OnInit {
-  @ViewChild('IdentifierTextbox') private IdentifierTextbox!: TextboxComponent;
+  @ViewChild('MainIdentifierTextbox') private MainIdentifierTextbox!: TextboxComponent;
   @ViewChild('EmailTextbox') private EmailTextbox!: TextboxComponent;
   @ViewChild('PhoneNumberTextbox') private PhoneNumberTextbox!: TextboxComponent;
   @ViewChild('PasswordTextbox') private PasswordTextbox!: TextboxComponent;
@@ -109,7 +109,7 @@ export class AuthenticationComponent implements OnInit {
     this.Status.set('Loading');
     
     const UserPayload: LoginData = {
-      UserIdentifier: ((this.IdentifierTextbox?.InputValue) ?? ''),
+      UserIdentifier: ((this.MainIdentifierTextbox?.InputValue) ?? ''),
       Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 
@@ -145,7 +145,7 @@ export class AuthenticationComponent implements OnInit {
       Email: ((this.EmailTextbox?.InputValue) ?? ''),
       PhoneNumber: ((this.PhoneNumberTextbox?.InputValue) ?? ''),
 
-      Username: ((this.IdentifierTextbox?.InputValue) ?? ''),
+      Username: ((this.MainIdentifierTextbox?.InputValue) ?? ''),
       Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 

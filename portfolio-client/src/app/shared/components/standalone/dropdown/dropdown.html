@@ -5,7 +5,10 @@
         (click) = "Toggle()">
         
         <div class = "FancyDropdown-Label-Wrapper">
-            <span class = "FancyDropdown-Label">{{ TriggerDisplayLabel }}</span>
+            <span 
+                class = "FancyDropdown-Label"
+                [FancyTypewriter] = "TriggerLabel">
+            </span>
         </div>
 
         <div class = "FancyDropdown-Icon"></div>
@@ -25,7 +28,10 @@
                 *ngIf = "(Item !== SelectedItem)"
                 class = "FancyDropdown-Item"
                 (click) = "Select(Item)">
-                <span class = "FancyDropdown-Item-Label">{{ GetItemDisplayLabel(Item) }}</span>
+                <span 
+                    class = "FancyDropdown-Item-Label"
+                    [FancyTypewriter] = "GetItemLabel(Item)">
+                </span>
             </div>
         </ng-container>
     </FancyContainer>

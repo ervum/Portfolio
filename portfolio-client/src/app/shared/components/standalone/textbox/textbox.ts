@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Undefinable, FancyUIElementTypeType, FancyTextboxOrderType, VerticalPositionType, FancyUIElementFocusStateType, StringBooleanType, Nullable, NGStylesType } from '@ervum/types';
+
 import { ContainerComponent } from '../container/container';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
 import { TypewriterAnimator } from '../../../utilities/typewriter';
+
+
 
 @Component({
   selector: 'FancyTextbox',
@@ -55,6 +58,8 @@ export class TextboxComponent implements OnInit, OnChanges {
   public FocusState: FancyUIElementFocusStateType = 'Unfocused';
 
   public IsVisible: boolean = false;
+  public DisplayedIcon: Undefinable<string>;
+  public IconAnimationState: 'Idle' | 'Exiting' | 'Entering' = 'Idle';
 
   // #endregion
 
@@ -123,11 +128,11 @@ export class TextboxComponent implements OnInit, OnChanges {
    * **NOTE: Hardcodes extension to `.png`.**
    */
   public get TextboxIconStyle(): string {
-    if (!(this.Icon)) {
+    if (!(this.DisplayedIcon)) {
       return '';
     }
 
-    return `url(${this.IconsBasePath}${this.Icon}.png)`;
+    return `url(${this.IconsBasePath}${this.DisplayedIcon}.png)`;
   }
 
   public get HasText(): boolean {
@@ -183,6 +188,15 @@ export class TextboxComponent implements OnInit, OnChanges {
     }
   }
 
+  private async AnimateIconChange(NewIcon: Undefinable<string>): Promise<void> {
+    this.IconAnimationState = 'Exiting';
+    await this.Wait(400); // Wait for ExitUp animation (0.4s)
+    this.DisplayedIcon = NewIcon;
+    this.IconAnimationState = 'Entering';
+    await this.Wait(400); // Wait for EnterDown animation (0.4s)
+    this.IconAnimationState = 'Idle';
+  }
+
   // #endregion
 
   // #region Inputs
@@ -210,6 +224,7 @@ export class TextboxComponent implements OnInit, OnChanges {
   @Input() Placeholder: string = '';
   public DisplayPlaceholder: string = '';
   private PlaceholderAnimator = new TypewriterAnimator();
+  private readonly PlaceholderTypewriter = new TypewriterAnimator();
 
   // #endregion
 
@@ -286,10 +301,21 @@ export class TextboxComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.IsVisible = this.InitialVisibility;
-    this.DisplayPlaceholder = this.Placeholder;
+    this.DisplayedIcon = this.Icon;
+    
+    this.PlaceholderAnimator.Animate(
+        '',
+        this.Placeholder,
+        (Text: string) => { this.DisplayPlaceholder = Text; },
+        this.InterfaceService.Typewriter()
+    );
   }
 
   ngOnChanges(Changes: SimpleChanges): void {
+    if (Changes['Icon'] && !Changes['Icon'].firstChange) {
+      this.AnimateIconChange(Changes['Icon'].currentValue);
+    }
+
     if (Changes['Placeholder'] && !Changes['Placeholder'].firstChange) {
       const OldText = Changes['Placeholder'].previousValue ?? '';
       const NewText = Changes['Placeholder'].currentValue ?? '';

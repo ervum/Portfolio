@@ -2,10 +2,11 @@ import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, 
 import { CommonModule } from '@angular/common';
 
 import { Nullable, Undefinable, FancyUIElementTypeType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
+
 import { ContainerComponent } from '../container/container';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
-import { TypewriterAnimator } from '../../../utilities/typewriter';
+import { TypewriterDirective } from '../../../directives/typewriter/typewriter.directive';
 
 
 
@@ -14,7 +15,8 @@ import { TypewriterAnimator } from '../../../utilities/typewriter';
   standalone: true,
   imports: [
     CommonModule,
-    ContainerComponent
+    ContainerComponent,
+    TypewriterDirective
   ],
   templateUrl: './button.html',
   styleUrl: './button.scss',
@@ -131,11 +133,7 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   @Input() Label: Nullable<string> = 'Button';
 
-  /** The label text actually rendered in the template (animated). */
-  public DisplayLabel: string = 'Button';
 
-  /** Shared typewriter animator for label transitions. */
-  private LabelTypewriter = new TypewriterAnimator();
   @Input() Icon: Nullable<string> = 'next';
 
   /** The global interface type signal. */
@@ -177,22 +175,9 @@ export class ButtonComponent implements OnInit, OnChanges {
   @ViewChild('ButtonElement', { static: true }) ButtonElementReference!: ElementRef<HTMLDivElement>;
 
   ngOnInit(): void {
-
-    this.DisplayLabel = this.Label ?? 'Button';
   }
 
   ngOnChanges(Changes: SimpleChanges): void {
-    if (Changes['Label'] && !Changes['Label'].firstChange) {
-      const OldLabel = Changes['Label'].previousValue ?? 'Button';
-      const NewLabel = Changes['Label'].currentValue ?? 'Button';
-
-      this.LabelTypewriter.Animate(
-        OldLabel,
-        NewLabel,
-        (Text: string) => { this.DisplayLabel = Text; },
-        this.InterfaceService.Typewriter()
-      );
-    }
   }
 
   // #endregion

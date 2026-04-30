@@ -13,16 +13,41 @@
 
                     <FancyDropdown
                         class = "Recovery-Dropdown"
-                        [Items] = "(RecoveryOptions())">
+                        [Type] = "InterfaceService.InterfaceType()"
+                        [Items] = "RecoveryOptions()"
+                        [SelectedItem] = "SelectedOption()"
+                        (SelectionChange) = "OnSelectionChange($event)">
                     </FancyDropdown>
                 </div>
 
-                <div class = "Form-Fields-Wrapper">
-                    <FancyTextbox
-                        class = "Input-Field"
-                        [Placeholder] = "(InterfaceService.T().Email)"
-                        Icon = "envelope">
-                    </FancyTextbox>
+                <div class = "Form-Fields-Wrapper" [class.Is-Password-Mode] = "SelectedRecoveryType() === 'Password'">
+                    <div class = "Form-Fields-Horizontal-Group">
+                        <div class = "Animation-Container Left-Field">
+                            <FancyTextbox
+                                class = "Input-Field"
+                                [Placeholder] = "FirstTextboxPlaceholder()"
+                                [Icon] = "FirstTextboxIcon()">
+                            </FancyTextbox>
+                        </div>
+                        <span class = "Separator-Text">{{ InterfaceService.T().OR }}</span>
+                        <div class = "Animation-Container Right-Field">
+                            <FancyTextbox
+                                class = "Input-Field"
+                                [Placeholder] = "SecondTextboxPlaceholder()"
+                                [Icon] = "SecondTextboxIcon()">
+                            </FancyTextbox>
+                        </div>
+                    </div>
+                    
+                    <div class = "Unique-Textbox-Wrapper">
+                        <div class = "Animation-Container Unique-Field">
+                            <FancyTextbox
+                                class = "Input-Field"
+                                [Placeholder] = "InterfaceService.T().UserIdentifier"
+                                Icon = "user">
+                            </FancyTextbox>
+                        </div>
+                    </div>
                 </div>
 
                 <div class = "Buttons-Container">
