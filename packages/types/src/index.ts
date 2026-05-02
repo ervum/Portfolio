@@ -84,4 +84,27 @@ export interface FancyDropdownItemType {
   ActionArguments?: unknown[]
 };
 
-/////       Fancy Checkbox       \\\\\
+/////       Fancy Checkbox       \\\\\
+export type FancyCheckboxCheckStateType = ('Checked' | 'Unchecked' | 'Mixed');
+
+
+
+/////      Deep Background       \\\\\
+export interface BackgroundPalette {
+  Name: string;
+  Colors: string[];
+};
+
+
+
+/////           Aurora           \\\\\
+export interface RGBColor {
+  R: number;
+  G: number;
+  B: number;
+};
+
+export interface AuroraSphere {
+  /** Pre-computed inline styles (position, size, background, CSS custom properties). */
+  Styles: NGStylesType;
+};
