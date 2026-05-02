@@ -8,21 +8,17 @@
     position: relative;
     width: var(--Button-Width, 100%);
     height: 100%;
-}
-
-:host(.FancyButton--Primary) {
-    color: white;
+    
+    color: var(--Text-Main);
 
     .FancyButton-Icon-Container {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--Surface-BG-Hover);
     }
 }
+
+:host(.FancyButton--Primary),
 :host(.FancyButton--Secondary) {
-    color: black;
-
-    .FancyButton-Icon-Container {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+    /* Theme variables automatically handle this */
 }
 
 
@@ -45,15 +41,8 @@
 
         border: solid;
         border-width: 1px;
-        
-        &.FancyButton--Primary {
-            border-color: white;
-            color: white;
-        }
-        &.FancyButton--Secondary {
-            border-color: black;
-            color: black;
-        }
+        border-color: var(--Border-Strong);
+        color: var(--Text-Main);
     }
 
     &:hover,
@@ -119,7 +108,7 @@
     
     border-radius: var(--Radius-Sharp);
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px var(--Shadow-Standard);
     
     overflow: hidden;
 

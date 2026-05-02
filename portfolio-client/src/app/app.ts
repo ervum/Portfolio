@@ -4,6 +4,8 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 import { AuroraComponent } from './shared/components/standalone/aurora/aurora';
+import { DeepBackgroundComponent } from './shared/components/standalone/deep-background/deep-background';
+
 import { DropdownComponent } from './shared/components/standalone/dropdown/dropdown';
 import { MinibuttonComponent } from './shared/components/standalone/minibutton/minibutton';
 import { MultibuttonComponent } from './shared/components/standalone/multibutton/multibutton';
@@ -19,6 +21,7 @@ import { Translations, type TranslationDictionary } from './core/internationaliz
     CommonModule, 
     RouterOutlet,
     AuroraComponent,
+    DeepBackgroundComponent,
     DropdownComponent,
     MinibuttonComponent,
     MultibuttonComponent

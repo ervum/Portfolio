@@ -1,16 +1,9 @@
-<div #Container 
-    class = "Aurora-Container">
+<div class="Aurora-Container" #Container>
+    <div class="Aurora-Wave Aurora-Wave--1"></div>
+    <div class="Aurora-Wave Aurora-Wave--2"></div>
+    <div class="Aurora-Wave Aurora-Wave--3"></div>
 
-    @for (Wave of WaveLayers; track $index) {
-        <div [class] = "Wave"></div>
+    @for (Sphere of Spheres; track Sphere.Id) {
+        <div class="Aurora-Sphere" [ngStyle]="Sphere.Styles"></div>
     }
-
-    @for (Sphere of Spheres; track $index) {
-        <div
-            class = "Aurora-Sphere"
-            [ngStyle] = "(Sphere.Styles)">
-        </div>
-    }
-
-    <!-- <div class = "Aurora-Noise"></div> -->
 </div>

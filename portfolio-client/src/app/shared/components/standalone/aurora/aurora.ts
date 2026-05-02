@@ -1,9 +1,6 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, Input, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener, Inject, inject, PLATFORM_ID, OnDestroy, effect } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-
-import { Nullable, Undefinable, NGStylesType } from '@ervum/types';
-
-
+import { InterfaceService } from '../../../../core/services/interface/interface';
 
 interface RGBColor {
   R: number;
@@ -11,249 +8,127 @@ interface RGBColor {
   B: number;
 }
 
-interface AuroraSphere {
-  /** Pre-computed inline styles (position, size, background, CSS custom properties). */
-  Styles: NGStylesType;
+interface Sphere {
+  Id: number;
+  Styles: Record<string, string>;
 }
-
-/** Smoothing factor for exponential lerp (0 = no smoothing, 1 = instant). */
-const MouseSmoothing: number = 0.12;
-
-
 
 @Component({
   selector: 'Aurora',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './aurora.html',
-  styleUrls: ['./aurora.scss']
+  styleUrl: './aurora.scss'
 })
-export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('Container') ContainerRef!: ElementRef<HTMLDivElement>;
+export class AuroraComponent implements OnInit, OnDestroy {
+  @ViewChild('Container') private ContainerRef!: ElementRef<HTMLDivElement>;
 
-  // #region Inputs
+  private InterfaceService: InterfaceService = inject(InterfaceService);
 
-  /** Number of gradient spheres to generate. */
-  @Input() SphereCount: number = 5;
+  private IsBrowser: boolean;
+  private AnimationFrameId: number | null = null;
+  private ResizeObserver: ResizeObserver | null = null;
 
-  /** Minimum sphere diameter (in vw units). */
-  @Input() MinimumSize: number = 14;
-  /** Maximum sphere diameter (in vw units). */
-  @Input() MaximumSize: number = 22;
+  public Spheres: Sphere[] = [];
 
-  /** Minimum vertical position (in percentage). */
-  @Input() MinimumTop: number = 0;
-  /** Maximum vertical position (in percentage). */
-  @Input() MaximumTop: number = 100;
-  /** Minimum horizontal position (in percentage). */
-  @Input() MinimumLeft: number = 0;
-  /** Maximum horizontal position (in percentage). */
-  @Input() MaximumLeft: number = 100;
+  // #region Mouse Tracking & Parallax
 
-  /** Minimum parallax speed. */
-  @Input() MinimumSpeed: number = -20;
-  /** Maximum parallax speed. */
-  @Input() MaximumSpeed: number = 20;
+  private MouseX: number = 0;
+  private MouseY: number = 0;
+  private TargetMouseX: number = 0;
+  private TargetMouseY: number = 0;
 
-  /** Minimum rotation speed. */
-  @Input() MinimumRotationSpeed: number = -0.8;
-  /** Maximum rotation speed. */
-  @Input() MaximumRotationSpeed: number = 0.8;
+  @HostListener('window:mousemove', ['$event'])
+  public OnMouseMove(Event: MouseEvent): void {
+    this.TargetMouseX = (Event.clientX / window.innerWidth) - 0.5;
+    this.TargetMouseY = (Event.clientY / window.innerHeight) - 0.5;
+  }
 
-  /** Minimum scale speed. */
-  @Input() MinimumScaleSpeed: number = 0.1;
-  /** Maximum scale speed. */
-  @Input() MaximumScaleSpeed: number = 0.2;
-
-  /** Minimum sphere opacity. */
-  @Input() MinimumOpacity: number = 0.3;
-  /** Maximum sphere opacity. */
-  @Input() MaximumOpacity: number = 0.5;
-
-  /** Minimum wave offset. */
-  @Input() MinimumWaveOffset: number = 0;
-  /** Maximum wave offset. */
-  @Input() MaximumWaveOffset: number = 3;
-
-  /** Minimum animation delay (in seconds). */
-  @Input() MinimumAnimationDelay: number = 0;
-  /** Maximum animation delay (in seconds). */
-  @Input() MaximumAnimationDelay: number = 4;
+  @HostListener('window:deviceorientation', ['$event'])
+  public OnDeviceOrientation(Event: DeviceOrientationEvent): void {
+    if (Event.beta && Event.gamma) {
+      // Mapping tilt to parallax
+      this.TargetMouseX = (Event.gamma / 45); // Approx range -45 to 45
+      this.TargetMouseY = (Event.beta / 45);
+    }
+  }
 
   // #endregion
-
-  // #region State
-
-  public Spheres: AuroraSphere[] = [];
-
-  /** CSS classes for each wave layer (data-driven instead of hardcoded HTML). */
-  public readonly WaveLayers: string[] = [
-    'Aurora-Wave Aurora-Wave--1',
-    'Aurora-Wave Aurora-Wave--2',
-    'Aurora-Wave Aurora-Wave--3'
-  ];
-
-  private readonly IsBrowser: boolean;
-
-  /** Raw mouse position (normalized -1 to +1). Updated instantly on mousemove. */
-  private RawMouseX: number = 0;
-  private RawMouseY: number = 0;
-
-  /** Smoothed mouse position (lerped toward raw). Used for CSS variable output. */
-  private SmoothedX: number = 0;
-  private SmoothedY: number = 0;
-
-  /** Smoothed angle that handles ±π wrap-around. Stored in radians. */
-  private SmoothedAngle: number = 0;
-
-  /** Active render loop handle for cancellation. */
-  private AnimationFrameID: Nullable<number> = null;
-
-  // #endregion
-
-  // #region Color Palette
-
-  /** Color palette for random gradient generation. */
-  private readonly ColorPalette: RGBColor[] = [
-    { R: 139, G: 92,  B: 246 },   // Purple
-    { R: 236, G: 72,  B: 153 },   // Pink
-    { R: 124, G: 58,  B: 237 },   // Deep Purple
-    { R: 79,  G: 70,  B: 229 },   // Indigo
-    { R: 219, G: 39,  B: 119 },   // Magenta
-    { R: 6,   G: 182, B: 212 },   // Cyan
-    { R: 59,  G: 130, B: 246 },   // Blue
-    { R: 14,  G: 165, B: 233 },   // Sky Blue
-  ];
-
-  // #endregion
-
-
 
   constructor(@Inject(PLATFORM_ID) private PlatformID: object) {
     this.IsBrowser = isPlatformBrowser(this.PlatformID);
+
+    // Regenerate gradients when the theme toggles
+    effect(() => {
+      this.InterfaceService.InterfaceType();
+      
+      if (this.Spheres.length > 0) {
+        this.RegenerateGradients();
+      }
+    });
   }
 
   ngOnInit(): void {
     this.GenerateSpheres();
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.IsBrowser) return;
-
-    this.StartRenderLoop();
+    if (this.IsBrowser) {
+      this.StartAnimationLoop();
+      this.ObserveResize();
+    }
   }
 
   ngOnDestroy(): void {
-    this.StopRenderLoop();
+    if (this.AnimationFrameId) cancelAnimationFrame(this.AnimationFrameId);
+    if (this.ResizeObserver) this.ResizeObserver.disconnect();
   }
 
-  // #region Render Loop
-
-  /**
-   * Starts a continuous render loop that smoothly lerps CSS variables toward the target mouse position.
-   * This decouples the animation frame rate from the mouse event rate.
-   */
-  private StartRenderLoop(): void {
-    if (!this.IsBrowser) return;
-
-    const Loop = (): void => {
-      this.UpdateSmoothedValues();
-      this.ApplyCSSVariables();
-
-      this.AnimationFrameID = requestAnimationFrame(Loop);
-    };
-
-    this.AnimationFrameID = requestAnimationFrame(Loop);
+  private ObserveResize(): void {
+    this.ResizeObserver = new ResizeObserver(() => this.GenerateSpheres());
+    this.ResizeObserver.observe(document.body);
   }
 
-  /** Cancels the active render loop. */
-  private StopRenderLoop(): void {
-    if (this.AnimationFrameID !== null) {
-      cancelAnimationFrame(this.AnimationFrameID);
-      this.AnimationFrameID = null;
-    }
-  }
-
-  /**
-   * Exponentially smooths the current position toward the raw mouse position.
-   * Also smooths the angle with wrap-around handling to prevent 360° snaps.
-   */
-  private UpdateSmoothedValues(): void {
-    this.SmoothedX += (this.RawMouseX - this.SmoothedX) * MouseSmoothing;
-    this.SmoothedY += (this.RawMouseY - this.SmoothedY) * MouseSmoothing;
-
-    const TargetAngle: number = Math.atan2(this.SmoothedY, this.SmoothedX);
-
-    // Compute the shortest angular delta, wrapping around ±π.
-    let AngleDelta: number = (TargetAngle - this.SmoothedAngle);
-    AngleDelta = AngleDelta - Math.round(AngleDelta / (2 * Math.PI)) * (2 * Math.PI);
-
-    this.SmoothedAngle += AngleDelta * MouseSmoothing;
-  }
-
-  /** Writes the current smoothed values to the container's CSS custom properties. */
-  private ApplyCSSVariables(): void {
-    const Container: Undefinable<HTMLDivElement> = this.ContainerRef?.nativeElement;
-    if (!Container) return;
-
-    const DistanceSquared: number = (this.SmoothedX * this.SmoothedX) + (this.SmoothedY * this.SmoothedY);
-
-    Container.style.setProperty('--Mouse-X', this.SmoothedX.toFixed(4));
-    Container.style.setProperty('--Mouse-Y', this.SmoothedY.toFixed(4));
-    Container.style.setProperty('--Mouse-Distance', Math.sqrt(DistanceSquared).toFixed(4));
-    Container.style.setProperty('--Mouse-Angle', this.SmoothedAngle.toFixed(4));
-  }
-
-  // #endregion
-
-  // #region Mouse Tracking
-
-  /**
-   * Updates the raw target position on every mouse move.
-   * The render loop handles smoothing — this just sets the target.
-   * On re-entry after leaving the viewport, the lerp naturally
-   * smooths from the current sphere position to the new mouse position.
-   */
-  @HostListener('window:mousemove', ['$event'])
-  OnMouseMove(Event: MouseEvent): void {
-    if (!this.IsBrowser) return;
-
-    this.RawMouseX = ((Event.clientX / window.innerWidth) * 2) - 1;
-    this.RawMouseY = ((Event.clientY / window.innerHeight) * 2) - 1;
-  }
-
-  // #endregion
-
-  // #region Sphere Generation
-
-  /**
-   * Populates `Spheres` with randomized styles within the configured bounds.
-   * All per-sphere visual properties are packed into a single `Styles` object
-   * that the template applies via `[ngStyle]`.
-   */
+  /** Populates the Spheres array based on screen density. */
   private GenerateSpheres(): void {
-    this.Spheres = [];
+    if (!this.IsBrowser) return;
 
-    for (let i = 0; i < this.SphereCount; i++) {
-      this.Spheres.push({
-        Styles: {
-          'top':                      `${this.RandomBetween(this.MinimumTop, this.MaximumTop)}%`,
-          'left':                     `${this.RandomBetween(this.MinimumLeft, this.MaximumLeft)}%`,
-          'width':                    `${this.RandomBetween(this.MinimumSize, this.MaximumSize)}vw`,
-          'height':                   `${this.RandomBetween(this.MinimumSize, this.MaximumSize)}vw`,
-          'background':               this.GenerateRandomGradient(),
-          'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay, this.MaximumAnimationDelay).toFixed(2)}s`,
-          '--Sphere-Opacity':         `${this.RandomBetween(this.MinimumOpacity, this.MaximumOpacity).toFixed(3)}`,
-          '--Sphere-Speed':           `${this.RandomBetween(this.MinimumSpeed, this.MaximumSpeed).toFixed(2)}`,
-          '--Sphere-RotationSpeed':   `${this.RandomBetween(this.MinimumRotationSpeed, this.MaximumRotationSpeed).toFixed(3)}`,
-          '--Sphere-ScaleSpeed':      `${this.RandomBetween(this.MinimumScaleSpeed, this.MaximumScaleSpeed).toFixed(3)}`,
-          '--Sphere-WaveOffset':      `${this.RandomBetween(this.MinimumWaveOffset, this.MaximumWaveOffset).toFixed(2)}`
-        }
-      });
-    }
+    const Width = window.innerWidth;
+    const Height = window.innerHeight;
+    const SphereCount = Math.max(4, Math.floor((Width * Height) / 150000));
+
+    this.Spheres = Array.from({ length: SphereCount }).map((_, Index) => ({
+      Id: Index,
+      Styles: this.CreateSphereStyles()
+    }));
   }
 
-  // #endregion
+  /** Re-calculates gradients for existing spheres (used for theme transitions). */
+  private RegenerateGradients(): void {
+    this.Spheres = this.Spheres.map(Sphere => ({
+      ...Sphere,
+      Styles: {
+        ...Sphere.Styles,
+        background: this.GenerateRandomGradient()
+      }
+    }));
+  }
+
+  private CreateSphereStyles(): Record<string, string> {
+    const Size = this.RandomBetween(250, 550);
+    const Speed = this.RandomBetween(0.5, 2);
+    const RotationSpeed = this.RandomBetween(0.1, 0.5);
+    const ScaleSpeed = this.RandomBetween(0.05, 0.2);
+
+    return {
+      width: `${Size}px`,
+      height: `${Size}px`,
+      top: `${this.RandomBetween(-10, 110)}%`,
+      left: `${this.RandomBetween(-10, 110)}%`,
+      background: this.GenerateRandomGradient(),
+      '--Sphere-Speed': Speed.toString(),
+      '--Sphere-RotationSpeed': RotationSpeed.toString(),
+      '--Sphere-ScaleSpeed': ScaleSpeed.toString(),
+      '--Sphere-Opacity': this.RandomBetween(0.3, 0.7).toString()
+    };
+  }
 
   // #region Gradient Generation
 
@@ -262,9 +137,27 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     return (Math.random() * (Maximum - Minimum)) + Minimum;
   }
 
-  /** Returns a random color from the palette. */
+  /** Converts HSL values to an RGBColor. */
+  private HSLToRGB(H: number, S: number, L: number): RGBColor {
+    S /= 100;
+    L /= 100;
+    const k = (n: number) => (n + H / 30) % 12;
+    const a = S * Math.min(L, 1 - L);
+    const f = (n: number) => L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return {
+      R: Math.round(255 * f(0)),
+      G: Math.round(255 * f(8)),
+      B: Math.round(255 * f(4))
+    };
+  }
+
+  /** Generates a completely random pastel color. */
   private RandomColor(): RGBColor {
-    return this.ColorPalette[(Math.random() * this.ColorPalette.length) | 0];
+    const Hue = this.RandomBetween(0, 360);
+    const Saturation = this.RandomBetween(70, 100);
+    const Lightness = this.RandomBetween(70, 85);
+    
+    return this.HSLToRGB(Hue, Saturation, Lightness);
   }
 
   /** Formats an RGBColor into an `rgba()` CSS string. */
@@ -272,7 +165,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     return `rgba(${Color.R}, ${Color.G}, ${Color.B}, ${Opacity.toFixed(2)})`;
   }
 
-  /** Builds a randomized CSS gradient string using colors from `ColorPalette`. */
+  /** Builds a randomized CSS gradient string using randomly generated pastel colors. */
   private GenerateRandomGradient(): string {
     const Roll: number = Math.random();
 
@@ -281,31 +174,36 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     const Opacity1: number = this.RandomBetween(0.4, 0.8);
     const Opacity2: number = this.RandomBetween(0.4, 0.8);
 
-    const Position1: number = (this.RandomBetween(20, 40)) | 0;
-    const Position2: number = (this.RandomBetween(50, 70)) | 0;
-    const Position3: number = (this.RandomBetween(60, 80)) | 0;
-
-    if (Roll < 0.5) {
-      return `
-        radial-gradient(circle at ${Position1}% ${Position1}%, ${this.RGBA(Color1, Opacity1)}, transparent ${Position2}%),
-        radial-gradient(circle at ${Position3}% ${100 - Position3}%, ${this.RGBA(Color2, Opacity2)}, transparent ${Position3}%)
-      `;
+    if (Roll < 0.33) {
+      return `radial-gradient(circle at center, ${this.RGBA(Color1, Opacity1)} 0%, transparent 70%)`;
+    } else if (Roll < 0.66) {
+      return `linear-gradient(${this.RandomBetween(0, 360)}deg, ${this.RGBA(Color1, Opacity1)} 0%, ${this.RGBA(Color2, Opacity2)} 100%)`;
+    } else {
+      return `radial-gradient(circle at 30% 30%, ${this.RGBA(Color1, Opacity1)} 0%, ${this.RGBA(Color2, Opacity2)} 50%, transparent 100%)`;
     }
-
-    if (Roll < 0.8) {
-      const Angle: number = (this.RandomBetween(0, 360)) | 0;
-      return `conic-gradient(from ${Angle}deg, ${this.RGBA(Color1, Opacity1)}, ${this.RGBA(Color2, Opacity2)}, ${this.RGBA(Color1, Opacity1)})`;
-    }
-
-    const Color3: RGBColor = this.RandomColor();
-    const Opacity3: number = this.RandomBetween(0.3, 0.6);
-
-    return `
-      radial-gradient(circle at ${Position1}% ${Position1}%, ${this.RGBA(Color1, Opacity1)}, transparent ${Position2}%),
-      radial-gradient(circle at ${Position3}% ${Position1}%, ${this.RGBA(Color2, Opacity2)}, transparent ${Position3}%),
-      radial-gradient(circle at ${100 - Position1}% ${100 - Position1}%, ${this.RGBA(Color3, Opacity3)}, transparent ${Position2}%)
-    `;
   }
 
   // #endregion
+
+  private StartAnimationLoop(): void {
+    const Tick = () => {
+      // Smooth lerp for parallax
+      this.MouseX += (this.TargetMouseX - this.MouseX) * 0.05;
+      this.MouseY += (this.TargetMouseY - this.MouseY) * 0.05;
+
+      const Distance = Math.sqrt(this.MouseX * this.MouseX + this.MouseY * this.MouseY);
+      const Angle = Math.atan2(this.MouseY, this.MouseX);
+
+      if (this.ContainerRef) {
+        const Style = this.ContainerRef.nativeElement.style;
+        Style.setProperty('--Mouse-X', this.MouseX.toString());
+        Style.setProperty('--Mouse-Y', this.MouseY.toString());
+        Style.setProperty('--Mouse-Distance', Distance.toString());
+        Style.setProperty('--Mouse-Angle', Angle.toString());
+      }
+
+      this.AnimationFrameId = requestAnimationFrame(Tick);
+    };
+    Tick();
+  }
 }

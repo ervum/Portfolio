@@ -33,9 +33,6 @@ $Blur-Standard: 12px;
 $Section-Width: 720px;
 $Section-Height: auto;
 
-$Edge-Colour: #ffffff;
-$Edge-Glow: rgba(255, 255, 255, 0.8);
-
 $Field-Width: 100%;
 
 /* Component Specifics - Shared */
@@ -59,13 +56,11 @@ $Multibutton-IndicatorTrackHeight: $FontSize-Standard;
 /* Component Specifics - Fancy Button */
 $Button-Width: 100%;
 
-$Glow-Standard: rgba(255, 255, 255, 0.6);
-$Glow-Strong: rgba(255, 255, 255, 0.35);
-
 
 
 /* --- CSS Variables Export --- */
 :root {
+    /* --- Global Shared Tokens --- */
     --Radius-Sharpest: #{$Radius-Sharpest};
     --Radius-Sharp: #{$Radius-Sharp};
     --Radius-Standard: #{$Radius-Standard};
@@ -89,12 +84,10 @@ $Glow-Strong: rgba(255, 255, 255, 0.35);
     --Hover-MoveY: #{$Hover-MoveY};
 
     --Blur-Standard: #{$Blur-Standard};
+    --Container-Blur: var(--Blur-Standard);
 
     --Section-Width: #{$Section-Width};
     --Section-Height: #{$Section-Height};
-
-    --Edge-Colour: #{$Edge-Colour};
-    --Edge-Glow: #{$Edge-Glow};
 
     --Field-Width: #{$Field-Width};
 
@@ -115,6 +108,68 @@ $Glow-Strong: rgba(255, 255, 255, 0.35);
 
     --Button-Width: #{$Button-Width};
 
-    --Glow-Standard: #{$Glow-Standard};
-    --Glow-Strong: #{$Glow-Strong};
+
+    /* --- Theme Palettes --- */
+
+    /* [Default / Primary] - Lumina (Dark Mode with White Accents) */
+    &, &.Theme--Primary {
+        --Base-BG: #050505;
+        --Surface-BG: rgba(17, 17, 17, 0.45);
+        --Surface-BG-Hover: rgba(26, 26, 26, 0.55);
+        --Container-Blur: 40px;
+        
+        --Accent-Main: #ffffff;
+        --Accent-Muted: rgba(255, 255, 255, 0.5);
+        --Accent-Glow: rgba(255, 255, 255, 0.8);
+        
+        --Text-Main: #ffffff;
+        --Text-Muted: rgba(255, 255, 255, 0.6);
+        
+        --Border-Main: rgba(255, 255, 255, 0.15);
+        --Border-Strong: rgba(255, 255, 255, 0.4);
+        
+        --Glow-Standard: rgba(255, 255, 255, 0.6);
+        --Glow-Strong: rgba(255, 255, 255, 0.35);
+
+        --Shadow-Standard: rgba(255, 255, 255, 0.2);
+        --Shadow-Strong: rgba(255, 255, 255, 0.05);
+
+        --Scrollbar-Thumb: rgba(255, 255, 255, 0.2);
+        
+        /* Legacy Support (to be deprecated) */
+        --Edge-Colour: #ffffff;
+        --Edge-Glow: rgba(255, 255, 255, 0.8);
+    }
+
+    /* [Secondary] - Obsidian (Light Mode with Black Accents) */
+    &.Theme--Secondary {
+        --Base-BG: #fcfcfd;
+        --Surface-BG: rgba(0, 0, 0, 0.04);
+        --Surface-BG-Hover: rgba(0, 0, 0, 0.08);
+        
+        --Accent-Main: #111111;
+        --Accent-Muted: rgba(0, 0, 0, 0.4);
+        --Accent-Glow: rgba(0, 0, 0, 0.2);
+        
+        --Text-Main: #111111;
+        --Text-Muted: rgba(0, 0, 0, 0.6);
+        
+        --Border-Main: rgba(0, 0, 0, 0.1);
+        --Border-Strong: rgba(0, 0, 0, 0.3);
+        
+        --Glow-Standard: rgba(0, 0, 0, 0.15);
+        --Glow-Strong: rgba(0, 0, 0, 0.1);
+
+        --Shadow-Standard: rgba(0, 0, 0, 0.2);
+        --Shadow-Strong: rgba(0, 0, 0, 0.5);
+
+        --Scrollbar-Thumb: rgba(0, 0, 0, 0.2);
+
+        --Container-Blur: 40px;
+
+        /* Legacy Support (to be deprecated) */
+        --Edge-Colour: #111111;
+        --Edge-Glow: rgba(0, 0, 0, 0.2);
+    }
 }
+

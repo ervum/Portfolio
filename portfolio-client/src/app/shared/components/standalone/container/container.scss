@@ -6,22 +6,22 @@
     display: inline-flex;
 
     border-radius: var(--Radius-Sharpest, var(--Radius-Standard));
-    -webkit-backdrop-filter: blur(var(--Blur-Standard));
-    backdrop-filter: blur(var(--Blur-Standard));
+    -webkit-backdrop-filter: blur(var(--Container-Blur));
+    backdrop-filter: blur(var(--Container-Blur));
 
     box-sizing: border-box;
     transition: inherit;
+
+    background-color: var(--Surface-BG);
+    border: 1px solid var(--Border-Strong);
+    color: var(--Text-Main);
 }
 
 :host(.FancyContainer--Primary) {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--Container-Border-Color, rgba(255, 255, 255, 0.8));
-    color: white;
+    /* Theme variables automatically handle this */
 }
 
 :host(.FancyContainer--Secondary) {
-    background-color: rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--Container-Border-Color, rgba(0, 0, 0, 0.8));
-    color: black;
+    /* Theme variables automatically handle this */
 }
 

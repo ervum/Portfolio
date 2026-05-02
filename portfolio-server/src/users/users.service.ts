@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { Nullable } from '@ervum/types';
+
 import { Repository, FindOptionsWhere } from 'typeorm';
 
 import { User } from './users.entity';
 import { RegisterDTO } from '../authentication/dto/register.dto';
+
+
 
 @Injectable()
 export class UsersService {

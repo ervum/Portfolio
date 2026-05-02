@@ -13,37 +13,33 @@
     width: 100%;
 }
 
-:host(.FancyMultibutton--Primary) {
-    color: white;
+:host {
+    // Default tracking variables (defaults to center)
+    --Indicator-Dynamic-Offset: 0.5;
+    --Indicator-Static-X: 50%;
+    --Indicator-Static-Y: 50%;
+
+    display: flex;
+    place-content: center;
+    width: 100%;
+
+    color: var(--Text-Main);
 
     .FancyMultibutton-Highlight {
-        background-color: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        box-shadow: 0 0 8px var(--Glow-Strong);
+        background-color: var(--Surface-BG-Hover);
+        border: 1px solid var(--Border-Strong);
+        box-shadow: 0 0 8px var(--Glow-Standard);
     }
 
     .FancyMultibutton::before {
-        background-color: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 8px var(--Glow-Strong);
+        background-color: var(--Surface-BG-Hover);
+        box-shadow: 0 0 8px var(--Glow-Standard);
     }
 }
+
+:host(.FancyMultibutton--Primary),
 :host(.FancyMultibutton--Secondary) {
-    color: black;
-
-    .FancyMultibutton-Highlight {
-        background-color: rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(0, 0, 0, 0.8);
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .FancyMultibutton::before {
-        background-color: rgba(0, 0, 0, 0.15);
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-        
-        /* Reduce blur for secondary theme to prevent "whitish" refraction on dark backgrounds */
-        backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
-        -webkit-backdrop-filter: blur(calc(var(--Blur-Standard) / 2));
-    }
+    /* Theme variables automatically handle this */
 }
 
 :host-context(.FancyMultibutton--Vertical),
@@ -181,10 +177,10 @@
         
         inset: 50%;
         
-        box-shadow: 0 0 8px var(--Glow-Strong); // Synced to 8px to prevent visual bleeding
+        box-shadow: 0 0 8px var(--Glow-Standard); // Synced to 8px to prevent visual bleeding
 
-        backdrop-filter: blur(var(--Blur-Standard)); // Synced with Highlight
-        -webkit-backdrop-filter: blur(var(--Blur-Standard));
+        backdrop-filter: blur(var(--Container-Blur)); // Synced with Highlight
+        -webkit-backdrop-filter: blur(var(--Container-Blur));
         
         border-radius: inherit;
         z-index: -1;

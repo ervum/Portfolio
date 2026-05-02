@@ -17,42 +17,30 @@
     -webkit-font-smoothing: antialiased;
     will-change: transform;
 
+    color: var(--Text-Main);
+
     &:hover {
         transform: scale(var(--Hover-Scale-Big)) translateZ(0);
-        --Container-Border-Color: currentColor;
+        --Container-Border-Color: var(--Border-Strong);
     }
 
     &:has(.FancyDropdown-Item:hover) {
         transform: scale(1) translateZ(0);
-        --Container-Border-Color: initial;
+        --Container-Border-Color: var(--Border-Main);
     }
-}
-
-:host(.FancyDropdown--Primary) {
-    color: white;
 
     .FancyDropdown-Icon-Container {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--Surface-BG-Hover);
     }
     
     .FancyDropdown-Item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--Surface-BG-Hover);
     }
 }
+
+:host(.FancyDropdown--Primary),
 :host(.FancyDropdown--Secondary) {
-    color: black;
-
-    .FancyDropdown-Icon {
-        @include s.MaskedIcon(url('/assets/icons/arrow.png'), black);
-    }
-
-    .FancyDropdown-Icon-Container {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .FancyDropdown-Item:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+    /* Theme variables automatically handle this */
 }
 
 
@@ -129,7 +117,7 @@
     aspect-ratio: 1 / 1;
     
     border-radius: var(--Radius-Sharp);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px var(--Shadow-Standard);
     
     overflow: hidden;
     flex-shrink: 0;
@@ -141,7 +129,7 @@
 
 .FancyDropdown-Icon {
     @include s.CreateTransition(transform);
-    @include s.MaskedIcon(url('/assets/icons/arrow.png'), white);
+    @include s.MaskedIcon(url('/assets/icons/arrow.png'), currentColor);
 
     border: none;
 

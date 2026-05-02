@@ -7,19 +7,20 @@
     width: 100%;
 }
 
-:host(.FancyTextbox--Primary) {
-    color: white;
+:host {
+    display: block;
+    width: 100%;
+    
+    color: var(--Text-Main);
 
     .FancyTextbox-Icon-Container {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--Surface-BG-Hover);
     }
 }
-:host(.FancyTextbox--Secondary) {
-    color: black;
 
-    .FancyTextbox-Icon-Container {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+:host(.FancyTextbox--Primary),
+:host(.FancyTextbox--Secondary) {
+    /* Theme variables automatically handle this */
 }
 
 
@@ -86,7 +87,7 @@
     
     border-radius: var(--Radius-Sharp);
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px var(--Shadow-Standard);
 }
 
 .FancyTextbox-Icon {
@@ -189,6 +190,9 @@
     height: 100%;
 
     transition: all 1.5s cubic-bezier(1, 0, 0, 1);
+
+    border: 1px solid var(--Border-Main);
+    background-color: var(--Surface-BG);
 
     &.FancyTextbox--First {
         border-radius: var(--Radius-Standard) var(--Radius-Standard) 2px 2px;

@@ -9,13 +9,13 @@
     /* Make it untappable for text selection */
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+
+    color: var(--Text-Main);
 }
 
-:host(.FancyCheckbox--Primary) {
-    color: white;
-}
+:host(.FancyCheckbox--Primary),
 :host(.FancyCheckbox--Secondary) {
-    color: black;
+    /* Theme variables automatically handle this */
 }
 
 

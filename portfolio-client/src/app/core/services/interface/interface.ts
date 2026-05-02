@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal, computed, type Signal, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, WritableSignal, computed, type Signal, Inject, PLATFORM_ID, effect } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 import { Nullable, FancyUIElementTypeType } from '@ervum/types';
@@ -15,6 +15,15 @@ export class InterfaceService {
 
   constructor(@Inject(PLATFORM_ID) PlatformID: object) {
     this.IsBrowser = isPlatformBrowser(PlatformID);
+
+    if (this.IsBrowser) {
+      effect(() => {
+        const Type = this.InterfaceType();
+
+        document.documentElement.classList.remove('Theme--Primary', 'Theme--Secondary');
+        document.documentElement.classList.add(`Theme--${Type}`);
+      });
+    }
   }
 
   /** The global interface type (Primary / Secondary) */

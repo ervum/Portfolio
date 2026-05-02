@@ -1,5 +1,16 @@
 @use 'app/shared/styles' as s;
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+    color: var(--Text-Main);
+}
+
+
+
 
 
 /* View Transition: Circular theme toggle ripple */
