@@ -8,17 +8,14 @@
     position: relative;
     width: var(--Button-Width, 100%);
     height: 100%;
+
+    container-type: size;
     
     color: var(--Text-Main);
 
     .FancyButton-Icon-Container {
         background-color: var(--Surface-BG-Hover);
     }
-}
-
-:host(.FancyButton--Primary),
-:host(.FancyButton--Secondary) {
-    /* Theme variables automatically handle this */
 }
 
 
@@ -51,7 +48,7 @@
         @include s.SynchronizeStates('.FancyButton') {
             transform: translateY(var(--Hover-MoveY));
 
-            border-radius: var(--Radius-Roundiest);
+            border-radius: 50%;
         }
 
         @include s.SynchronizeStates('.FancyButton-Label') {
@@ -59,7 +56,7 @@
         }
 
         @include s.SynchronizeStates('.FancyButton-Icon-Container') {
-            border-radius: var(--Radius-Roundiest);
+            border-radius: 50%;
             transform: scale(var(--Hover-Scale-Standard));
         }
     }
@@ -87,7 +84,7 @@
 
     background-color: transparent;
 
-    border-radius: var(--Radius-Standard);
+    border-radius: 35.6cqmin;
 
     text-align: left;
 }
@@ -106,7 +103,7 @@
     width: auto;
     aspect-ratio: 1 / 1;
     
-    border-radius: var(--Radius-Sharp);
+    border-radius: 35.6cqmin;
 
     box-shadow: 0 0 10px var(--Shadow-Standard);
     

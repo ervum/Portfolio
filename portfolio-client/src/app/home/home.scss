@@ -1,5 +1,7 @@
 @use '../shared/styles/' as s;
 
+
+
 .Main {
     width: 100vw;
     height: 100vh;
@@ -11,8 +13,6 @@
     background: transparent;
     overflow: hidden;
 }
-
-
 
 .Wrapper {
     display: flex;

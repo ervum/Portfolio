@@ -1,4 +1,4 @@
-import { Component, inject, signal, WritableSignal, computed } from '@angular/core';
+import { Component, inject, signal, WritableSignal, computed, type Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { MultibuttonComponent } from './shared/components/standalone/multibutton
 import { InterfaceService } from './core/services/interface/interface';
 import { NavigationService } from './core/services/navigation/navigation';
 import { Translations, type TranslationDictionary } from './core/internationalization';
+import { FancyMultibuttonItemType, FancyDropdownItemType } from '@ervum/types';
 
 @Component({
   selector: 'app-root',
@@ -36,20 +37,20 @@ export class App {
 
   public SelectedIndex: WritableSignal<number> = signal(0);
 
-  public RouteSelectorItems = [
+  public RouteSelectorItems: FancyMultibuttonItemType[] = [
     { Label: 'house', Action: () => this.NavigateWithAnimation('home') },
     { Label: 'user', Action: () => this.NavigateWithAnimation('authentication') },
   ];
 
-  public LanguageItems = computed(() => {
-    return Object.keys(Translations).map(Language => ({
+  public LanguageItems: Signal<FancyDropdownItemType[]> = computed(() => {
+    return Object.keys(Translations).map((Language: string) => ({
       ID: Language,
       Label: this.InterfaceService.T()[`LanguageName_${Language}` as keyof TranslationDictionary] as string,
       Action: () => this.InterfaceService.SetLanguage(Language)
     }));
   });
 
-  public ThemeIcon = computed(() => {
+  public ThemeIcon: Signal<string> = computed(() => {
     return this.InterfaceService.InterfaceType() === 'Primary' 
       ? 'assets/icons/sun.png' 
       : 'assets/icons/moon.png';
@@ -60,8 +61,8 @@ export class App {
     this.Router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      const url = event.urlAfterRedirects || event.url;
-      const path = url.split('?')[0];
+      const url: string = event.urlAfterRedirects || event.url;
+      const path: string = url.split('?')[0];
       if (path.includes('authentication')) {
         this.SelectedIndex.set(1);
       } else {
@@ -79,12 +80,12 @@ export class App {
   }
 
   public NavigateBack(): void {
-    const url = this.Router.url;
-    const segments = url.split('/').filter(s => s !== '');
+    const url: string = this.Router.url;
+    const segments: string[] = url.split('/').filter(s => s !== '');
     
     if (segments.length > 0) {
       segments.pop();
-      const target = segments.join('/') || '';
+      const target: string = segments.join('/') || '';
       this.NavigateWithAnimation(target);
     }
   }

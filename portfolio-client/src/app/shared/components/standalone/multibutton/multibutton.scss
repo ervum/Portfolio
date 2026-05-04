@@ -11,17 +11,6 @@
     display: flex;
     place-content: center;
     width: 100%;
-}
-
-:host {
-    // Default tracking variables (defaults to center)
-    --Indicator-Dynamic-Offset: 0.5;
-    --Indicator-Static-X: 50%;
-    --Indicator-Static-Y: 50%;
-
-    display: flex;
-    place-content: center;
-    width: 100%;
 
     color: var(--Text-Main);
 
@@ -35,11 +24,6 @@
         background-color: var(--Surface-BG-Hover);
         box-shadow: 0 0 8px var(--Glow-Standard);
     }
-}
-
-:host(.FancyMultibutton--Primary),
-:host(.FancyMultibutton--Secondary) {
-    /* Theme variables automatically handle this */
 }
 
 :host-context(.FancyMultibutton--Vertical),
@@ -60,15 +44,15 @@
     width: var(--Multibutton-Width, 100%);
     height: 100%;
 
-    border-radius: var(--Radius-Standard);
+    border-radius: calc(var(--Control-Height, 45px) * 0.356);
     transition: border-radius var(--Duration-Standard) var(--Easing-Standard);
 
     &:hover {
-        border-radius: var(--Radius-Roundiest);
+        border-radius: 50%;
 
         .FancyMultibutton-Highlight,
         .FancyMultibutton {
-            border-radius: var(--Radius-Roundiest);
+            border-radius: 50%;
         }
     }
 
@@ -98,7 +82,9 @@
             height: $Multibutton-Highlight-Height;
             top: calc((#{$Multibutton-Highlight-Height} + var(--Multibutton-Padding)) * var(--selected-index));
 
-            transition: top var(--Duration-Slow) var(--Easing-Snap), border-radius var(--Duration-Standard) var(--Easing-Standard);
+            transition: 
+                top var(--Duration-Slow) var(--Easing-Snap), 
+                border-radius var(--Duration-Slow) var(--Easing-Snap);
         }
 
         .FancyMultibutton {
@@ -138,9 +124,11 @@
 
     height: 100%;
 
-    border-radius: var(--Radius-Sharp);
+    border-radius: calc(var(--Control-Height, 45px) * 0.267);
 
-    transition: left var(--Duration-Slow) var(--Easing-Snap), border-radius var(--Duration-Standard) var(--Easing-Standard);
+    transition: 
+        left var(--Duration-Slow) var(--Easing-Snap), 
+        border-radius var(--Duration-Slow) var(--Easing-Snap);
 }
 
 .FancyMultibutton {
@@ -168,7 +156,7 @@
     color: inherit;
 
     white-space: nowrap;
-    border-radius: var(--Radius-Sharp);
+    border-radius: calc(var(--Control-Height, 45px) * 0.267);
     transition: all var(--Duration-Standard) var(--Easing-Standard);
 
     &::before {

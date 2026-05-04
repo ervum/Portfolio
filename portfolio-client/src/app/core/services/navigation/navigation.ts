@@ -14,9 +14,9 @@ export class NavigationService {
    * @param Target The target route (e.g., 'home', 'authentication/recovery').
    */
   public NavigateWithAnimation(Target: string): void {
-    const CurrentPath = this.Router.url.split('?')[0];
-    const NormalizedTarget = (Target.startsWith('/') ? Target.substring(1) : Target);
-    const TargetPath = `/${NormalizedTarget}`;
+    const CurrentPath: string = this.Router.url.split('?')[0];
+    const NormalizedTarget: string = (Target.startsWith('/') ? Target.substring(1) : Target);
+    const TargetPath: string = `/${NormalizedTarget}`;
     
     if (CurrentPath === TargetPath || (NormalizedTarget === 'home' && CurrentPath === '/')) return;
 

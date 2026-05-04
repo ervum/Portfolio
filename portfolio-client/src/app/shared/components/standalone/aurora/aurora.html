@@ -1,8 +1,4 @@
 <div class = "Aurora-Container" #Container>
-    @for (Wave of [1, 2, 3]; track Wave) {
-        <div [class] = "'Aurora-Wave Aurora-Wave--' + Wave"></div>
-    }
-
     @for (Sphere of Spheres; track $index) {
         <div
             class = "Aurora-Sphere"

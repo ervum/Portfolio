@@ -43,8 +43,8 @@
       [(ngModel)] = "InputValue" 
       [placeholder] = "DisplayPlaceholder"
 
-      [type] = "IsSensitive ? (IsVisible ? 'text' : 'password') : 'text'"
-      [attr.maxlength] = "MaximumLength"
+      [type] = "IsSensitive() ? (IsVisible ? 'text' : 'password') : 'text'"
+      [attr.maxlength] = "MaximumLength()"
 
       (submit) = "OnSubmit()"
 
@@ -54,7 +54,8 @@
       (pointerdown) = "OnDown()"
       (pointerup) = "OnUp()"
       
-      (keydown) = "OnKeyDown()"
+      (keydown) = "OnKeyDown(); OnFilterKeyDown($event)"
+      (paste) = "OnPaste($event)"
       (keyup) = "OnKeyUp()"
       
       (wheel) = "OnWheel()"
@@ -65,17 +66,18 @@
       (focus) = "OnFocus()"
       (blur) = "OnUnfocus()">
 
-    <div
-      *ngIf = "IsSensitive"
-      class = "FancyTextbox-Visibility-Toggle"
-      
-      [ngClass] = "GetInputClasses"
-      (click) = "ToggleVisibility()">
-      <div class = "Visibility-Toggle-BaseIcon"></div>
+    @if (IsSensitive()) {
       <div
-        class = "Visibility-Toggle-StrikeIcon Animation-Draw"
-        [class.Is-Drawn] = "!IsVisible">
+        class = "FancyTextbox-Visibility-Toggle"
+        
+        [ngClass] = "GetInputClasses"
+        (click) = "ToggleVisibility()">
+        <div class = "Visibility-Toggle-BaseIcon"></div>
+        <div
+          class = "Visibility-Toggle-StrikeIcon Animation-Draw"
+          [class.Is-Drawn] = "!IsVisible">
+        </div>
       </div>
-    </div>
+    }
   </div>
-</FancyContainer>
+</FancyContainer>

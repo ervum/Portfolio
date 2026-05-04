@@ -29,20 +29,25 @@ export class TypewriterAnimator {
     SetText: (Text: string) => void,
     AnimateEnabled: boolean = true
   ): Promise<void> {
+    if (OldText === NewText) {
+      SetText(NewText);
+      return;
+    }
+
     if (!AnimateEnabled) {
       SetText(NewText);
       return;
     }
-    const AnimationID = ++this.CurrentAnimationID;
+    const AnimationID: number = ++this.CurrentAnimationID;
 
-    let TotalSteps = OldText.length + NewText.length;
+    let TotalSteps: number = OldText.length + NewText.length;
     if (OldText.length > 0) TotalSteps += 1;
 
-    const DelayPerStep = TotalSteps > 0 ? this.TotalDuration / TotalSteps : 0;
+    const DelayPerStep: number = TotalSteps > 0 ? this.TotalDuration / TotalSteps : 0;
 
     // Delete phase: remove characters one by one from the end.
     if (OldText.length > 0) {
-      for (let i = OldText.length; i >= 0; i--) {
+      for (let i: number = OldText.length; i >= 0; i--) {
         if (this.CurrentAnimationID !== AnimationID) return;
         SetText(OldText.substring(0, i));
         if (DelayPerStep > 0) await this.Delay(DelayPerStep);
@@ -52,7 +57,7 @@ export class TypewriterAnimator {
     }
 
     // Type phase: add characters one by one.
-    for (let i = 1; i <= NewText.length; i++) {
+    for (let i: number = 1; i <= NewText.length; i++) {
       if (this.CurrentAnimationID !== AnimationID) return;
       SetText(NewText.substring(0, i));
       if (DelayPerStep > 0) await this.Delay(DelayPerStep);
@@ -65,6 +70,6 @@ export class TypewriterAnimator {
   }
 
   private Delay(Ms: number): Promise<void> {
-    return new Promise(Resolve => setTimeout(Resolve, Ms));
+    return new Promise<void>(Resolve => setTimeout(Resolve, Ms));
   }
 }

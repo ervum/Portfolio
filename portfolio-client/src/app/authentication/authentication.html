@@ -2,19 +2,19 @@
     <div
         class = "Section-Wrapper"
         FancySlideUpDown
-        [ngClass] = "(IsLoading)">
+        [ngClass] = "IsLoading">
 
         <FancyContainer class = "Content-Section-Wrapper">
             <div class = "Content-Section">
                 <span
                     class = "Section-Title"
-                    [FancyTypewriter] = "(InterfaceService.T().Portfolio)">
+                    [FancyTypewriter] = "InterfaceService.T().Portfolio">
                 </span>
 
                 <FancyMultibutton
                     class = "ActionType-Multibutton"
 
-                    [Items] = "(AuthenticationButtons())"
+                    [Items] = "AuthenticationButtons()"
                     [ShowHighlight] = "true"
 
                     DisplayMode = "Text">
@@ -23,20 +23,21 @@
                 <div
                     class = "Form-Fields-Wrapper"
 
-                    [ngClass] = "(GetFormFieldsClasses)">
+                    [ngClass] = "GetFormFieldsClasses">
                     <div class = "Extra-Fields-Container">
                         <FancyTextbox
                             #EmailTextbox
                             class = "Input-Field"
-                            [Placeholder] = "(InterfaceService.T().Email)"
+                            [Placeholder] = "InterfaceService.T().Email"
                             Icon = "envelope">
                         </FancyTextbox>
 
                         <FancyTextbox
                             #PhoneNumberTextbox
                             class = "Input-Field"
-                            [Placeholder] = "(InterfaceService.T().PhoneNumber)"
-                            Icon = "phone">
+                            [Placeholder] = "InterfaceService.T().PhoneNumber"
+                            Icon = "phone"
+                            OnlyAllow = "0123456789+-()">
                         </FancyTextbox>
                     </div>
 
@@ -44,40 +45,40 @@
                         <FancyTextbox
                             #MainIdentifierTextbox
                             class = "Input-Field"
-                            [Placeholder] = "(CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username)"
-                            [Icon] = "(CurrentFormType() === 'Sign In' ? 'user' : 'at')">
+                            [Placeholder] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
+                            [Icon] = "CurrentFormType() === 'Sign In' ? 'user' : 'at'">
                         </FancyTextbox>
 
                         <FancyTextbox
                             #PasswordTextbox
                             class = "Input-Field"
-                            [Placeholder] = "(InterfaceService.T().Password)"
+                            [Placeholder] = "InterfaceService.T().Password"
                             [IsSensitive] = "true"
                             Icon = "lock">
                         </FancyTextbox>
                     </div>
                 </div>
 
+                <div class = "Secondary-Actions-Container">
+                    <FancyCheckbox
+                        class = "RememberMe-Checkbox"
+                        [Label] = "InterfaceService.T().RememberMe"
+                        [Checked] = "false">
+                    </FancyCheckbox>
+                </div>
+
                 <div class = "Buttons-Container">
                     <FancyButton
                         class = "Action-Button"
-                        [Label] = "(CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp)"
+                        [Label] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp"
                         (Up) = "HandleSubmit()">
                     </FancyButton>
 
-                    <div class = "Secondary-Actions-Container">
-                        <FancyButton
-                            class = "Secondary-Action-Button"
-                            [Label] = "(InterfaceService.T().AccountRecovery)"
-                            (Up) = "HandleAccountRecovery()">
-                        </FancyButton>
-
-                        <FancyCheckbox
-                            class = "RememberMe-Checkbox"
-                            [Label] = "(InterfaceService.T().RememberMe)"
-                            [Checked] = "false">
-                        </FancyCheckbox>
-                    </div>
+                    <FancyButton
+                        class = "Secondary-Action-Button"
+                        [Label] = "InterfaceService.T().AccountRecovery"
+                        (Up) = "HandleAccountRecovery()">
+                    </FancyButton>
                 </div>
             </div>
         </FancyContainer>

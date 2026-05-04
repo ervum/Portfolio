@@ -1,4 +1,4 @@
-import { Component, input, computed, inject } from '@angular/core';
+import { Component, input, computed, inject, type Signal, type WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Undefinable, FancyUIElementTypeType } from '@ervum/types';
@@ -19,10 +19,10 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
     }
 })
 export class ContainerComponent {
-    private readonly InterfaceService = inject(InterfaceService);
+    private readonly InterfaceService: InterfaceService = inject(InterfaceService);
 
     /** The global interface type signal. */
-    private GlobalType = this.InterfaceService.InterfaceType;
+    private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
     /** 
      * Local type override. 
@@ -34,6 +34,6 @@ export class ContainerComponent {
      * The final type to use. 
      * Uses the local override if specified, otherwise follows the global theme.
      */
-    public EffectiveType = computed(() => this.Type() ?? this.GlobalType());
+    public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => this.Type() ?? this.GlobalType());
 }
 

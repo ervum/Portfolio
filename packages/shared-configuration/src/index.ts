@@ -22,7 +22,7 @@ const DefaultSecrets: SecretsType = {
 
 async function GetSecrets(): Promise<SecretsType> {
   try {
-    const { Secrets: DynamicSecrets } = await import('./secrets.js');
+    const { Secrets: DynamicSecrets }: { Secrets: SecretsType } = await import('./secrets.js');
     
     return { ...DefaultSecrets, ...DynamicSecrets };
   } catch (e: unknown) {

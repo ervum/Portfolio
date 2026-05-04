@@ -5,7 +5,7 @@
 :host {
     display: inline-flex;
 
-    border-radius: var(--Radius-Sharpest, var(--Radius-Standard));
+    border-radius: var(--Radius-Standard);
     -webkit-backdrop-filter: blur(var(--Container-Blur));
     backdrop-filter: blur(var(--Container-Blur));
 
@@ -16,12 +16,3 @@
     border: 1px solid var(--Border-Strong);
     color: var(--Text-Main);
 }
-
-:host(.FancyContainer--Primary) {
-    /* Theme variables automatically handle this */
-}
-
-:host(.FancyContainer--Secondary) {
-    /* Theme variables automatically handle this */
-}
-

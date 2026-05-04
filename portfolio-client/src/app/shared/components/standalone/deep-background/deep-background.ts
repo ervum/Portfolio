@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, computed, type Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { BackgroundPalette } from '@ervum/types';
+import { BackgroundPalette, FancyUIElementTypeType } from '@ervum/types';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
 
@@ -17,19 +17,16 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
 export class DeepBackgroundComponent {
   private InterfaceService: InterfaceService = inject(InterfaceService);
 
-  /** Number of blob layers. */
-  public readonly BlobCount: number = 4;
-
   /**
    * Generates a random palette on construction.
    * Both dark and light variants share the same random hue so
    * switching themes feels like a tonal shift rather than a new palette.
    */
-  private readonly GeneratedPalette = this.GenerateRandomPalettes();
+  private readonly GeneratedPalette: { Dark: BackgroundPalette; Light: BackgroundPalette } = this.GenerateRandomPalettes();
 
   /** Active palette based on current theme */
   public ActivePalette: Signal<BackgroundPalette> = computed(() => {
-    const Theme = this.InterfaceService.InterfaceType();
+    const Theme: FancyUIElementTypeType = this.InterfaceService.InterfaceType();
     return Theme === 'Primary'
       ? this.GeneratedPalette.Dark
       : this.GeneratedPalette.Light;
@@ -37,7 +34,7 @@ export class DeepBackgroundComponent {
 
   /** CSS Variables to be applied to the host */
   public BackgroundStyles: Signal<Record<string, string>> = computed(() => {
-    const Palette = this.ActivePalette();
+    const Palette: BackgroundPalette = this.ActivePalette();
     return {
       '--BG-Color-1': Palette.Colors[0],
       '--BG-Color-2': Palette.Colors[1],
@@ -61,13 +58,13 @@ export class DeepBackgroundComponent {
     S /= 100;
     L /= 100;
 
-    const k = (n: number) => (n + H / 30) % 12;
-    const a = S * Math.min(L, 1 - L);
-    const f = (n: number) => L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const k: (n: number) => number = (n: number) => (n + H / 30) % 12;
+    const a: number = S * Math.min(L, 1 - L);
+    const f: (n: number) => number = (n: number) => L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 
-    const R = Math.round(255 * f(0));
-    const G = Math.round(255 * f(8));
-    const B = Math.round(255 * f(4));
+    const R: number = Math.round(255 * f(0));
+    const G: number = Math.round(255 * f(8));
+    const B: number = Math.round(255 * f(4));
 
     return `#${R.toString(16).padStart(2, '0')}${G.toString(16).padStart(2, '0')}${B.toString(16).padStart(2, '0')}`;
   }
@@ -84,26 +81,26 @@ export class DeepBackgroundComponent {
    * unmistakably light without being harsh.
    */
   private GenerateRandomPalettes(): { Dark: BackgroundPalette; Light: BackgroundPalette } {
-    const BaseHue = this.RandomBetween(0, 360);
+    const BaseHue: number = this.RandomBetween(0, 360);
 
-    const HueNames = ['Ocean', 'Forest', 'Crimson', 'Violet', 'Amber', 'Teal', 'Rose', 'Slate'];
-    const Name = HueNames[Math.floor(Math.random() * HueNames.length)];
+    const HueNames: string[] = ['Ocean', 'Forest', 'Crimson', 'Violet', 'Amber', 'Teal', 'Rose', 'Slate'];
+    const Name: string = HueNames[Math.floor(Math.random() * HueNames.length)];
 
     // Generate 4 dark colors: near-black with barely perceptible tint
     const DarkColors: string[] = [];
-    for (let i = 0; i < 4; i++) {
-      const Hue = BaseHue + this.RandomBetween(-30, 30);
-      const Saturation = this.RandomBetween(3, 8);
-      const Lightness = this.RandomBetween(1, 4);
+    for (let i: number = 0; i < 4; i++) {
+      const Hue: number = BaseHue + this.RandomBetween(-30, 30);
+      const Saturation: number = this.RandomBetween(3, 8);
+      const Lightness: number = this.RandomBetween(1, 4);
       DarkColors.push(this.HSLToHex(Hue, Saturation, Lightness));
     }
 
     // Generate 4 light colors: near-white with soft pastel tint
     const LightColors: string[] = [];
-    for (let i = 0; i < 4; i++) {
-      const Hue = BaseHue + this.RandomBetween(-30, 30);
-      const Saturation = this.RandomBetween(40, 70);
-      const Lightness = this.RandomBetween(92, 98);
+    for (let i: number = 0; i < 4; i++) {
+      const Hue: number = BaseHue + this.RandomBetween(-30, 30);
+      const Saturation: number = this.RandomBetween(40, 70);
+      const Lightness: number = this.RandomBetween(92, 98);
       LightColors.push(this.HSLToHex(Hue, Saturation, Lightness));
     }
 

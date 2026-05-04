@@ -1,8 +1,8 @@
-import { Component, inject, signal, ViewChild, WritableSignal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, ViewChild, WritableSignal, computed, OnInit, type Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { FancyUIElementLoadStatusType, LoginData, RegisterData } from '@ervum/types';
+import { FancyUIElementLoadStatusType, LoginData, RegisterData, FancyMultibuttonItemType } from '@ervum/types';
 
 import { MultibuttonComponent } from '../shared/components/standalone/multibutton/multibutton';
 import { ButtonComponent } from '../shared/components/standalone/button/button';
@@ -53,7 +53,7 @@ export class AuthenticationComponent implements OnInit {
 
   public CurrentFormType: WritableSignal<'Sign In' | 'Sign Up'> = signal<'Sign In' | 'Sign Up'>('Sign In');
 
-  public AuthenticationButtons = computed(() => [
+  public AuthenticationButtons: Signal<FancyMultibuttonItemType[]> = computed(() => [
     {
       Label: this.InterfaceService.T().SignIn,
       Action: () => this.CurrentFormType.set('Sign In')

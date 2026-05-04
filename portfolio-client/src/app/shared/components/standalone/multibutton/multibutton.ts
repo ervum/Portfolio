@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal, WritableSignal, inject, input, computed } from '@angular/core';
+import { Component, Output, EventEmitter, signal, WritableSignal, inject, input, computed, model, type Signal, type ModelSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Nullable, FancyUIElementTypeType, FancyMultiButtonDisplayModeType, HorizontalPositionType, VerticalPositionType, FancyMultiButtonIndicatorStyleType, FancyMultibuttonItemType, Undefinable } from '@ervum/types';
@@ -20,26 +20,26 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
   templateUrl: './multibutton.html',
   styleUrl: './multibutton.scss',
   host: {
-    '[class.FancyMultibutton--Vertical]': 'Vertical',
+    '[class.FancyMultibutton--Vertical]': 'Vertical()',
     '[class.FancyMultibutton--Primary]': 'EffectiveType() === "Primary"',
     '[class.FancyMultibutton--Secondary]': 'EffectiveType() === "Secondary"'
   }
 })
 export class MultibuttonComponent {
-  private readonly InterfaceService = inject(InterfaceService);
+  private readonly InterfaceService: InterfaceService = inject(InterfaceService);
 
   /** Currently selected button index. */
-  @Input() public SelectedIndex: number = 0;
+  public SelectedIndex: ModelSignal<number> = model(0);
   public HoveredIndex: WritableSignal<Nullable<number>> = signal<number | null>(null);
 
   /** Selects a button by index and invokes its action if defined. */
   public SelectButton(Index: number): void {
-    if (Index === this.SelectedIndex) return;
+    if (Index === this.SelectedIndex()) return;
 
-    this.SelectedIndex = Index;
+    this.SelectedIndex.set(Index);
     this.SelectedIndexChange.emit(Index);
 
-    const Item = this.Items[Index];
+    const Item: Undefinable<FancyMultibuttonItemType> = this.Items()[Index];
 
     if (Item && (Item.Action)) {
       Item.Action(...((Item.ActionArguments) ?? []));
@@ -62,11 +62,11 @@ export class MultibuttonComponent {
   }
 
   public get GetBaseClasses(): Record<string, boolean> {
-    const DefaultSide: string = this.Vertical ? 'Left' : 'Below';
-    const ActiveSide: string = this.IndicatorSide || DefaultSide;
+    const DefaultSide: string = this.Vertical() ? 'Left' : 'Below';
+    const ActiveSide: string = this.IndicatorSide() || DefaultSide;
 
     return {
-      [`FancyMultibutton--Vertical`]: this.Vertical,
+      [`FancyMultibutton--Vertical`]: this.Vertical(),
       [`IndicatorPosition--${ActiveSide}`]: true
     };
   }
@@ -74,32 +74,35 @@ export class MultibuttonComponent {
   public get GetWrapperClasses(): Record<string, boolean> {
     return {
       'Hovering--First': this.HoveredIndex() === 0,
-      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items.length - 1,
+      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items().length - 1,
       ...this.GetBaseClasses
     };
   }
 
   public get GetContentStyles(): Record<string, number> {
     return {
-      '--selected-index': this.SelectedIndex,
-      '--button-count': this.Items.length
+      '--selected-index': this.SelectedIndex(),
+      '--button-count': this.Items().length
     };
   }
 
   public get GetHighlightClasses(): Record<string, boolean> {
     return {
-      'Hovering--Selected': this.HoveredIndex() === this.SelectedIndex,
-      'Hovering--First': this.HoveredIndex() === 0 && this.SelectedIndex === 0,
-      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items.length - 1 && this.SelectedIndex === this.Items.length - 1
+      'Hovering--Selected': this.HoveredIndex() === this.SelectedIndex(),
+      'Hovering--First': this.HoveredIndex() === 0 && this.SelectedIndex() === 0,
+      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items().length - 1 && this.SelectedIndex() === this.Items().length - 1
     };
   }
 
   public GetButtonClasses(Index: number): Record<string, boolean> {
+    const IsHoveringSelf: boolean = this.HoveredIndex() === Index;
+    const IsSelected: boolean = this.SelectedIndex() === Index;
+
     return {
-      'FancyMultibutton--Selected': this.SelectedIndex === Index,
-      'Hovering--Self': this.HoveredIndex() === Index,
+      'FancyMultibutton--Selected': IsSelected,
+      'Hovering--Self': IsHoveringSelf && !(this.ShowHighlight() && IsSelected),
       'Hovering--First': Index === 0,
-      'Hovering--Last': Index === this.Items.length - 1
+      'Hovering--Last': Index === this.Items().length - 1
     };
   }
 
@@ -111,25 +114,25 @@ export class MultibuttonComponent {
 
   // #region Inputs
 
-  @Input() Items: FancyMultibuttonItemType[] = [];
+  public Items = input<FancyMultibuttonItemType[]>([]);
 
   /** The global interface type signal. */
-  private GlobalType = this.InterfaceService.InterfaceType;
+  private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
   public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
-  public EffectiveType = computed(() => (this.Type() ?? this.GlobalType()));
+  public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => (this.Type() ?? this.GlobalType()));
 
-  @Input() DisplayMode: Nullable<FancyMultiButtonDisplayModeType> = 'Text';
+  public DisplayMode = input<Nullable<FancyMultiButtonDisplayModeType>>('Text');
   
-  @Input() Vertical: boolean = false;
-  @Input() IndicatorSide: Nullable<HorizontalPositionType | VerticalPositionType> = null;
-  @Input() IndicatorType: FancyMultiButtonIndicatorStyleType = 'Dash';
+  public Vertical = input(false);
+  public IndicatorSide = input<Nullable<HorizontalPositionType | VerticalPositionType>>(null);
+  public IndicatorType = input<FancyMultiButtonIndicatorStyleType>('Dash');
 
-  @Input() ShowHighlight: boolean = false;
-  @Input() ShowIndicator: boolean = false;
+  public ShowHighlight = input(false);
+  public ShowIndicator = input(false);
 
   // #endregion
 

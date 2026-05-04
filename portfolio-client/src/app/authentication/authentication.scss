@@ -184,13 +184,15 @@
     display: flex;
     flex-direction: row;
     place-items: center;
-    justify-content: space-between;
-    width: 100%;
+    justify-content: center;
+    width: var(--Textbox-Width);
+    align-self: center;
 }
 
 .Secondary-Action-Button {
     width: 50%;
-    height: 44px;
+    height: 39px; // 75% of 52px
+    align-self: center;
 
     font-weight: 600;
     font-size: 0.75rem;

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, Logger } from '@nestjs/common';
 import { ServerConfiguration } from '@ervum/shared-configuration';
+import { ServerConfigurationType } from '@ervum/types';
 
 /**
  * Initializes and starts the NestJS server application, applying global configuration such as port and proxy prefixes.
@@ -9,7 +10,7 @@ import { ServerConfiguration } from '@ervum/shared-configuration';
 async function bootstrap(): Promise<void> {
   const Application: INestApplication = await NestFactory.create(AppModule);
   
-  const Configuration = await ServerConfiguration;
+  const Configuration: ServerConfigurationType = await ServerConfiguration;
   const Port: number = (Configuration.Port);
 
   Application.setGlobalPrefix(Configuration.ProxyURL);

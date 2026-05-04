@@ -3,16 +3,12 @@
 
 
 /* --- Typography System --- */
-
 $Font-Primary: 'Inter', system-ui, -apple-system, sans-serif;
 
 /* --- Global Base Styles --- */
-
 body {
     font-family: $Font-Primary;
     margin: 0%;
-    background: #161616;
-    color: white; /* Default color for the application */
 }
 
 input, 
@@ -30,7 +26,6 @@ button {
 }
 
 /* --- Shared Text Styles --- */
-
 .Text-Standard {
     font-size: var(--FontSize-Standard);
 }

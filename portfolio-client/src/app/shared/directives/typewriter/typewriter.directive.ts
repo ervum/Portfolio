@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Directive, ElementRef, inject, input, effect } from '@angular/core';
 
 import { TypewriterAnimator } from '../../utilities/typewriter';
 import { InterfaceService } from '../../../core/services/interface/interface';
@@ -9,20 +9,26 @@ import { InterfaceService } from '../../../core/services/interface/interface';
   selector: '[FancyTypewriter]',
   standalone: true
 })
-export class TypewriterDirective implements OnChanges {
+export class TypewriterDirective {
   private readonly InterfaceService = inject(InterfaceService);
   private readonly ElementRef: ElementRef<HTMLElement> = inject(ElementRef);
   private readonly Animator = new TypewriterAnimator();
 
-  @Input('FancyTypewriter') Text: string = '';
+  public Text = input<string>('', { alias: 'FancyTypewriter' });
 
-  ngOnChanges(Changes: SimpleChanges): void {
-    if (Changes['Text']) {
-      const OldText: string = (Changes['Text'].previousValue) ?? '';
-      const NewText: string = (Changes['Text'].currentValue) ?? '';
+  private Initialized = false;
 
-      if (Changes['Text'].isFirstChange()) {
-        this.ElementRef.nativeElement.innerText = NewText;
+  constructor() {
+    effect(() => {
+      const NewText = this.Text()?.trim() ?? '';
+      const OldText = this.ElementRef.nativeElement.innerText?.trim() ?? '';
+
+      // Skip animation on first run or if text already matches
+      if (!this.Initialized || NewText === OldText) {
+        if (NewText !== '') {
+          this.ElementRef.nativeElement.innerText = NewText;
+          this.Initialized = true;
+        }
         return;
       }
 
@@ -32,6 +38,6 @@ export class TypewriterDirective implements OnChanges {
         (Text: string) => { this.ElementRef.nativeElement.innerText = Text; },
         this.InterfaceService.Typewriter()
       );
-    }
+    });
   }
 }

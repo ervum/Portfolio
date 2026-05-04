@@ -23,16 +23,17 @@
         class = "FancyDropdown-List"
         [Type] = "EffectiveType()">
         
-        <ng-container *ngFor = "let Item of Items">
-            <div 
-                *ngIf = "(Item !== SelectedItem)"
-                class = "FancyDropdown-Item"
-                (click) = "Select(Item)">
-                <span 
-                    class = "FancyDropdown-Item-Label"
-                    [FancyTypewriter] = "GetItemLabel(Item)">
-                </span>
-            </div>
-        </ng-container>
+        @for (Item of Items(); track $index) {
+            @if (Item !== SelectedItem()) {
+                <div 
+                    class = "FancyDropdown-Item"
+                    (click) = "Select(Item)">
+                    <span 
+                        class = "FancyDropdown-Item-Label"
+                        [FancyTypewriter] = "GetItemLabel(Item)">
+                    </span>
+                </div>
+            }
+        }
     </FancyContainer>
 </div>

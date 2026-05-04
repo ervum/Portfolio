@@ -1,10 +1,12 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, Input, OnInit, OnDestroy, Inject, PLATFORM_ID, inject, effect } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, OnInit, OnDestroy, Inject, PLATFORM_ID, inject, effect, input } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Nullable, Undefinable, NGStylesType, RGBColor, AuroraSphere } from '@ervum/types';
-import { InterfaceService } from '../../../../core/services/interface/interface';
 
-/** Smoothing factor for exponential lerp (0 = no smoothing, 1 = instant). */
-const MouseSmoothing: number = 0.12;
+import { Nullable, Undefinable, RGBColor, AuroraSphere } from '@ervum/types';
+
+import { InterfaceService } from '../../../../core/services/interface/interface';
+import { MouseSmoothing } from '../../../constants';
+
+
 
 @Component({
   selector: 'Aurora',
@@ -21,65 +23,55 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   // #region Inputs
 
   /** Number of gradient spheres to generate. */
-  @Input() SphereCount: number = 5;
+  public SphereCount = input(5);
 
   /** Minimum sphere diameter (in vw units). */
-  @Input() MinimumSize: number = 14;
+  public MinimumSize = input(14);
   /** Maximum sphere diameter (in vw units). */
-  @Input() MaximumSize: number = 22;
+  public MaximumSize = input(22);
 
   /** Minimum vertical position (in percentage). */
-  @Input() MinimumTop: number = 0;
+  public MinimumTop = input(0);
   /** Maximum vertical position (in percentage). */
-  @Input() MaximumTop: number = 100;
+  public MaximumTop = input(100);
 
   /** Minimum horizontal position (in percentage). */
-  @Input() MinimumLeft: number = 0;
+  public MinimumLeft = input(0);
   /** Maximum horizontal position (in percentage). */
-  @Input() MaximumLeft: number = 100;
+  public MaximumLeft = input(100);
 
   /** Minimum parallax speed. */
-  @Input() MinimumSpeed: number = -20;
+  public MinimumSpeed = input(-20);
   /** Maximum parallax speed. */
-  @Input() MaximumSpeed: number = 20;
+  public MaximumSpeed = input(20);
 
   /** Minimum rotation speed. */
-  @Input() MinimumRotationSpeed: number = -0.8;
+  public MinimumRotationSpeed = input(-0.8);
   /** Maximum rotation speed. */
-  @Input() MaximumRotationSpeed: number = 0.8;
+  public MaximumRotationSpeed = input(0.8);
 
   /** Minimum scale speed. */
-  @Input() MinimumScaleSpeed: number = 0.1;
+  public MinimumScaleSpeed = input(0.1);
   /** Maximum scale speed. */
-  @Input() MaximumScaleSpeed: number = 0.2;
+  public MaximumScaleSpeed = input(0.2);
 
   /** Minimum sphere opacity. */
-  @Input() MinimumOpacity: number = 0.3;
+  public MinimumOpacity = input(0.3);
   /** Maximum sphere opacity. */
-  @Input() MaximumOpacity: number = 0.5;
+  public MaximumOpacity = input(0.5);
 
-  /** Minimum wave offset. */
-  @Input() MinimumWaveOffset: number = 0;
-  /** Maximum wave offset. */
-  @Input() MaximumWaveOffset: number = 3;
+
 
   /** Minimum animation delay (in seconds). */
-  @Input() MinimumAnimationDelay: number = 0;
+  public MinimumAnimationDelay = input(0);
   /** Maximum animation delay (in seconds). */
-  @Input() MaximumAnimationDelay: number = 4;
+  public MaximumAnimationDelay = input(4);
 
   // #endregion
 
   // #region State
 
   public Spheres: AuroraSphere[] = [];
-
-  /** CSS classes for each wave layer (data-driven instead of hardcoded HTML). */
-  public readonly WaveLayers: string[] = [
-    'Aurora-Wave Aurora-Wave--1',
-    'Aurora-Wave Aurora-Wave--2',
-    'Aurora-Wave Aurora-Wave--3'
-  ];
 
   private readonly IsBrowser: boolean;
 
@@ -98,8 +90,6 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private AnimationFrameID: Nullable<number> = null;
 
   // #endregion
-
-
 
   constructor(@Inject(PLATFORM_ID) private PlatformID: object) {
     this.IsBrowser = isPlatformBrowser(this.PlatformID);
@@ -211,20 +201,20 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private GenerateSpheres(): void {
     this.Spheres = [];
 
-    for (let i = 0; i < this.SphereCount; i++) {
+    for (let i: number = 0; i < this.SphereCount(); i++) {
       this.Spheres.push({
         Styles: {
-          'top':                      `${this.RandomBetween(this.MinimumTop, this.MaximumTop)}%`,
-          'left':                     `${this.RandomBetween(this.MinimumLeft, this.MaximumLeft)}%`,
-          'width':                    `${this.RandomBetween(this.MinimumSize, this.MaximumSize)}vw`,
-          'height':                   `${this.RandomBetween(this.MinimumSize, this.MaximumSize)}vw`,
+          'top':                      `${this.RandomBetween(this.MinimumTop(), this.MaximumTop())}%`,
+          'left':                     `${this.RandomBetween(this.MinimumLeft(), this.MaximumLeft())}%`,
+          'width':                    `${this.RandomBetween(this.MinimumSize(), this.MaximumSize())}vw`,
+          'height':                   `${this.RandomBetween(this.MinimumSize(), this.MaximumSize())}vw`,
           'background':               this.GenerateRandomGradient(),
-          'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay, this.MaximumAnimationDelay).toFixed(2)}s`,
-          '--Sphere-Opacity':         `${this.RandomBetween(this.MinimumOpacity, this.MaximumOpacity).toFixed(3)}`,
-          '--Sphere-Speed':           `${this.RandomBetween(this.MinimumSpeed, this.MaximumSpeed).toFixed(2)}`,
-          '--Sphere-RotationSpeed':   `${this.RandomBetween(this.MinimumRotationSpeed, this.MaximumRotationSpeed).toFixed(3)}`,
-          '--Sphere-ScaleSpeed':      `${this.RandomBetween(this.MinimumScaleSpeed, this.MaximumScaleSpeed).toFixed(3)}`,
-          '--Sphere-WaveOffset':      `${this.RandomBetween(this.MinimumWaveOffset, this.MaximumWaveOffset).toFixed(2)}`
+          'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay(), this.MaximumAnimationDelay()).toFixed(2)}s`,
+          '--Sphere-Opacity':         `${this.RandomBetween(this.MinimumOpacity(), this.MaximumOpacity()).toFixed(3)}`,
+          '--Sphere-Speed':           `${this.RandomBetween(this.MinimumSpeed(), this.MaximumSpeed()).toFixed(2)}`,
+          '--Sphere-RotationSpeed':   `${this.RandomBetween(this.MinimumRotationSpeed(), this.MaximumRotationSpeed()).toFixed(3)}`,
+          '--Sphere-ScaleSpeed':      `${this.RandomBetween(this.MinimumScaleSpeed(), this.MaximumScaleSpeed()).toFixed(3)}`,
+
         }
       });
     }
@@ -253,9 +243,11 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private HSLToRGB(H: number, S: number, L: number): RGBColor {
     S /= 100;
     L /= 100;
-    const k = (n: number) => (n + H / 30) % 12;
-    const a = S * Math.min(L, 1 - L);
-    const f = (n: number) => L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
+    const k: (n: number) => number = (n: number) => (n + H / 30) % 12;
+    const a: number = S * Math.min(L, 1 - L);
+    const f: (n: number) => number = (n: number) => L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
     return {
       R: Math.round(255 * f(0)),
       G: Math.round(255 * f(8)),
@@ -265,9 +257,9 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Generates a completely random pastel color. */
   private RandomColor(): RGBColor {
-    const Hue = this.RandomBetween(0, 360);
-    const Saturation = this.RandomBetween(70, 100);
-    const Lightness = this.RandomBetween(70, 85);
+    const Hue: number = this.RandomBetween(0, 360);
+    const Saturation: number = this.RandomBetween(70, 100);
+    const Lightness: number = this.RandomBetween(70, 85);
     
     return this.HSLToRGB(Hue, Saturation, Lightness);
   }

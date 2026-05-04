@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, computed, signal, type Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -6,6 +6,7 @@ import { FancyDropdownItemType } from '@ervum/types';
 import { ContainerComponent } from '../../shared/components/standalone/container/container';
 import { DropdownComponent } from '../../shared/components/standalone/dropdown/dropdown';
 import { InterfaceService } from '../../core/services/interface/interface';
+import { type TranslationDictionary } from '../../core/internationalization';
 import { NavigationService } from '../../core/services/navigation/navigation';
 import { TypewriterDirective } from '../../shared/directives/typewriter/typewriter.directive';
 import { ButtonComponent } from '../../shared/components/standalone/button/button';
@@ -32,31 +33,30 @@ export class RecoveryComponent implements OnInit {
   public InterfaceService: InterfaceService = inject(InterfaceService);
   private NavigationService: NavigationService = inject(NavigationService);
 
-  public RecoveryOptions = computed(() => [
-    { Label: this.InterfaceService.T().Username, Action: () => {} },
-    { Label: this.InterfaceService.T().PhoneNumber, Action: () => {} },
-    { Label: this.InterfaceService.T().Email, Action: () => {} },
-    { Label: this.InterfaceService.T().Password, Action: () => {} },
+  public RecoveryOptions: Signal<FancyDropdownItemType[]> = computed(() => [
+    { ID: 'Username', Label: this.InterfaceService.T().Username, Action: () => {} },
+    { ID: 'PhoneNumber', Label: this.InterfaceService.T().PhoneNumber, Action: () => {} },
+    { ID: 'Email', Label: this.InterfaceService.T().Email, Action: () => {} },
+    { ID: 'Password', Label: this.InterfaceService.T().Password, Action: () => {} },
   ]);
 
   public SelectedOption = signal<FancyDropdownItemType | undefined>(undefined);
 
-  public SelectedRecoveryType = computed(() => {
-    const Selected = this.SelectedOption();
+  public SelectedRecoveryType: Signal<string> = computed(() => {
+    const Selected: FancyDropdownItemType | undefined = this.SelectedOption();
     if (!Selected) return 'Username';
 
-    const T = this.InterfaceService.T();
-    if (Selected.Label === T.Username) return 'Username';
-    if (Selected.Label === T.PhoneNumber) return 'PhoneNumber';
-    if (Selected.Label === T.Email) return 'Email';
-    if (Selected.Label === T.Password) return 'Password';
+    if (Selected.ID === 'Username') return 'Username';
+    if (Selected.ID === 'PhoneNumber') return 'PhoneNumber';
+    if (Selected.ID === 'Email') return 'Email';
+    if (Selected.ID === 'Password') return 'Password';
 
     return 'Username';
   });
 
   public ngOnInit(): void {
     // Wait for options to be available if needed, then set default to 'Password'
-    const Options = this.RecoveryOptions();
+    const Options: FancyDropdownItemType[] = this.RecoveryOptions();
     if (Options.length >= 4) {
       this.SelectedOption.set(Options[3]);
     }
@@ -66,33 +66,49 @@ export class RecoveryComponent implements OnInit {
     this.SelectedOption.set(Item);
   }
 
+  public FirstTextboxOnlyAllow = computed(() => {
+    return this.SelectedRecoveryType() === 'Username' ? '0123456789+-()' : undefined;
+  });
+
+  public SecondTextboxOnlyAllow = computed(() => {
+    return this.SelectedRecoveryType() === 'Email' ? '0123456789+-()' : undefined;
+  });
+
   public FirstTextboxIcon = computed(() => {
-    const Type = this.SelectedRecoveryType();
+    const Type: string = this.SelectedRecoveryType();
+  
     if (Type === 'Username') return 'phone';
     if (Type === 'PhoneNumber' || Type === 'Email') return 'at';
+  
+    return undefined;
+  });
+
+  public SecondTextboxIcon = computed(() => {
+    const Type: string = this.SelectedRecoveryType();
+  
+    if (Type === 'Username' || Type === 'PhoneNumber') return 'envelope';
+    if (Type === 'Email') return 'phone';
+  
     return undefined;
   });
 
   public FirstTextboxPlaceholder = computed(() => {
-    const Type = this.SelectedRecoveryType();
-    const T = this.InterfaceService.T();
+    const Type: string = this.SelectedRecoveryType();
+    const T: TranslationDictionary = this.InterfaceService.T();
+
     if (Type === 'Username') return T.PhoneNumber;
     if (Type === 'PhoneNumber' || Type === 'Email') return T.Username;
+
     return '';
   });
 
-  public SecondTextboxIcon = computed(() => {
-    const Type = this.SelectedRecoveryType();
-    if (Type === 'Username' || Type === 'PhoneNumber') return 'envelope';
-    if (Type === 'Email') return 'phone';
-    return undefined;
-  });
-
   public SecondTextboxPlaceholder = computed(() => {
-    const Type = this.SelectedRecoveryType();
-    const T = this.InterfaceService.T();
+    const Type: string = this.SelectedRecoveryType();
+    const T: TranslationDictionary = this.InterfaceService.T();
+  
     if (Type === 'Username' || Type === 'PhoneNumber') return T.Email;
     if (Type === 'Email') return T.PhoneNumber;
+
     return '';
   });
 

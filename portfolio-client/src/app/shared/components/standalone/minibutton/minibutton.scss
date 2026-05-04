@@ -5,6 +5,10 @@
 :host {
     display: inline-flex;
     cursor: pointer;
+
+    width: var(--Minibutton-Width, 48px);
+    height: var(--Minibutton-Height, 48px);
+    container-type: size;
 }
 
 
@@ -16,20 +20,16 @@
     
     width: var(--Minibutton-Width, 48px);
     height: var(--Minibutton-Height, 48px);
-    border-radius: var(--Radius-Standard);
+    border-radius: 35.6cqmin;
     
-    transition: 
-        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
-        border-radius 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-        background-color 0.3s ease, 
-        border-color 0.3s ease;
+    @include s.CreateTransition(transform, border-radius, background-color, border-color);
         
     overflow: hidden;
     
     &:hover {
         transform: translateY(-5px) scale(var(--Hover-Scale-Big));
 
-        border-radius: var(--Radius-Round);
+        border-radius: 50%;
     }
 }
 

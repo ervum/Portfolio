@@ -1,55 +1,55 @@
 <FancyContainer
     class = "FancyMultibutton-Wrapper"
 
-    [Type] = "(EffectiveType())"
+    [Type] = "EffectiveType()"
 
-    [ngClass] = "(GetWrapperClasses)">
+    [ngClass] = "GetWrapperClasses">
     <div
         class = "FancyMultibutton-Content"
 
-        [ngStyle] = "(GetContentStyles)"
+        [ngStyle] = "GetContentStyles"
 
-        [ngClass] = "(GetBaseClasses)">
-        @if (ShowHighlight) {
+        [ngClass] = "GetBaseClasses">
+        @if (ShowHighlight()) {
             <FancyContainer
                 class = "FancyMultibutton-Highlight"
 
-                [Type] = "(EffectiveType())"
+                [Type] = "EffectiveType()"
 
-                [ngClass] = "(GetHighlightClasses)">
+                [ngClass] = "GetHighlightClasses">
             </FancyContainer>
         }
 
-        @if (ShowIndicator) {
+        @if (ShowIndicator()) {
             <div
-                class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType }}"
+                class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType() }}"
 
-                [ngStyle] = "(GetContentStyles)">
+                [ngStyle] = "GetContentStyles">
             </div>
         }
 
-        @for (Item of Items; track $index) {
+        @for (Item of Items(); track $index) {
             <button
                 type = "button"
 
                 class = "FancyMultibutton"
 
-                [ngClass] = "(GetButtonClasses($index))"
+                [ngClass] = "GetButtonClasses($index)"
 
                 (click) = "SelectButton($index)"
                 (pointerenter) = "OnHover($index)"
                 (pointerleave) = "OnUnhover()">
 
-                @if (DisplayMode === 'Icon') {
+                @if (DisplayMode() === 'Icon') {
                     <div
                         class = "FancyMultibutton-Icon"
 
-                        [ngStyle] = "(GetIconStyles(Item.Label))">
+                        [ngStyle] = "GetIconStyles(Item.Label)">
                     </div>
                 } @else {
                     <span
                         class = "FancyMultibutton-Label"
-                        [FancyTypewriter] = "(Item.Label)">
+                        [FancyTypewriter] = "Item.Label">
                     </span>
                 }
             </button>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, OnChanges, SimpleChanges, Output, computed, inject, input } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, OnInit, OnChanges, SimpleChanges, Output, computed, inject, input, model, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FancyDropdownItemType, FancyUIElementTypeType, Undefinable } from '@ervum/types';
@@ -27,19 +27,19 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
   }
 })
 export class DropdownComponent implements OnInit, OnChanges {
-  private readonly InterfaceService = inject(InterfaceService);
-  private readonly ElementRef = inject(ElementRef);
+  private readonly InterfaceService: InterfaceService = inject(InterfaceService);
+  private readonly ElementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
-  @Input() Items: FancyDropdownItemType[] = [];
-  @Input() SelectedItem: Undefinable<FancyDropdownItemType>;
+  public Items = input<FancyDropdownItemType[]>([]);
+  public SelectedItem: ModelSignal<Undefinable<FancyDropdownItemType>> = model<Undefinable<FancyDropdownItemType>>();
   
-  @Output() SelectionChange = new EventEmitter<FancyDropdownItemType>();
+  @Output() SelectionChange: EventEmitter<FancyDropdownItemType> = new EventEmitter<FancyDropdownItemType>();
 
   public IsOpen: boolean = false;
 
-  private GlobalType = this.InterfaceService.InterfaceType;
+  private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
   public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
-  public EffectiveType = computed(() => this.Type() ?? this.GlobalType());
+  public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => this.Type() ?? this.GlobalType());
 
   /** Displayed text for the trigger label. */
   public TriggerLabel: string = 'Select';
@@ -48,43 +48,43 @@ export class DropdownComponent implements OnInit, OnChanges {
   public ItemLabels: Map<FancyDropdownItemType, string> = new Map();
 
   ngOnInit(): void {
-    if (!this.SelectedItem && this.Items.length > 0) {
-      this.SelectedItem = this.Items[0];
+    if (!this.SelectedItem() && this.Items().length > 0) {
+      this.SelectedItem.set(this.Items()[0]);
     }
 
-    this.TriggerLabel = this.SelectedItem?.Label ?? 'Select';
+    this.TriggerLabel = this.SelectedItem()?.Label ?? 'Select';
 
-    for (const Item of this.Items) {
+    for (const Item of this.Items()) {
       this.ItemLabels.set(Item, Item.Label);
     }
   }
 
   ngOnChanges(Changes: SimpleChanges): void {
-    if (Changes['SelectedItem'] && this.SelectedItem) {
-      this.TriggerLabel = this.SelectedItem.Label;
+    if (Changes['SelectedItem'] && this.SelectedItem()) {
+      this.TriggerLabel = (this.SelectedItem()!).Label;
     }
 
     if (Changes['Items'] && !Changes['Items'].firstChange) {
-      for (const Item of this.Items) {
+      for (const Item of this.Items()) {
         if (!this.ItemLabels.has(Item)) {
           this.ItemLabels.set(Item, Item.Label);
         }
       }
 
-      if (this.SelectedItem) {
-        const MatchingItem: Undefinable<FancyDropdownItemType> = this.Items.find(Item => 
-          (Item.ID !== undefined && Item.ID === this.SelectedItem?.ID) || 
-          (Item.ID === undefined && Item.Label === this.SelectedItem?.Label)
+      if (this.SelectedItem()) {
+        const MatchingItem: Undefinable<FancyDropdownItemType> = this.Items().find(Item => 
+          (Item.ID !== undefined && Item.ID === this.SelectedItem()?.ID) || 
+          (Item.ID === undefined && Item.Label === this.SelectedItem()?.Label)
         );
 
         if (MatchingItem) {
-          this.SelectedItem = MatchingItem;
+          this.SelectedItem.set(MatchingItem);
           this.TriggerLabel = MatchingItem.Label;
-        } else if (this.Items.length > 0) {
-          this.SelectedItem = this.Items[0];
-          this.TriggerLabel = this.SelectedItem.Label;
+        } else if (this.Items().length > 0) {
+          this.SelectedItem.set(this.Items()[0]);
+          this.TriggerLabel = this.SelectedItem()!.Label;
         } else {
-          this.SelectedItem = undefined;
+          this.SelectedItem.set(undefined);
           this.TriggerLabel = 'Select';
         }
       }
@@ -98,9 +98,9 @@ export class DropdownComponent implements OnInit, OnChanges {
 
   /** Selects an item, closes the dropdown, and updates labels. */
   public Select(Item: FancyDropdownItemType): void {
-    const PreviousItem = this.SelectedItem;
+    const PreviousItem: Undefinable<FancyDropdownItemType> = this.SelectedItem();
 
-    this.SelectedItem = Item;
+    this.SelectedItem.set(Item);
     this.IsOpen = false;
     
     this.SelectionChange.emit(Item);
@@ -129,7 +129,7 @@ export class DropdownComponent implements OnInit, OnChanges {
   /** Closes the dropdown when clicking outside of it. */
   @HostListener('document:click', ['$event'])
   public OnClickOutside(Event: MouseEvent): void {
-    if (!this.ElementRef.nativeElement.contains(Event.target)) {
+    if (!this.ElementRef.nativeElement.contains(Event.target as Node)) {
       this.IsOpen = false;
     }
   }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnInit, OnChanges, SimpleChanges, inject, input, computed } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, ElementRef, OnInit, OnChanges, SimpleChanges, inject, input, computed, type Signal, type WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Nullable, Undefinable, FancyUIElementTypeType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
@@ -26,10 +26,10 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
   }
 })
 export class ButtonComponent implements OnInit, OnChanges {
-  private readonly InterfaceService = inject(InterfaceService);
+  private readonly InterfaceService: InterfaceService = inject(InterfaceService);
   // #region Configuration & State
 
-  private readonly IconsBasePath = '../../../../../assets/icons/';
+  private readonly IconsBasePath: string = '../../../../../assets/icons/';
 
   private EntryIsQueued: boolean = false;
   private ExitIsQueued: boolean = false;
@@ -85,11 +85,11 @@ export class ButtonComponent implements OnInit, OnChanges {
   // #region Style & Class Getters
 
   public get ButtonIconStyle(): string {
-    if (!(this.Icon)) {
+    if (!(this.Icon())) {
       return '';
     }
 
-    return `url(${this.IconsBasePath}${this.Icon}.png)`;
+    return `url(${this.IconsBasePath}${this.Icon()}.png)`;
   }
 
   /** Inline styles for the normal wrapper (icon URL). */
@@ -103,7 +103,7 @@ export class ButtonComponent implements OnInit, OnChanges {
     return {
       ...this.GetTypeClass(),
 
-      'FancyButton--Centered': ((this.Centered) === true)
+      'FancyButton--Centered': ((this.Centered()) === true)
     };
   }
 
@@ -127,25 +127,24 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   // #region Inputs
 
-  @Input() BorderSpacing: Nullable<number> = 0.03;
+  public BorderSpacing = input<Nullable<number>>(0.03);
 
-  @Input() Padding: Nullable<number> = -3.0;
+  public Padding = input<Nullable<number>>(-3.0);
 
-  @Input() Label: Nullable<string> = 'Button';
+  public Label = input<Nullable<string>>('');
 
-
-  @Input() Icon: Nullable<string> = 'next';
+  public Icon = input<Nullable<string>>('next');
 
   /** The global interface type signal. */
-  private GlobalType = this.InterfaceService.InterfaceType;
+  private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
   public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
-  public EffectiveType = computed(() => this.Type() ?? this.GlobalType());
+  public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => this.Type() ?? this.GlobalType());
 
-  @Input() Centered: Nullable<boolean> = false;
+  public Centered = input<Nullable<boolean>>(false);
 
   // #endregion
 

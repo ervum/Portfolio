@@ -18,7 +18,7 @@ export class InterfaceService {
 
     if (this.IsBrowser) {
       effect(() => {
-        const Type = this.InterfaceType();
+        const Type: FancyUIElementTypeType = this.InterfaceType();
 
         document.documentElement.classList.remove('Theme--Primary', 'Theme--Secondary');
         document.documentElement.classList.add(`Theme--${Type}`);
@@ -76,7 +76,7 @@ export class InterfaceService {
       Math.max(Y, ((window.innerHeight) - Y))
     );
 
-    const Transition = document.startViewTransition(() => {
+    const Transition: any = (document as any).startViewTransition(() => {
       this.ToggleInterfaceType();
     });
 
@@ -129,7 +129,7 @@ export class InterfaceService {
    * Retrieves and clears the shared navigation data.
    */
   public GetAndClearNavigationData(): any {
-    const Data = this.NavigationData();
+    const Data: any = this.NavigationData();
     
     this.NavigationData.set(null);
 

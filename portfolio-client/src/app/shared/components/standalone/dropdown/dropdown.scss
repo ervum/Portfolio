@@ -11,6 +11,8 @@
     width: var(--Button-Width, 100%);
     height: var(--Button-Height, 50px);
 
+    container-type: size;
+
     /* Improve scaling quality to prevent graying/blurring of thin borders */
     backface-visibility: hidden;
     transform-style: preserve-3d;
@@ -38,9 +40,10 @@
     }
 }
 
-:host(.FancyDropdown--Primary),
-:host(.FancyDropdown--Secondary) {
-    /* Theme variables automatically handle this */
+:host(.FancyDropdown--Open) {
+    .FancyDropdown-Icon {
+        transform: rotate(-90deg);
+    }
 }
 
 
@@ -57,11 +60,11 @@
 
     &:hover {
         @include s.SynchronizeStates('.FancyDropdown-Trigger') {
-            border-radius: var(--Radius-Round);
+            border-radius: 50%;
         }
 
         @include s.SynchronizeStates('.FancyDropdown-Icon-Container') {
-            border-radius: var(--Radius-Round);
+            border-radius: 50%;
         }
     }
 }
@@ -80,7 +83,7 @@
     height: 100%;
 
     cursor: pointer;
-    border-radius: var(--Radius-Standard);
+    border-radius: 35.6cqmin;
 }
 
 .FancyDropdown-Label-Wrapper {
@@ -116,7 +119,7 @@
     width: auto;
     aspect-ratio: 1 / 1;
     
-    border-radius: var(--Radius-Sharp);
+    border-radius: 35.6cqmin;
     box-shadow: 0 0 10px var(--Shadow-Standard);
     
     overflow: hidden;
@@ -139,12 +142,6 @@
     transform: rotate(90deg);
 }
 
-:host(.FancyDropdown--Open) {
-    .FancyDropdown-Icon {
-        transform: rotate(-90deg);
-    }
-}
-
 .FancyDropdown-List-Wrapper {
     position: absolute;
     top: 0;
@@ -154,8 +151,8 @@
     z-index: 1;
     
     clip-path: inset(0px 0px -2000px 0px);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - var(--Radius-Standard, 16px)), black var(--Button-Height, 50px));
-    mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - var(--Radius-Standard, 16px)), black var(--Button-Height, 50px));
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - 35.6cqmin), black var(--Button-Height, 50px));
+    mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - 35.6cqmin), black var(--Button-Height, 50px));
     pointer-events: none;
     
     &.Is-Open {
@@ -172,8 +169,8 @@
     padding: calc(var(--Button-Height, 50px) + var(--Padding-Medium)) var(--Padding-Medium) var(--Padding-Medium) var(--Padding-Medium);
     gap: var(--Padding-Small);
 
-    border-radius: var(--Radius-Standard);
-    border-top: none !important;
+    border-radius: 26.7cqmin;
+    border-top: none;
     overflow: hidden;
     
     transform: translateY(-100%);
@@ -183,12 +180,12 @@
     }
 
     &:has(.FancyDropdown-Item:hover) {
-        border-radius: min(var(--Radius-Round), calc(var(--Control-Height) / 2));
+        border-radius: 53.3cqmin;
     }
 }
 
 .FancyDropdown-Item {
-    @include s.CreateTransition(background-color, transform);
+    @include s.CreateTransition(background-color, transform, border-radius);
 
     display: flex;
     flex-direction: row;
@@ -196,9 +193,10 @@
     
     padding: var(--Padding-Small) var(--Padding-Medium);
     cursor: pointer;
-    border-radius: var(--Radius-Round);
+    border-radius: 53.3cqmin;
 
     &:hover {
         transform: scale(var(--Hover-Scale-Big));
+        border-radius: 50%;
     }
 }

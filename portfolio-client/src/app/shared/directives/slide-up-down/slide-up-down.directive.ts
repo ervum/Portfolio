@@ -1,5 +1,6 @@
 import { Directive, ElementRef, OnInit, inject, effect, OnDestroy } from '@angular/core';
-import { AnimationBuilder, style, animate } from '@angular/animations';
+import { AnimationBuilder, style, animate, AnimationFactory, AnimationPlayer } from '@angular/animations';
+import { Nullable } from '@ervum/types';
 import { InterfaceService } from '../../../core/services/interface/interface';
 
 @Directive({
@@ -14,7 +15,7 @@ export class SlideUpDownDirective implements OnInit, OnDestroy {
   constructor() {
     // Listen for exit requests (manual or guard-triggered)
     effect(() => {
-      const Request = this.InterfaceService.RouteTransitionRequest();
+      const Request: Nullable<string> = this.InterfaceService.RouteTransitionRequest();
       if (Request !== null) {
         this.PlayAnimation('Out');
       }
@@ -41,12 +42,12 @@ export class SlideUpDownDirective implements OnInit, OnDestroy {
    * @param State The animation state ('In' or 'Out').
    */
   private PlayAnimation(State: 'In' | 'Out'): void {
-    const Animation = this.Builder.build([
+    const Animation: AnimationFactory = this.Builder.build([
       style(State === 'In' ? { transform: 'translateY(100vh)', opacity: 0 } : { transform: 'translateY(0)', opacity: 1 }),
       animate('0.8s cubic-bezier(0.86, 0, 0.07, 1)', style(State === 'In' ? { transform: 'translateY(0)', opacity: 1 } : { transform: 'translateY(100vh)', opacity: 0 }))
     ]);
 
-    const Player = Animation.create(this.ElementRef.nativeElement);
+    const Player: AnimationPlayer = Animation.create(this.ElementRef.nativeElement);
     Player.play();
   }
 }

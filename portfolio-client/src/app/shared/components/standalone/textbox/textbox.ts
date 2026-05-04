@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, inject, input, computed } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnChanges, SimpleChanges, Output, inject, input, computed, type Signal, type WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -27,10 +27,10 @@ import { TypewriterAnimator } from '../../../utilities/typewriter';
   }
 })
 export class TextboxComponent implements OnInit, OnChanges {
-  private readonly InterfaceService = inject(InterfaceService);
+  private readonly InterfaceService: InterfaceService = inject(InterfaceService);
   // #region Configuration & State
 
-  private readonly IconsBasePath = '../../../../../assets/icons/';
+  private readonly IconsBasePath: string = '../../../../../assets/icons/';
 
   private readonly AnimationDurationIn: number = 2000;
   private readonly AnimationDurationOut: number = 2000;
@@ -82,10 +82,11 @@ export class TextboxComponent implements OnInit, OnChanges {
    * Order classes used by wrappers and overlays to determine border radius and positioning.
    * 
    * - Includes: `First`, `Intermediate`, `Last` and `Unique`.
+   * 84. **Includes: `First`, `Intermediate`, `Last` and `Unique`.**
    */
-  private get GetOrderClasses(): Record<string, boolean> {
+  public get GetOrderClasses(): Record<string, boolean> {
     return {
-      [`FancyTextbox--${this.Order}`]: true
+      [`FancyTextbox--${this.Order()}`]: true
     };
   }
 
@@ -108,7 +109,7 @@ export class TextboxComponent implements OnInit, OnChanges {
       ...(this.GetBaseClasses),
       ...(this.GetOrderClasses),
 
-      'FancyTextboxBorder--AnimationBelow': ((this.BorderAnimation) === 'Below')
+      'FancyTextboxBorder--AnimationBelow': ((this.BorderAnimation()) === 'Below')
     };
   }
 
@@ -118,8 +119,6 @@ export class TextboxComponent implements OnInit, OnChanges {
       [`FancyTextbox--${this.EffectiveType()}`]: true
     };
   }
-
-
 
   /**
    * Constructs the background image URL for the icon.
@@ -144,7 +143,7 @@ export class TextboxComponent implements OnInit, OnChanges {
   // #region Logic & Helpers
 
   private Wait(ms: number): Promise<void> {
-    return new Promise((Resolve) => setTimeout(Resolve, ms));
+    return new Promise<void>((Resolve) => setTimeout(Resolve, ms));
   }
 
   private ParseBoolean(b: boolean): StringBooleanType {
@@ -201,30 +200,33 @@ export class TextboxComponent implements OnInit, OnChanges {
 
   // #region Inputs
 
-  @Input() MaximumLength: Undefinable<number> = undefined;
+  public MaximumLength = input<Undefinable<number>>(undefined);
 
-  @Input() Icon: Undefinable<string> = '';
+  public Icon = input<Undefinable<string>>('');
 
   /** The global interface type signal. */
-  private GlobalType = this.InterfaceService.InterfaceType;
+  private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
   public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
-  public EffectiveType = computed(() => (this.Type() ?? this.GlobalType()));
+  public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => (this.Type() ?? this.GlobalType()));
 
-  @Input() BorderAnimation: Undefinable<VerticalPositionType> = 'Above';
+  public BorderAnimation = input<Undefinable<VerticalPositionType>>('Above');
 
-  @Input() Order: Undefinable<FancyTextboxOrderType> = 'Unique';
+  public Order = input<Undefinable<FancyTextboxOrderType>>('Unique');
 
-  @Input() IsSensitive: boolean = false;
-  @Input() InitialVisibility: boolean = false;
+  public IsSensitive = input(false);
+  public InitialVisibility = input(false);
 
-  @Input() Placeholder: string = '';
+  /** Whitelist of allowed characters. If set, only these characters can be typed or pasted. */
+  public OnlyAllow = input<Undefinable<string>>(undefined);
+
+  public Placeholder = input('');
   public DisplayPlaceholder: string = '';
-  private PlaceholderAnimator = new TypewriterAnimator();
-  private readonly PlaceholderTypewriter = new TypewriterAnimator();
+  private PlaceholderAnimator: TypewriterAnimator = new TypewriterAnimator();
+  private readonly PlaceholderTypewriter: TypewriterAnimator = new TypewriterAnimator();
 
   // #endregion
 
@@ -293,6 +295,37 @@ export class TextboxComponent implements OnInit, OnChanges {
   public OnKeyDown(): void { this.KeyDown.emit(); }
   public OnKeyUp(): void { this.KeyUp.emit(); }
 
+  /** Blocks disallowed key presses before they reach the input. */
+  public OnFilterKeyDown(Event: KeyboardEvent): void {
+    if (!this.OnlyAllow()) return;
+
+    // Allow control keys (backspace, delete, arrows, tab, etc.)
+    if (Event.key.length !== 1 || Event.ctrlKey || Event.metaKey || Event.altKey) return;
+
+    if (!this.OnlyAllow()!.includes(Event.key)) {
+      Event.preventDefault();
+    }
+  }
+
+  /** Intercepts paste events and filters out disallowed characters from clipboard data. */
+  public OnPaste(Event: ClipboardEvent): void {
+    if (!this.OnlyAllow()) return;
+
+    Event.preventDefault();
+
+    const PastedText: string = Event.clipboardData?.getData('text') ?? '';
+    const AllowedSet: Set<string> = new Set(this.OnlyAllow());
+    const Filtered: string = [...PastedText].filter(Character => AllowedSet.has(Character)).join('');
+
+    if (Filtered) {
+      const Input: HTMLInputElement = Event.target as HTMLInputElement;
+      const Start: number = Input.selectionStart ?? this.InputValue.length;
+      const End: number = Input.selectionEnd ?? Start;
+
+      this.InputValue = this.InputValue.slice(0, Start) + Filtered + this.InputValue.slice(End);
+    }
+  }
+
   public OnWheel(): void { this.Wheel.emit(); }
 
   public ToggleVisibility(): void {
@@ -300,15 +333,8 @@ export class TextboxComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.IsVisible = this.InitialVisibility;
-    this.DisplayedIcon = this.Icon;
-    
-    this.PlaceholderAnimator.Animate(
-        '',
-        this.Placeholder,
-        (Text: string) => { this.DisplayPlaceholder = Text; },
-        this.InterfaceService.Typewriter()
-    );
+    this.IsVisible = this.InitialVisibility();
+    this.DisplayedIcon = this.Icon();
   }
 
   ngOnChanges(Changes: SimpleChanges): void {
@@ -317,17 +343,22 @@ export class TextboxComponent implements OnInit, OnChanges {
     }
 
     if (Changes['Placeholder'] && !Changes['Placeholder'].firstChange) {
-      const OldText = Changes['Placeholder'].previousValue ?? '';
-      const NewText = Changes['Placeholder'].currentValue ?? '';
+      const OldText: string = (Changes['Placeholder'].previousValue ?? '').trim();
+      const NewText: string = (Changes['Placeholder'].currentValue ?? '').trim();
 
-      this.PlaceholderAnimator.Animate(
-        OldText,
-        NewText,
-        (Text: string) => { this.DisplayPlaceholder = Text; },
-        this.InterfaceService.Typewriter()
-      );
+      if (OldText === '' || NewText === OldText) {
+        this.DisplayPlaceholder = NewText;
+        this.PlaceholderAnimator.Cancel();
+      } else {
+        this.PlaceholderAnimator.Animate(
+          OldText,
+          NewText,
+          (Text: string) => { this.DisplayPlaceholder = Text; },
+          this.InterfaceService.Typewriter()
+        );
+      }
     } else if (Changes['Placeholder'] && Changes['Placeholder'].firstChange) {
-      this.DisplayPlaceholder = this.Placeholder;
+      this.DisplayPlaceholder = this.Placeholder();
     }
   }
 

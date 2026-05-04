@@ -19,7 +19,7 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
   standalone: true,
   imports: [CommonModule, ContainerComponent, TypewriterDirective],
   templateUrl: './minibutton.html',
-  styleUrl: './minibutton.scss',
+  styleUrl: './minibutton.scss'
 })
 export class MinibuttonComponent {
   /** The global interface service for theme synchronization. */

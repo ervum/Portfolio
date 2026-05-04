@@ -5,22 +5,12 @@
 :host {
     display: block;
     width: 100%;
-}
-
-:host {
-    display: block;
-    width: 100%;
     
     color: var(--Text-Main);
 
     .FancyTextbox-Icon-Container {
         background-color: var(--Surface-BG-Hover);
     }
-}
-
-:host(.FancyTextbox--Primary),
-:host(.FancyTextbox--Secondary) {
-    /* Theme variables automatically handle this */
 }
 
 
@@ -41,19 +31,26 @@
 
     transition: all var(--Duration-Slow) var(--Easing-Standard);
 
-    border-radius: var(--Radius-Standard);
+    border-radius: calc(var(--Control-Height, 45px) * 0.356);
     
     padding: 0px var(--Padding-Small) 0px var(--Padding-Small);
 
     font-size: var(--FontSize-Standard);
 
-    &:hover {
+    background: transparent;
+    border: none;
+
+    &:hover:not(:has(.FancyTextbox-Visibility-Toggle:hover)) {
         width: calc(var(--Textbox-Width) * var(--Hover-Scale-Big));
-        border-radius: var(--Radius-Roundiest);
+        border-radius: 50%;
 
         .FancyTextbox-Icon-Container {
             transform: scale(var(--Hover-Scale-Standard));
-            border-radius: var(--Radius-Roundiest);
+            border-radius: 50%;
+        }
+
+        .FancyTextbox-Border {
+            border-radius: 50%;
         }
     }
 
@@ -71,9 +68,6 @@
     place-content: center;
     place-items: center;
 
-    display: block;
-    place-content: center;
-
     overflow: hidden;
 
     z-index: 3;
@@ -85,8 +79,9 @@
 
     flex-shrink: 0;
     
-    border-radius: var(--Radius-Sharp);
+    border-radius: calc(var(--Control-Height, 45px) * 0.356);
 
+    border: 1px solid var(--Border-Strong);
     box-shadow: 0 0 10px var(--Shadow-Standard);
 }
 
@@ -112,16 +107,6 @@
     }
 }
 
-@keyframes Icon-ExitUp {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-30px); opacity: 0; }
-}
-
-@keyframes Icon-EnterDown {
-    0% { transform: translateY(30px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
 .FancyTextbox-Visibility-Toggle {
     position: absolute;
     right: var(--Padding-Small);
@@ -137,6 +122,15 @@
     pointer-events: all;
 
     transition: all var(--Duration-Slow) var(--Easing-Standard);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: calc(var(--Padding-Small) * -1);
+    }
 
     .Visibility-Toggle-BaseIcon,
     .Visibility-Toggle-StrikeIcon {
@@ -189,13 +183,14 @@
     width: 100%;
     height: 100%;
 
-    transition: all 1.5s cubic-bezier(1, 0, 0, 1);
+    transition: all var(--Duration-Slow) var(--Easing-Standard);
 
-    border: 1px solid var(--Border-Main);
+    border: 1px solid var(--Border-Strong);
     background-color: var(--Surface-BG);
+    box-sizing: border-box;
 
     &.FancyTextbox--First {
-        border-radius: var(--Radius-Standard) var(--Radius-Standard) 2px 2px;
+        border-radius: calc(var(--Control-Height, 45px) * 0.356) calc(var(--Control-Height, 45px) * 0.356) 2px 2px;
     }
     &.FancyTextbox--Intermediate {
         border-top: none;
@@ -203,10 +198,10 @@
     }
     &.FancyTextbox--Last {
         border-top: none;
-        border-radius: 2px 2px var(--Radius-Standard) var(--Radius-Standard);
+        border-radius: 2px 2px calc(var(--Control-Height, 45px) * 0.356) calc(var(--Control-Height, 45px) * 0.356);
     }
     &.FancyTextbox--Unique {
-        border-radius: var(--Radius-Standard);
+        border-radius: calc(var(--Control-Height, 45px) * 0.356);
     }
 }
 
@@ -234,7 +229,7 @@
 
     border: none;
     border-width: 0px;
-    border-radius: var(--Radius-Sharp);
+    border-radius: calc(var(--Control-Height, 45px) * 0.267);
 
     text-align: left;
     text-indent: 0;
@@ -244,6 +239,5 @@
 
     &:has(~ .FancyTextbox-Visibility-Toggle) {
         padding-right: calc(var(--Control-Height) + var(--Padding-Small));
-        text-indent: 0; // maybe useless code
     }
 }

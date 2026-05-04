@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, input, computed } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input, computed, model, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContainerComponent } from '../container/container';
@@ -26,27 +26,27 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
   }
 })
 export class CheckboxComponent {
-  private readonly InterfaceService = inject(InterfaceService);
+  private readonly InterfaceService: InterfaceService = inject(InterfaceService);
 
-  @Input() Checked: boolean = false;
+  public Checked: ModelSignal<boolean> = model(false);
   
   /** The global interface type signal. */
-  private GlobalType = this.InterfaceService.InterfaceType;
+  private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
   public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
-  public EffectiveType = computed(() => (this.Type() ?? this.GlobalType()));
+  public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => (this.Type() ?? this.GlobalType()));
   
-  @Input() Label: string = '';
-  @Input() LabelPosition: HorizontalPositionType = 'Right';
+  public Label = input('');
+  public LabelPosition = input<HorizontalPositionType>('Right');
   
   @Output() CheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public Toggle(): void {
-    this.Checked = !(this.Checked);
-    this.CheckedChange.emit(this.Checked);
+    this.Checked.set(!(this.Checked()));
+    this.CheckedChange.emit(this.Checked());
   }
 }
 

@@ -1,9 +1,9 @@
 <div
   class = "FancyButton-Wrapper"
 
-  [ngClass] = "(GetWrapperClasses())"
+  [ngClass] = "GetWrapperClasses()"
 
-  [ngStyle] = "(GetWrapperStyles)">
+  [ngStyle] = "GetWrapperStyles">
   <FancyContainer
     #ButtonElement
 
@@ -13,9 +13,9 @@
 
     class = "FancyButton"
 
-    [Type] = "(EffectiveType())"
+    [Type] = "EffectiveType()"
 
-    [ngClass] = "(GetButtonClasses())"
+    [ngClass] = "GetButtonClasses()"
 
     (pointerenter) = "OnHover()"
     (pointermove) = "OnMove($event)"
@@ -36,21 +36,21 @@
     <div class = "FancyButton-Label-Wrapper">
       <span 
         class = "FancyButton-Label"
-        [FancyTypewriter] = "Label ?? ''">
+        [FancyTypewriter] = "Label() ?? ''">
       </span>
     </div>
 
-    @if (Icon !== '') {
+    @if (Icon() !== '') {
       <FancyContainer
         class = "FancyButton-Icon-Container"
 
-        [Type] = "(EffectiveType())"
+        [Type] = "EffectiveType()"
 
-        [ngClass] = "(GetIconClasses())">
+        [ngClass] = "GetIconClasses()">
         <div
           class = "FancyButton-Icon"
 
-          [ngClass] = "(GetIconClasses())"
+          [ngClass] = "GetIconClasses()"
 
           (animationend) = "OnIconAnimationEnd()">
         </div>
