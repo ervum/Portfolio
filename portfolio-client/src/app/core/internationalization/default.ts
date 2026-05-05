@@ -1,4 +1,6 @@
 export const DefaultDictionary = {
+  LanguageCode: 'en',
+  
   Portfolio: 'Portfolio',
   SignIn: 'Sign In',
   SignUp: 'Sign Up',

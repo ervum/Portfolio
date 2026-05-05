@@ -3,6 +3,8 @@ import { TranslationDictionary } from './default';
 
 
 export const SpanishDictionary: TranslationDictionary = {
+  LanguageCode: 'es',
+
   Portfolio: 'Portfolio',
   SignIn: 'Iniciar sesión',
   SignUp: 'Registrarse',

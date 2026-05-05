@@ -16,8 +16,15 @@
 
                 [Type] = "EffectiveType()"
 
-                [ngClass] = "GetHighlightClasses">
+                [ngClass] = "GetHighlightClasses"
+                [ngStyle] = "GetContentStyles">
             </FancyContainer>
+
+            <div
+                class = "FancyMultibutton-Indicator FancyMultibutton-Indicator--{{ IndicatorType() }}"
+                [ngClass] = "GetHoverIndicatorClasses()"
+                [ngStyle] = "GetContentStyles">
+            </div>
         }
 
         @if (ShowIndicator()) {

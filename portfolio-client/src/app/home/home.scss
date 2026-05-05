@@ -36,7 +36,7 @@
     place-content: center;
     place-items: center;
 
-    border-radius: 64px;
+    border-radius: 8cqmin;
 
     background-color: var(--Surface-BG);
     -webkit-backdrop-filter: blur(var(--Container-Blur));
@@ -68,3 +68,14 @@
     position: relative;
     z-index: 5;
 }
+
+.Section-Title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--Text-Main);
+    margin-bottom: 8px;
+    
+    letter-spacing: -0.02em;
+    opacity: 0.6;
+}
+

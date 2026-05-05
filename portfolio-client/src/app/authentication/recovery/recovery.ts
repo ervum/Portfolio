@@ -1,28 +1,35 @@
 import { Component, inject, OnInit, computed, signal, type Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { FancyDropdownItemType } from '@ervum/types';
+import { Undefinable, FancyDropdownItemType } from '@ervum/types';
+
 import { ContainerComponent } from '../../shared/components/standalone/container/container';
 import { DropdownComponent } from '../../shared/components/standalone/dropdown/dropdown';
-import { InterfaceService } from '../../core/services/interface/interface';
-import { type TranslationDictionary } from '../../core/internationalization';
-import { NavigationService } from '../../core/services/navigation/navigation';
-import { TypewriterDirective } from '../../shared/directives/typewriter/typewriter.directive';
 import { ButtonComponent } from '../../shared/components/standalone/button/button';
 import { TextboxComponent } from '../../shared/components/standalone/textbox/textbox';
+
+import { type TranslationDictionary } from '../../core/internationalization';
+import { InterfaceService } from '../../core/services/interface/interface';
+import { NavigationService } from '../../core/services/navigation/navigation';
+
+import { TypewriterDirective } from '../../shared/directives/typewriter/typewriter.directive';
 import { SlideUpDownDirective } from '../../shared/directives/slide-up-down/slide-up-down.directive';
+
+
 
 @Component({
   selector: 'app-recovery',
   standalone: true,
   imports: [
     CommonModule,
+
     ContainerComponent,
     DropdownComponent,
-    TypewriterDirective,
     ButtonComponent,
     TextboxComponent,
+
+    TypewriterDirective,
     SlideUpDownDirective
   ],
   templateUrl: './recovery.html',
@@ -30,8 +37,9 @@ import { SlideUpDownDirective } from '../../shared/directives/slide-up-down/slid
 })
 export class RecoveryComponent implements OnInit {
   private Router: Router = inject(Router);
-  public InterfaceService: InterfaceService = inject(InterfaceService);
+
   private NavigationService: NavigationService = inject(NavigationService);
+  public InterfaceService: InterfaceService = inject(InterfaceService);
 
   public RecoveryOptions: Signal<FancyDropdownItemType[]> = computed(() => [
     { ID: 'Username', Label: this.InterfaceService.T().Username, Action: () => {} },
@@ -40,10 +48,11 @@ export class RecoveryComponent implements OnInit {
     { ID: 'Password', Label: this.InterfaceService.T().Password, Action: () => {} },
   ]);
 
-  public SelectedOption = signal<FancyDropdownItemType | undefined>(undefined);
+  public SelectedOption = signal<Undefinable<FancyDropdownItemType>>(undefined);
 
   public SelectedRecoveryType: Signal<string> = computed(() => {
-    const Selected: FancyDropdownItemType | undefined = this.SelectedOption();
+    const Selected: Undefinable<FancyDropdownItemType> = this.SelectedOption();
+
     if (!Selected) return 'Username';
 
     if (Selected.ID === 'Username') return 'Username';
@@ -115,5 +124,22 @@ export class RecoveryComponent implements OnInit {
   public GoBack(): void {
     // Navigate back to authentication
     this.NavigationService.NavigateWithAnimation('authentication');
+  }
+
+  /**
+   * Mock handler for the recovery process to show the shared animation.
+   */
+  public HandleRecovery(): void {
+    this.InterfaceService.SetStatus('Loading');
+
+    // Simulate a network request
+    setTimeout(() => {
+      // 80% chance of success for demonstration
+      if (Math.random() > 0.2) {
+        this.InterfaceService.SetStatus('Success');
+      } else {
+        this.InterfaceService.SetStatus('Error');
+      }
+    }, 500);
   }
 }

@@ -204,20 +204,28 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     for (let i: number = 0; i < this.SphereCount(); i++) {
       this.Spheres.push({
         Styles: {
-          'top':                      `${this.RandomBetween(this.MinimumTop(), this.MaximumTop())}%`,
-          'left':                     `${this.RandomBetween(this.MinimumLeft(), this.MaximumLeft())}%`,
-          'width':                    `${this.RandomBetween(this.MinimumSize(), this.MaximumSize())}vw`,
-          'height':                   `${this.RandomBetween(this.MinimumSize(), this.MaximumSize())}vw`,
-          'background':               this.GenerateRandomGradient(),
-          'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay(), this.MaximumAnimationDelay()).toFixed(2)}s`,
           '--Sphere-Opacity':         `${this.RandomBetween(this.MinimumOpacity(), this.MaximumOpacity()).toFixed(3)}`,
           '--Sphere-Speed':           `${this.RandomBetween(this.MinimumSpeed(), this.MaximumSpeed()).toFixed(2)}`,
           '--Sphere-RotationSpeed':   `${this.RandomBetween(this.MinimumRotationSpeed(), this.MaximumRotationSpeed()).toFixed(3)}`,
           '--Sphere-ScaleSpeed':      `${this.RandomBetween(this.MinimumScaleSpeed(), this.MaximumScaleSpeed()).toFixed(3)}`,
+          
+          'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay(), this.MaximumAnimationDelay()).toFixed(2)}s`,
 
+          'top':                      `${this.RandomBetween(this.MinimumTop(), this.MaximumTop())}%`,
+          'left':                     `${this.RandomBetween(this.MinimumLeft(), this.MaximumLeft())}%`,
+          'width':                    `${this.RandomBetween(this.MinimumSize(), this.MaximumSize())}vw`,
+          'height':                   `${this.RandomBetween(this.MinimumSize(), this.MaximumSize())}vw`,
+
+          'background':               this.GenerateRandomGradient(),
+          'border-radius':            this.GetRandomRadius()
         }
       });
     }
+  }
+
+  /** Returns a random radius between 10cqmin and 50cqmin. */
+  private GetRandomRadius(): string {
+    return `${this.RandomBetween(10, 50).toFixed(2)}cqmin`;
   }
 
   /**
@@ -236,7 +244,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Returns a random number between `Minimum` and `Maximum`. */
   private RandomBetween(Minimum: number, Maximum: number): number {
-    return (Math.random() * (Maximum - Minimum)) + Minimum;
+    return ((Math.random() * (Maximum - Minimum)) + Minimum);
   }
 
   /** Converts HSL values to an RGBColor. */
@@ -244,9 +252,9 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     S /= 100;
     L /= 100;
 
-    const k: (n: number) => number = (n: number) => (n + H / 30) % 12;
+    const k: (n: number) => number = (n: number) => ((n + H / 30) % 12);
     const a: number = S * Math.min(L, 1 - L);
-    const f: (n: number) => number = (n: number) => L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const f: (n: number) => number = (n: number) => (L - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))));
 
     return {
       R: Math.round(255 * f(0)),

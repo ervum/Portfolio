@@ -20,7 +20,7 @@
     will-change: transform;
 
     color: var(--Text-Main);
-
+    
     &:hover {
         transform: scale(var(--Hover-Scale-Big)) translateZ(0);
         --Container-Border-Color: var(--Border-Strong);
@@ -31,19 +31,10 @@
         --Container-Border-Color: var(--Border-Main);
     }
 
-    .FancyDropdown-Icon-Container {
-        background-color: var(--Surface-BG-Hover);
-    }
-    
-    .FancyDropdown-Item:hover {
-        background-color: var(--Surface-BG-Hover);
-    }
 }
 
-:host(.FancyDropdown--Open) {
-    .FancyDropdown-Icon {
-        transform: rotate(-90deg);
-    }
+:host(.FancyDropdown--Open) .FancyDropdown-Icon {
+    transform: rotate(-90deg);
 }
 
 
@@ -60,11 +51,11 @@
 
     &:hover {
         @include s.SynchronizeStates('.FancyDropdown-Trigger') {
-            border-radius: 50%;
+            border-radius: var(--Radius-Pill);
         }
 
         @include s.SynchronizeStates('.FancyDropdown-Icon-Container') {
-            border-radius: 50%;
+            border-radius: var(--Radius-Pill);
         }
     }
 }
@@ -83,7 +74,7 @@
     height: 100%;
 
     cursor: pointer;
-    border-radius: 35.6cqmin;
+    border-radius: var(--Radius-Standard);
 }
 
 .FancyDropdown-Label-Wrapper {
@@ -119,11 +110,13 @@
     width: auto;
     aspect-ratio: 1 / 1;
     
-    border-radius: 35.6cqmin;
+    border-radius: var(--Radius-Standard);
     box-shadow: 0 0 10px var(--Shadow-Standard);
     
     overflow: hidden;
     flex-shrink: 0;
+    
+    background-color: var(--Surface-BG-Hover);
 
     background-size: contain;
     background-repeat: no-repeat;
@@ -166,10 +159,10 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: calc(var(--Button-Height, 50px) + var(--Padding-Medium)) var(--Padding-Medium) var(--Padding-Medium) var(--Padding-Medium);
+    padding: calc(var(--Button-Height, 50px) + var(--Padding-Medium)) 0px var(--Padding-Medium) 0px;
     gap: var(--Padding-Small);
 
-    border-radius: 26.7cqmin;
+    border-radius: var(--Radius-Sharp);
     border-top: none;
     overflow: hidden;
     
@@ -180,7 +173,7 @@
     }
 
     &:has(.FancyDropdown-Item:hover) {
-        border-radius: 53.3cqmin;
+        border-radius: var(--Radius-Pill);
     }
 }
 
@@ -193,10 +186,13 @@
     
     padding: var(--Padding-Small) var(--Padding-Medium);
     cursor: pointer;
-    border-radius: 53.3cqmin;
+    border-radius: var(--Radius-Pill);
 
     &:hover {
+        background-color: var(--Surface-BG-Hover);
+
         transform: scale(var(--Hover-Scale-Big));
-        border-radius: 50%;
+
+        border-radius: var(--Radius-Pill);
     }
 }

@@ -1,11 +1,12 @@
 /* --- Design Tokens --- */
 
 /* Border Radiuses */
-$Radius-Sharpest: 6px;
-$Radius-Sharp: 12px;
-$Radius-Standard: 16px;
-$Radius-Round: 24px;
-$Radius-Roundiest: 64px;
+$Radius-Square: 0cqmin;
+$Radius-Sharpest: 10cqmin;
+$Radius-Sharp: 20cqmin;
+$Radius-Standard: 30cqmin;
+$Radius-Round: 35cqmin;
+$Radius-Pill: 50cqmin;
 
 /* Typography */
 $FontSize-Standard: 14px;
@@ -19,10 +20,11 @@ $Duration-Standard: 0.8s;
 $Duration-Slow: 1.0s;
 
 /* Interactive States */
-$Hover-Scale-Standard: 0.8;
+$Interact-Scale-Big: 1.2;
+$Interact-Scale-Standard: 1.1;
+
 $Hover-Scale-Big: 0.9;
-$Hover-Scale-Glow: 0.9;
-$Hover-Glow-Gap: 4px;
+$Hover-Scale-Standard: 0.8;
 
 $Hover-MoveY: -5px;
 
@@ -61,11 +63,12 @@ $Button-Width: 100%;
 /* --- CSS Variables Export --- */
 :root {
     /* --- Global Shared Tokens --- */
+    --Radius-Square: #{$Radius-Square};
     --Radius-Sharpest: #{$Radius-Sharpest};
     --Radius-Sharp: #{$Radius-Sharp};
     --Radius-Standard: #{$Radius-Standard};
     --Radius-Round: #{$Radius-Round};
-    --Radius-Roundiest: #{$Radius-Roundiest};
+    --Radius-Pill: #{$Radius-Pill};
 
     --FontSize-Standard: #{$FontSize-Standard};
     --FontSize-Small: #{$FontSize-Small};
@@ -76,10 +79,11 @@ $Button-Width: 100%;
     --Duration-Standard: #{$Duration-Standard};
     --Duration-Slow: #{$Duration-Slow};
 
+    --Interact-Scale-Big: #{$Interact-Scale-Big};
+    --Interact-Scale-Standard: #{$Interact-Scale-Standard};
+
     --Hover-Scale-Standard: #{$Hover-Scale-Standard};
     --Hover-Scale-Big: #{$Hover-Scale-Big};
-    --Hover-Scale-Glow: #{$Hover-Scale-Glow};
-    --Hover-Glow-Gap: #{$Hover-Glow-Gap};
 
     --Hover-MoveY: #{$Hover-MoveY};
 
@@ -107,7 +111,6 @@ $Button-Width: 100%;
     --Multibutton-IndicatorTrackHeight: #{$Multibutton-IndicatorTrackHeight};
 
     --Button-Width: #{$Button-Width};
-
 
     /* --- Theme Palettes --- */
 
@@ -172,4 +175,3 @@ $Button-Width: 100%;
         --Edge-Glow: rgba(0, 0, 0, 0.2);
     }
 }
-

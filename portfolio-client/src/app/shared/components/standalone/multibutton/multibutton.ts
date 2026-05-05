@@ -30,7 +30,8 @@ export class MultibuttonComponent {
 
   /** Currently selected button index. */
   public SelectedIndex: ModelSignal<number> = model(0);
-  public HoveredIndex: WritableSignal<Nullable<number>> = signal<number | null>(null);
+  public HoveredIndex: WritableSignal<Nullable<number>> = signal<Nullable<number>>(null);
+  public LastHoveredIndex: WritableSignal<number> = signal<number>(0);
 
   /** Selects a button by index and invokes its action if defined. */
   public SelectButton(Index: number): void {
@@ -49,6 +50,7 @@ export class MultibuttonComponent {
   /** Sets the hovered button index. */
   public OnHover(Index: number): void {
     this.HoveredIndex.set(Index);
+    this.LastHoveredIndex.set(Index);
   }
 
   /** Clears the hovered button index. */
@@ -79,18 +81,32 @@ export class MultibuttonComponent {
     };
   }
 
-  public get GetContentStyles(): Record<string, number> {
+  public get GetContentStyles(): Record<string, Nullable<number>> {
     return {
       '--selected-index': this.SelectedIndex(),
+      '--Hover-Index': this.LastHoveredIndex(),
       '--button-count': this.Items().length
     };
   }
 
   public get GetHighlightClasses(): Record<string, boolean> {
+    const HoveredIndex = this.HoveredIndex();
+    const SelectedIndex = this.SelectedIndex();
+    const IsHovering = HoveredIndex !== null;
+
     return {
-      'Hovering--Selected': this.HoveredIndex() === this.SelectedIndex(),
-      'Hovering--First': this.HoveredIndex() === 0 && this.SelectedIndex() === 0,
-      'Hovering--Last': this.HoveredIndex() !== null && this.HoveredIndex() === this.Items().length - 1 && this.SelectedIndex() === this.Items().length - 1
+      'Hovering--Any': IsHovering,
+      'Hovering--Selected': IsHovering && HoveredIndex === SelectedIndex,
+      'Hovering--Before': IsHovering && HoveredIndex < SelectedIndex,
+      'Hovering--After': IsHovering && HoveredIndex > SelectedIndex
+    };
+  }
+
+  /** Classes for the special hover indicator (used when ShowHighlight is true). */
+  public GetHoverIndicatorClasses(): Record<string, boolean> {
+    return {
+      'FancyMultibutton-Indicator--Hover': true,
+      'Is-Active': this.HoveredIndex() !== null
     };
   }
 
@@ -100,7 +116,7 @@ export class MultibuttonComponent {
 
     return {
       'FancyMultibutton--Selected': IsSelected,
-      'Hovering--Self': IsHoveringSelf && !(this.ShowHighlight() && IsSelected),
+      'Hovering--Self': IsHoveringSelf && !this.ShowHighlight(),
       'Hovering--First': Index === 0,
       'Hovering--Last': Index === this.Items().length - 1
     };

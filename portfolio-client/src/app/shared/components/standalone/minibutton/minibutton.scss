@@ -8,28 +8,29 @@
 
     width: var(--Minibutton-Width, 48px);
     height: var(--Minibutton-Height, 48px);
+    
     container-type: size;
 }
 
 
 
 .Minibutton-IconContainer {
+    @include s.CreateTransition(transform, border-radius, background-color, border-color);
+
     display: flex;
     place-content: center;
     place-items: center;
     
     width: var(--Minibutton-Width, 48px);
     height: var(--Minibutton-Height, 48px);
-    border-radius: 35.6cqmin;
+    border-radius: var(--Radius-Standard);
     
-    @include s.CreateTransition(transform, border-radius, background-color, border-color);
-        
     overflow: hidden;
     
     &:hover {
-        transform: translateY(-5px) scale(var(--Hover-Scale-Big));
+        transform: translateY(var(--Hover-MoveY)) scale(var(--Hover-Scale-Big));
 
-        border-radius: 50%;
+        border-radius: var(--Radius-Pill);
     }
 }
 
@@ -48,13 +49,13 @@
     mask-repeat: no-repeat;
     mask-image: var(--icon);
 
-    transition: background-color 0.3s ease;
+    transition: background-color var(--Duration-Standard) var(--Easing-Standard);
     
     &.Minibutton-Icon--Entering {
-        animation: Icon-EnterLeft 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        animation: Icon-EnterLeft var(--Duration-Standard) var(--Easing-Standard) forwards;
     }
     &.Minibutton-Icon--Exiting {
-        animation: Icon-ExitRight 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        animation: Icon-ExitRight var(--Duration-Standard) var(--Easing-Standard) forwards;
     }
     &.Minibutton-Icon--OffScreen {
         transform: translateX(50px);
@@ -65,5 +66,5 @@
     font-size: 14px;
     font-weight: 600;
 
-    transition: color 0.3s ease;
+    transition: color var(--Duration-Standard) var(--Easing-Standard);
 }

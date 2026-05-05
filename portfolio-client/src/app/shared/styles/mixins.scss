@@ -1,7 +1,9 @@
 @use 'sass:list';
 
+
+
 @mixin CreateTransition($Properties ...) {
-    $Duration: var(--Duration-Slow);
+    $Duration: var(--Duration-Standard);
     $Easing: var(--Easing-Standard);
 
     $Transitions: ();

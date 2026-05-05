@@ -1,0 +1,11 @@
+@property --edge-colour {
+    syntax: '<color>';
+    initial-value: #ffffff;
+    inherits: true;
+}
+
+@property --edge-glow {
+    syntax: '<color>';
+    initial-value: rgba(255, 255, 255, 0.8);
+    inherits: true;
+}

@@ -12,10 +12,6 @@
     container-type: size;
     
     color: var(--Text-Main);
-
-    .FancyButton-Icon-Container {
-        background-color: var(--Surface-BG-Hover);
-    }
 }
 
 
@@ -48,7 +44,7 @@
         @include s.SynchronizeStates('.FancyButton') {
             transform: translateY(var(--Hover-MoveY));
 
-            border-radius: 50%;
+            border-radius: var(--Radius-Pill);
         }
 
         @include s.SynchronizeStates('.FancyButton-Label') {
@@ -56,7 +52,7 @@
         }
 
         @include s.SynchronizeStates('.FancyButton-Icon-Container') {
-            border-radius: 50%;
+            border-radius: var(--Radius-Pill);
             transform: scale(var(--Hover-Scale-Standard));
         }
     }
@@ -84,7 +80,7 @@
 
     background-color: transparent;
 
-    border-radius: 35.6cqmin;
+    border-radius: var(--Radius-Standard);
 
     text-align: left;
 }
@@ -103,15 +99,27 @@
     width: auto;
     aspect-ratio: 1 / 1;
     
-    border-radius: 35.6cqmin;
+    background-color: var(--Surface-BG-Hover);
 
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: var(--Surface-BG);
+        z-index: -1;
+        border-radius: inherit;
+    }
+    
+    border-radius: var(--Radius-Standard);
+    border: 1px solid var(--Border-Strong);
     box-shadow: 0 0 10px var(--Shadow-Standard);
     
     overflow: hidden;
-
     flex-shrink: 0;
-
+    
     background-size: contain;
+
+
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -128,10 +136,10 @@
     width: 50%;
 
     &.FancyButton-Icon--Entering {
-        animation: Icon-EnterLeft 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        animation: Icon-EnterLeft var(--Duration-Standard) var(--Easing-Standard) forwards;
     }
     &.FancyButton-Icon--Exiting {
-        animation: Icon-ExitRight 1.25s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        animation: Icon-ExitRight var(--Duration-Standard) var(--Easing-Standard) forwards;
     }
     &.FancyButton-Icon--OffScreen {
         transform: translateX(50px);

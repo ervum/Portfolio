@@ -3,11 +3,9 @@
 
 
 /* --- Shape Definitions --- */
-
 $Polygon-Square: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
 
 /* --- Mixins --- */
-
 @mixin ConcaveBorder($Size: 75%, $X: 50%, $Y: 50%, $Smoothness: 1%) {
     aspect-ratio: 1 / 1;
     
@@ -50,14 +48,13 @@ $Polygon-Square: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
 }
 
 /* --- Utility Classes (for global availability) --- */
-
 .Concave-Border {
+    @include ConcaveBorder(var(--Size), var(--X), var(--Y), var(--Smoothness));
+    
     --Size: 75%;
     --X: 50%;
     --Y: 50%;
     --Smoothness: 1%;
-    
-    @include ConcaveBorder(var(--Size), var(--X), var(--Y), var(--Smoothness));
     
     background: white;
 
@@ -68,14 +65,18 @@ $Polygon-Square: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
 }
 
 .Shape {
-    --Shape: #{$Polygon-Square};
     @include ClipShape(var(--Shape));
+
+    --Shape: #{$Polygon-Square};
+
     background: white;
-    border-radius: 5%;
+    container-type: size;
+    border-radius: 5cqmin;
 
     &.Invert {
-        --Stroke: -5px;
         @include InvertShape(var(--Shape), var(--Stroke));
+
+        --Stroke: -5px;
     }
 }
 

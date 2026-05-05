@@ -9,9 +9,10 @@
     
     /* Make it untappable for text selection */
     user-select: none;
-    -webkit-tap-highlight-color: transparent;
 
     color: var(--Text-Main);
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -31,20 +32,41 @@
 }
 
 .FancyCheckbox-IconContainer {
+    @include s.CreateTransition(transform, border-radius, background-color, border-color);
+    
     display: flex;
     align-items: center;
     justify-content: center;
+
+    position: relative;
 
     /* Scaled relatively against the font-size */
     width: 1.25em;
     height: 1.25em;
     flex-shrink: 0;
 
-    /* Use matching easing for transform and border-radius to avoid two-step animation */
-    @include s.CreateTransition(transform, border-radius, background-color, border-color);
+    container-type: size;
 
-    /* Proportional radius: 35.6% of the 1.25em dimension */
-    border-radius: calc(1.25em * 0.356);
+    transition-duration: var(--Duration-Standard);
+    transition-timing-function: var(--Easing-Standard);
+
+    /* Reset parent FancyContainer styles to use pseudo-element for correct cqmin resolution */
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: var(--Radius-Standard);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+
+        background-color: var(--Surface-BG);
+        border: 1px solid var(--Border-Strong);
+        border-radius: var(--Radius-Standard);
+
+        transition: border-radius var(--Duration-Standard) var(--Easing-Standard);
+    }
 }
 
 .FancyCheckbox-Label {
@@ -66,6 +88,10 @@
 .FancyCheckbox-Wrapper:hover {
     .FancyCheckbox-IconContainer {
         transform: scale(var(--Hover-Scale-Big));
-        border-radius: 50%;
+        border-radius: var(--Radius-Pill);
+
+        &::before {
+            border-radius: var(--Radius-Pill);
+        }
     }
 }

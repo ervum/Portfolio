@@ -16,7 +16,8 @@
 <FancyDropdown
     class = "Language-Dropdown"
     [class.Home] = "SelectedIndex() === 0"
-    [Items] = "(LanguageItems())">
+    [Items] = "(LanguageItems())"
+    [SelectedItem] = "CurrentLanguageItem()">
 </FancyDropdown>
 
 <FancyMinibutton
@@ -31,7 +32,7 @@
     class = "RouteSelector-Multibutton"
 
     [Items] = "RouteSelectorItems"
-    [SelectedIndex] = "SelectedIndex()"
+    [(SelectedIndex)] = "SelectedIndex"
     [Vertical] = "true"
     [ShowIndicator] = "true"
 

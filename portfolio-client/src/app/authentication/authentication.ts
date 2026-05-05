@@ -9,6 +9,7 @@ import { ButtonComponent } from '../shared/components/standalone/button/button';
 import { TextboxComponent } from '../shared/components/standalone/textbox/textbox';
 import { CheckboxComponent } from '../shared/components/standalone/checkbox/checkbox';
 import { ContainerComponent } from '../shared/components/standalone/container/container';
+import { MinibuttonComponent } from '../shared/components/standalone/minibutton/minibutton';
 
 import { TypewriterDirective } from '../shared/directives/typewriter/typewriter.directive';
 import { SlideUpDownDirective } from '../shared/directives/slide-up-down/slide-up-down.directive';
@@ -32,6 +33,7 @@ import { forkJoin, timer } from 'rxjs';
     TextboxComponent,
     CheckboxComponent,
     ContainerComponent,
+    MinibuttonComponent,
 
     TypewriterDirective,
     SlideUpDownDirective
@@ -64,12 +66,8 @@ export class AuthenticationComponent implements OnInit {
     }
   ]);
   
-  public Status: WritableSignal<FancyUIElementLoadStatusType> = signal<FancyUIElementLoadStatusType>('Idle');
-  
   public get IsLoading(): Record<string, boolean> {
-    return {
-      [`Section--${this.Status()}`]: true
-    };
+    return this.InterfaceService.GetStatusClasses();
   }
   
   
@@ -106,7 +104,7 @@ export class AuthenticationComponent implements OnInit {
   public HandleSignIn(): void {
     console.log('Sign-In attempt initiated from the Authentication Component!');
     
-    this.Status.set('Loading');
+    this.InterfaceService.SetStatus('Loading');
     
     const UserPayload: LoginData = {
       UserIdentifier: ((this.MainIdentifierTextbox?.InputValue) ?? ''),
@@ -116,21 +114,17 @@ export class AuthenticationComponent implements OnInit {
     forkJoin([
       this.AuthenticationService.Login(UserPayload),
 
-      timer(300)
+      timer(50)
     ]).subscribe({
       next: (Response: [LoginData, number]) => {
         console.log('Successfully signed in:', Response);
 
-        this.Status.set('Success');
-        
-        setTimeout(() => this.Status.set('Idle'), 3000);
+        this.InterfaceService.SetStatus('Success');
       },
-      error: (Err: unknown) => {
-        console.error('Error signing in:', Err);
+      error: (Error: unknown) => {
+        console.error('Error signing in:', Error);
 
-        this.Status.set('Error');
-
-        setTimeout(() => this.Status.set('Idle'), 3000);
+        this.InterfaceService.SetStatus('Error');
       }
     });
   }
@@ -139,7 +133,7 @@ export class AuthenticationComponent implements OnInit {
   public HandleSignUp(): void {
     console.log('Sign-Up attempt initiated from the Authentication Component!');
     
-    this.Status.set('Loading');
+    this.InterfaceService.SetStatus('Loading');
 
     const UserPayload: RegisterData = {
       Email: ((this.EmailTextbox?.InputValue) ?? ''),
@@ -152,21 +146,17 @@ export class AuthenticationComponent implements OnInit {
     forkJoin([
       this.AuthenticationService.Register(UserPayload),
 
-      timer(300)
+      timer(50)
     ]).subscribe({
       next: (Response: [RegisterData, number]) => {
         console.log('Successfully signed up:', Response);
 
-        this.Status.set('Success');
-
-        setTimeout(() => this.Status.set('Idle'), 3000);
+        this.InterfaceService.SetStatus('Success');
       },
       error: (Err: unknown) => {
         console.error('Error signing up:', Err);
 
-        this.Status.set('Error');
-
-        setTimeout(() => this.Status.set('Idle'), 3000);
+        this.InterfaceService.SetStatus('Error');
       }
     });
   }

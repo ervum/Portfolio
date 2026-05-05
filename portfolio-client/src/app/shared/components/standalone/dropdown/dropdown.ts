@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, OnInit, OnChanges, SimpleChanges, Output, computed, inject, input, model, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, computed, inject, input, model, effect, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FancyDropdownItemType, FancyUIElementTypeType, Undefinable } from '@ervum/types';
@@ -26,7 +26,7 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
     '[class.FancyDropdown--Open]': 'IsOpen'
   }
 })
-export class DropdownComponent implements OnInit, OnChanges {
+export class DropdownComponent {
   private readonly InterfaceService: InterfaceService = inject(InterfaceService);
   private readonly ElementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
@@ -42,53 +42,22 @@ export class DropdownComponent implements OnInit, OnChanges {
   public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => this.Type() ?? this.GlobalType());
 
   /** Displayed text for the trigger label. */
-  public TriggerLabel: string = 'Select';
+  public TriggerLabel: Signal<string> = computed(() => this.SelectedItem()?.Label ?? 'Select');
 
   /** Displayed text for each list item. Keyed by item reference. */
   public ItemLabels: Map<FancyDropdownItemType, string> = new Map();
 
-  ngOnInit(): void {
-    if (!this.SelectedItem() && this.Items().length > 0) {
-      this.SelectedItem.set(this.Items()[0]);
-    }
+  constructor() {
+    // Sync Item Labels when Items input changes
+    effect(() => {
+      const Items: FancyDropdownItemType[] = this.Items();
 
-    this.TriggerLabel = this.SelectedItem()?.Label ?? 'Select';
-
-    for (const Item of this.Items()) {
-      this.ItemLabels.set(Item, Item.Label);
-    }
-  }
-
-  ngOnChanges(Changes: SimpleChanges): void {
-    if (Changes['SelectedItem'] && this.SelectedItem()) {
-      this.TriggerLabel = (this.SelectedItem()!).Label;
-    }
-
-    if (Changes['Items'] && !Changes['Items'].firstChange) {
-      for (const Item of this.Items()) {
+      for (const Item of Items) {
         if (!this.ItemLabels.has(Item)) {
           this.ItemLabels.set(Item, Item.Label);
         }
       }
-
-      if (this.SelectedItem()) {
-        const MatchingItem: Undefinable<FancyDropdownItemType> = this.Items().find(Item => 
-          (Item.ID !== undefined && Item.ID === this.SelectedItem()?.ID) || 
-          (Item.ID === undefined && Item.Label === this.SelectedItem()?.Label)
-        );
-
-        if (MatchingItem) {
-          this.SelectedItem.set(MatchingItem);
-          this.TriggerLabel = MatchingItem.Label;
-        } else if (this.Items().length > 0) {
-          this.SelectedItem.set(this.Items()[0]);
-          this.TriggerLabel = this.SelectedItem()!.Label;
-        } else {
-          this.SelectedItem.set(undefined);
-          this.TriggerLabel = 'Select';
-        }
-      }
-    }
+    });
   }
 
   /** Toggles the dropdown open/closed state. */
@@ -108,9 +77,6 @@ export class DropdownComponent implements OnInit, OnChanges {
     if (Item.Action) {
       Item.Action(...(Item.ActionArguments ?? []));
     }
-
-    // Update trigger label to trigger directive animation.
-    this.TriggerLabel = Item.Label;
 
     // Animate the previously selected item appearing back in the list.
     if (PreviousItem) {
