@@ -8,13 +8,17 @@ const ClientPort: number = 4200;
 const ProxyURL: string = 'api';
 const SlashedProxyURL: string = `/${ProxyURL}`;
 
-const DefaultSecrets: SecretsType = {
+
+
+export const DefaultSecrets: SecretsType = {
     Database: {
         Host: 'localhost',
         Port: 5432,
-        User: '',
-        Password: '',
-        Name: 'portfolio_database'
+
+        User: 'Administrator',
+        Password: 'Pass',
+
+        Name: 'Database'
     }
 };
 

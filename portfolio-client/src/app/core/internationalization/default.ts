@@ -1,7 +1,7 @@
 export const DefaultDictionary = {
   LanguageCode: 'en',
   
-  Portfolio: 'Portfolio',
+  Portfolio: 'Larper',
   SignIn: 'Sign In',
   SignUp: 'Sign Up',
   RememberMe: 'Remember me',

@@ -14,6 +14,10 @@
   "scripts": {
     "install:all": "pnpm -w install",
     "build": "pnpm -r build",
-    "dev:all": "concurrently \"pnpm --filter \"@ervum/*\" --parallel watch\" \"cd portfolio-server && pnpm start:dev\" \"cd portfolio-client && pnpm start\""
+    "db:up": "node scripts/db-up.mjs",
+    "packages:watch": "pnpm --filter \"@ervum/*\" --parallel watch",
+    "server:start:dev": "pnpm db:up && pnpm --filter \"portfolio-server\" start:dev",
+    "client:start": "pnpm --filter \"portfolio-client\" start",
+    "dev:all": "pnpm db:up && concurrently \"pnpm packages:watch\" \"pnpm server:start:dev\" \"pnpm client:start\""
   }
 }

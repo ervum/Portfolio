@@ -1,7 +1,3 @@
-@use '../../../styles' as s;
-
-
-
 .Aurora-Container {
     --Mouse-X: 0;
     --Mouse-Y: 0;
@@ -14,20 +10,13 @@
     
     width: 100vw;
     height: 100vh;
-    
-    z-index: -1;
+
+    z-index: -1; // Above DeepBackground, below all page content
 
     pointer-events: none;
     overflow: hidden;
-
-    opacity: 0;
-    animation: Aurora-FadeIn 3s var(--Easing-Standard) forwards;
 }
 
-@keyframes Aurora-FadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
 
 
 .Aurora-Sphere {
@@ -41,12 +30,12 @@
     position: absolute;
     container-type: size;
     border-radius: var(--Radius-Pill);
+
+    filter: blur(80px);
     
-    mix-blend-mode: screen; 
-    
-    filter: blur(var(--Blur-Standard)); 
-    
-    will-change: transform, opacity;
+    // Only hint transform for GPU, not opacity — will-change: opacity triggers
+    // stacking context creation which can conflict with parent mix-blend-mode
+    will-change: transform;
     
     animation: Aurora-BlobFloat 8s var(--Easing-Standard) infinite;
 
@@ -55,13 +44,8 @@
         rotate(var(--Rotation))
         scale(var(--Scale));
     opacity: clamp(0.2, calc(var(--Sphere-Opacity, 0.4) * (1 + var(--Mouse-Distance) * 0.15)), 0.8);
-    
-    z-index: 4;
 
     :root.Theme--Secondary & {
-        opacity: clamp(0.05, calc(var(--Sphere-Opacity, 0.4) * 0.35), 0.3);
-        
-        mix-blend-mode: multiply;
+        opacity: clamp(0.05, calc(var(--Sphere-Opacity, 0.4) * 0.35), 0.25);
     }
-    
 }

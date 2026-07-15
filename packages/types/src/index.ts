@@ -22,8 +22,10 @@ export type ConfigurationType = {
 export type DatabaseConfigurationType = {
   Host: string;
   Port: number;
+
   User: string;
   Password: string;
+  
   Name: string;
 };
 
@@ -107,4 +109,4 @@ export interface RGBColor {
 export interface AuroraSphere {
   /** Pre-computed inline styles (position, size, background, CSS custom properties). */
   Styles: NGStylesType;
-};
+};

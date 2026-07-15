@@ -56,9 +56,9 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   public MaximumScaleSpeed = input(0.2);
 
   /** Minimum sphere opacity. */
-  public MinimumOpacity = input(0.3);
+  public MinimumOpacity = input(0.55);
   /** Maximum sphere opacity. */
-  public MaximumOpacity = input(0.5);
+  public MaximumOpacity = input(0.85);
 
 
 
@@ -283,8 +283,8 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const Color1: RGBColor = this.RandomColor();
     const Color2: RGBColor = this.RandomColor();
-    const Opacity1: number = this.RandomBetween(0.4, 0.8);
-    const Opacity2: number = this.RandomBetween(0.4, 0.8);
+    const Opacity1: number = this.RandomBetween(0.7, 1.0);
+    const Opacity2: number = this.RandomBetween(0.7, 1.0);
 
     const Position1: number = (this.RandomBetween(20, 40)) | 0;
     const Position2: number = (this.RandomBetween(50, 70)) | 0;
@@ -303,7 +303,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const Color3: RGBColor = this.RandomColor();
-    const Opacity3: number = this.RandomBetween(0.3, 0.6);
+    const Opacity3: number = this.RandomBetween(0.6, 0.9);
 
     return `
       radial-gradient(circle at ${Position1}% ${Position1}%, ${this.RGBA(Color1, Opacity1)}, transparent ${Position2}%),

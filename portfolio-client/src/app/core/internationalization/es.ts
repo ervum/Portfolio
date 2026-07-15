@@ -5,7 +5,7 @@ import { TranslationDictionary } from './default';
 export const SpanishDictionary: TranslationDictionary = {
   LanguageCode: 'es',
 
-  Portfolio: 'Portfolio',
+  Portfolio: 'Larper',
   SignIn: 'Iniciar sesión',
   SignUp: 'Registrarse',
   RememberMe: 'Recuérdame',
