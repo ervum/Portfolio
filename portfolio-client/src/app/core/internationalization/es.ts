@@ -5,7 +5,7 @@ import { TranslationDictionary } from './default';
 export const SpanishDictionary: TranslationDictionary = {
   LanguageCode: 'es',
 
-  Portfolio: 'Larper',
+  Portfolio: 'Portfolio',
   SignIn: 'Iniciar sesión',
   SignUp: 'Registrarse',
   RememberMe: 'Recuérdame',
@@ -23,6 +23,9 @@ export const SpanishDictionary: TranslationDictionary = {
   Recover: 'recuperar',
   Continue: 'Continuar',
   RecoveryIntro: 'Me gustaría recuperar mi',
+
   Home: 'INICIO',
   OR: 'O',
+
+  ExtensionWarningTooltip: 'Una extensión de terceros está modificando esta página. Algunos aspectos de la interfaz podrían verse visualmente diferentes al diseño original.',
 };

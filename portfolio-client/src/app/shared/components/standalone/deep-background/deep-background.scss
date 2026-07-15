@@ -10,12 +10,20 @@
     width: 100vw;
     height: 100vh;
     
-    z-index: -2; // Behind everything, including Aurora
+    z-index: 0; // Base background layer
     
     background-color: var(--BG-Color-1, var(--Base-BG));
     overflow: hidden;
     
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    
     transition: background-color var(--Duration-Standard) var(--Easing-Standard);
+
+    :root.Block-DarkMode-Extensions & {
+        color-scheme: inherit !important;
+    }
 }
 
 

@@ -1,3 +1,7 @@
+@use '../../../styles' as s;
+
+
+
 .Aurora-Container {
     --Mouse-X: 0;
     --Mouse-Y: 0;
@@ -10,13 +14,28 @@
     
     width: 100vw;
     height: 100vh;
-
-    z-index: -1; // Above DeepBackground, below all page content
+    
+    z-index: 1; // Sits above DeepBackground, below content
 
     pointer-events: none;
     overflow: hidden;
+
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+
+    opacity: 0;
+    animation: Aurora-FadeIn 3s var(--Easing-Standard) forwards;
+
+    :root.Block-DarkMode-Extensions & {
+        color-scheme: inherit !important;
+    }
 }
 
+@keyframes Aurora-FadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
 
 .Aurora-Sphere {
@@ -30,20 +49,24 @@
     position: absolute;
     container-type: size;
     border-radius: var(--Radius-Pill);
-
-    filter: blur(80px);
     
-    // Only hint transform for GPU, not opacity — will-change: opacity triggers
-    // stacking context creation which can conflict with parent mix-blend-mode
+    filter: blur(50px);
+    
     will-change: transform;
     
     animation: Aurora-BlobFloat 8s var(--Easing-Standard) infinite;
+
+    :root.Block-DarkMode-Extensions & {
+        color-scheme: inherit !important;
+    }
 
     transform: 
         translate(var(--Parallax-X), var(--Parallax-Y))
         rotate(var(--Rotation))
         scale(var(--Scale));
     opacity: clamp(0.2, calc(var(--Sphere-Opacity, 0.4) * (1 + var(--Mouse-Distance) * 0.15)), 0.8);
+    
+    z-index: 4;
 
     :root.Theme--Secondary & {
         opacity: clamp(0.05, calc(var(--Sphere-Opacity, 0.4) * 0.35), 0.25);

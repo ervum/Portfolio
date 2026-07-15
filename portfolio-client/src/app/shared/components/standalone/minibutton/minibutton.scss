@@ -12,6 +12,16 @@
     container-type: size;
 }
 
+:host(.Disabled) {
+    cursor: not-allowed !important;
+    opacity: 0.5;
+
+    .Minibutton-IconContainer {
+        cursor: not-allowed !important;
+        pointer-events: none;
+    }
+}
+
 
 
 .Minibutton-IconContainer {

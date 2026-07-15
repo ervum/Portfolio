@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, OnInit, OnDestroy, Inject, PLATFORM_ID, inject, effect, input } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, OnInit, OnDestroy, Inject, PLATFORM_ID, inject, effect, input, TransferState, makeStateKey } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 import { Nullable, Undefinable, RGBColor, AuroraSphere } from '@ervum/types';
@@ -89,6 +89,14 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Active render loop handle for cancellation. */
   private AnimationFrameID: Nullable<number> = null;
 
+  /** Cache variables to prevent redundant style updates when the mouse is static. */
+  private LastX: number = -999;
+  private LastY: number = -999;
+  private LastAngle: number = -999;
+
+  private TransferState: TransferState = inject(TransferState);
+  private static readonly SpheresKey = makeStateKey<AuroraSphere[]>('Aurora-Spheres');
+
   // #endregion
 
   constructor(@Inject(PLATFORM_ID) private PlatformID: object) {
@@ -105,7 +113,15 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.GenerateSpheres();
+    const SavedSpheres = this.TransferState.get(AuroraComponent.SpheresKey, null);
+    if (SavedSpheres) {
+      this.Spheres = SavedSpheres;
+    } else {
+      this.GenerateSpheres();
+      if (!this.IsBrowser) {
+        this.TransferState.set(AuroraComponent.SpheresKey, this.Spheres);
+      }
+    }
   }
 
   ngAfterViewInit(): void {
@@ -163,6 +179,19 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private ApplyCSSVariables(): void {
     const Container: Undefinable<HTMLDivElement> = this.ContainerRef?.nativeElement;
     if (!Container) return;
+
+    const DeltaX: number = Math.abs(this.SmoothedX - this.LastX);
+    const DeltaY: number = Math.abs(this.SmoothedY - this.LastY);
+    const DeltaAngle: number = Math.abs(this.SmoothedAngle - this.LastAngle);
+
+    // If change is too small (e.g. mouse static), skip DOM style update
+    if (DeltaX < 0.0001 && DeltaY < 0.0001 && DeltaAngle < 0.0001) {
+      return;
+    }
+
+    this.LastX = this.SmoothedX;
+    this.LastY = this.SmoothedY;
+    this.LastAngle = this.SmoothedAngle;
 
     const DistanceSquared: number = (this.SmoothedX * this.SmoothedX) + (this.SmoothedY * this.SmoothedY);
 

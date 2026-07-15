@@ -23,6 +23,7 @@
     class = "Theme-Toggle-Minibutton"
     [Icon] = "ThemeIcon()"
     [Animated] = "false"
+    [Disabled] = "InterfaceService.DarkModeExtensionActive()"
     
     (click) = "ToggleTheme($event)">
 </FancyMinibutton>
@@ -37,5 +38,14 @@
 
     DisplayMode = "Icon">
 </FancyMultibutton>
+
+<div
+    class = "Extension-Warning-Tooltip-Wrapper"
+    [class.Extension-Warning-Tooltip-Wrapper--Active] = "InterfaceService.DarkModeExtensionActive()">
+
+    <FancyContainer class = "Extension-Warning-Tooltip">
+        <span [FancyTypewriter] = "InterfaceService.T().ExtensionWarningTooltip"></span>
+    </FancyContainer>
+</div>
 
 <router-outlet />

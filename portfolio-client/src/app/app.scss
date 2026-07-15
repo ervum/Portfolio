@@ -74,3 +74,45 @@
         }
     }
 }
+
+.Extension-Warning-Tooltip-Wrapper {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 1000;
+
+    opacity: 0;
+    transform: translateY(-80px);
+    transition: transform 0.6s var(--Easing-Standard), opacity 0.6s var(--Easing-Standard);
+
+    &.Extension-Warning-Tooltip-Wrapper--Active {
+        opacity: 1;
+        transform: translateY(0);
+
+        .Extension-Warning-Tooltip {
+            pointer-events: auto;
+        }
+    }
+}
+
+.Extension-Warning-Tooltip {
+    width: var(--Section-Width);
+    max-width: calc(100vw - 40px);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--Padding-Medium, 8px) 20px;
+    border-radius: var(--Radius-Standard);
+    text-align: center;
+    font-size: var(--FontSize-Small, 12px);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--Text-Main);
+    pointer-events: none;
+}

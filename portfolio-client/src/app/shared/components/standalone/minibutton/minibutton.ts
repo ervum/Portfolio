@@ -19,11 +19,17 @@ import { TypewriterDirective } from '../../../directives/typewriter/typewriter.d
   standalone: true,
   imports: [CommonModule, ContainerComponent, TypewriterDirective],
   templateUrl: './minibutton.html',
-  styleUrl: './minibutton.scss'
+  styleUrl: './minibutton.scss',
+  host: {
+    '[class.Disabled]': 'Disabled()'
+  }
 })
 export class MinibuttonComponent {
   /** The global interface service for theme synchronization. */
   public InterfaceService: InterfaceService = inject(InterfaceService);
+
+  /** Whether the minibutton is disabled. */
+  public Disabled: InputSignal<boolean> = input<boolean>(false);
 
   /** Optional text label to display inside the button. */
   public Label: InputSignal<Undefinable<string>> = input<Undefinable<string>>(undefined);
@@ -44,7 +50,7 @@ export class MinibuttonComponent {
   private ExitIsQueued: boolean = false;
 
   public OnDown(): void {
-    if (!this.Animated()) return;
+    if (this.Disabled() || !this.Animated()) return;
     
     if (this.IconStatus === 'AtCenter') {
       this.ExitIsQueued = true;
@@ -55,7 +61,7 @@ export class MinibuttonComponent {
   }
 
   public OnUp(): void {
-    if (!this.Animated()) return;
+    if (this.Disabled() || !this.Animated()) return;
 
     if (this.IconStatus === 'OffScreen') {
       this.IconStatus = 'Entering';

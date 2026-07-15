@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, computed, type Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, computed, type Signal, TransferState, makeStateKey, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 import { BackgroundPalette, FancyUIElementTypeType } from '@ervum/types';
 
@@ -16,13 +16,29 @@ import { InterfaceService } from '../../../../core/services/interface/interface'
 })
 export class DeepBackgroundComponent {
   private InterfaceService: InterfaceService = inject(InterfaceService);
+  private TransferState: TransferState = inject(TransferState);
+  private PlatformID: object = inject(PLATFORM_ID);
+
+  private static readonly PaletteKey = makeStateKey<{ Dark: BackgroundPalette; Light: BackgroundPalette }>('DeepBackground-Palette');
 
   /**
    * Generates a random palette on construction.
    * Both dark and light variants share the same random hue so
    * switching themes feels like a tonal shift rather than a new palette.
    */
-  private readonly GeneratedPalette: { Dark: BackgroundPalette; Light: BackgroundPalette } = this.GenerateRandomPalettes();
+  private readonly GeneratedPalette: { Dark: BackgroundPalette; Light: BackgroundPalette };
+
+  constructor() {
+    const SavedPalette = this.TransferState.get(DeepBackgroundComponent.PaletteKey, null);
+    if (SavedPalette) {
+      this.GeneratedPalette = SavedPalette;
+    } else {
+      this.GeneratedPalette = this.GenerateRandomPalettes();
+      if (!isPlatformBrowser(this.PlatformID)) {
+        this.TransferState.set(DeepBackgroundComponent.PaletteKey, this.GeneratedPalette);
+      }
+    }
+  }
 
   /** Active palette based on current theme */
   public ActivePalette: Signal<BackgroundPalette> = computed(() => {
@@ -76,9 +92,9 @@ export class DeepBackgroundComponent {
    * and very low lightness (1–4%). The result is almost pure black with
    * the faintest whisper of color — never noticeably red, green, etc.
    *
-   * **Light (Secondary):** Near-white colors with moderate saturation (40–70%)
-   * and high lightness (92–98%). The result is soft pastels that are
-   * unmistakably light without being harsh.
+   * **Light (Secondary):** Near-white colors with very low saturation (3–8%)
+   * and high lightness (98–99.5%). The result is a clean white base with
+   * the faintest whisper of color — never noticeably red, green, etc.
    */
   private GenerateRandomPalettes(): { Dark: BackgroundPalette; Light: BackgroundPalette } {
     const BaseHue: number = this.RandomBetween(0, 360);
@@ -95,12 +111,12 @@ export class DeepBackgroundComponent {
       DarkColors.push(this.HSLToHex(Hue, Saturation, Lightness));
     }
 
-    // Generate 4 light colors: near-white with soft pastel tint
+    // Generate 4 light colors: near-white with barely perceptible tint
     const LightColors: string[] = [];
     for (let i: number = 0; i < 4; i++) {
       const Hue: number = BaseHue + this.RandomBetween(-30, 30);
-      const Saturation: number = this.RandomBetween(40, 70);
-      const Lightness: number = this.RandomBetween(92, 98);
+      const Saturation: number = this.RandomBetween(3, 8);
+      const Lightness: number = this.RandomBetween(98, 99.5);
       LightColors.push(this.HSLToHex(Hue, Saturation, Lightness));
     }
 

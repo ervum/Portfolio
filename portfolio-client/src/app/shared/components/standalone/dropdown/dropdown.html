@@ -24,7 +24,7 @@
         [Type] = "EffectiveType()">
         
         @for (Item of Items(); track $index) {
-            @if (Item !== SelectedItem()) {
+            @if (!IsSameItem(Item, SelectedItem())) {
                 <div 
                     class = "FancyDropdown-Item"
                     (click) = "Select(Item)">

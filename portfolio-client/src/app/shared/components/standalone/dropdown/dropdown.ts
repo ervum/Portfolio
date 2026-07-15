@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Output, computed, inject, input, model, effect, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, computed, inject, input, model, effect, untracked, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FancyDropdownItemType, FancyUIElementTypeType, Undefinable } from '@ervum/types';
@@ -52,12 +52,27 @@ export class DropdownComponent {
     effect(() => {
       const Items: FancyDropdownItemType[] = this.Items();
 
+      this.ItemLabels.clear();
       for (const Item of Items) {
-        if (!this.ItemLabels.has(Item)) {
-          this.ItemLabels.set(Item, Item.Label);
+        this.ItemLabels.set(Item, Item.Label);
+      }
+
+      const CurrentSelected: Undefinable<FancyDropdownItemType> = untracked(() => this.SelectedItem());
+      if (CurrentSelected) {
+        const MatchingItem: Undefinable<FancyDropdownItemType> = Items.find(Item => this.IsSameItem(Item, CurrentSelected));
+        if (MatchingItem && MatchingItem !== CurrentSelected) {
+          this.SelectedItem.set(MatchingItem);
         }
       }
     });
+  }
+
+  /** Checks whether two dropdown items are identical either by reference or by ID/Label. */
+  public IsSameItem(A: Undefinable<FancyDropdownItemType>, B: Undefinable<FancyDropdownItemType>): boolean {
+    if (!A || !B) return (A === B);
+    if ((A.ID !== undefined) && (B.ID !== undefined)) return (A.ID === B.ID);
+
+    return (A === B) || (A.Label === B.Label);
   }
 
   /** Toggles the dropdown open/closed state. */

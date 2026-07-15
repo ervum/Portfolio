@@ -1,5 +1,61 @@
 @use 'app/shared/styles' as s;
 
+:root {
+    color-scheme: light dark;
+
+    &.Theme--Primary {
+        color-scheme: dark;
+    }
+    &.Theme--Secondary {
+        color-scheme: light;
+    }
+
+    &.Block-DarkMode-Extensions {
+        &.Theme--Primary,
+        &.Theme--Primary body {
+            color-scheme: only dark !important;
+        }
+        &.Theme--Secondary,
+        &.Theme--Secondary body {
+            color-scheme: only light !important;
+        }
+    }
+}
+
+.no-transitions,
+.no-transitions * {
+    transition: none !important;
+    animation: none !important;
+}
+
+span,
+p,
+h1, h2, h3, h4, h5, h6,
+label,
+button,
+[role="button"],
+.FancyButton,
+.FancyMultibutton,
+.FancyDropdown-Trigger,
+.FancyDropdown-Item,
+.Extension-Warning-Tooltip,
+.Section-Title,
+.Minibutton-IconContainer,
+.FancyTextbox-Icon-Container,
+.FancyTextbox-Visibility-Toggle {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -11,6 +67,20 @@ html, body {
 
 html {
     background-color: var(--Base-BG);
+}
+
+body {
+    background-color: transparent;
+    // Resolved stacking context via positive z-indexes on Aurora and DeepBackground.
+
+    :root.Block-DarkMode-Extensions & {
+        color-scheme: inherit !important;
+    }
+}
+
+.Main {
+    position: relative;
+    z-index: 2;
 }
 
 

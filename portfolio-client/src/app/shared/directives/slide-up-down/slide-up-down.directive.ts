@@ -12,12 +12,18 @@ export class SlideUpDownDirective implements OnInit, OnDestroy {
   private readonly Builder: AnimationBuilder = inject(AnimationBuilder);
   private readonly InterfaceService: InterfaceService = inject(InterfaceService);
 
+  private HasPlayedOut: boolean = false;
+
   constructor() {
     // Listen for exit requests (manual or guard-triggered)
     effect(() => {
       const Request: Nullable<string> = this.InterfaceService.RouteTransitionRequest();
       if (Request !== null) {
+        this.HasPlayedOut = true;
         this.PlayAnimation('Out');
+      } else if (this.HasPlayedOut && Request === null) {
+        this.HasPlayedOut = false;
+        this.PlayAnimation('In');
       }
     });
   }

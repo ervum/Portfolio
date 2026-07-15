@@ -1,5 +1,5 @@
-import { Component, inject, signal, WritableSignal, computed, type Signal } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { Component, inject, signal, WritableSignal, computed, type Signal, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, Location, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd, NavigationStart } from '@angular/router';
 
 
@@ -13,6 +13,8 @@ import { DeepBackgroundComponent } from './shared/components/standalone/deep-bac
 import { DropdownComponent } from './shared/components/standalone/dropdown/dropdown';
 import { MinibuttonComponent } from './shared/components/standalone/minibutton/minibutton';
 import { MultibuttonComponent } from './shared/components/standalone/multibutton/multibutton';
+import { ContainerComponent } from './shared/components/standalone/container/container';
+import { TypewriterDirective } from './shared/directives/typewriter/typewriter.directive';
 
 import { InterfaceService } from './core/services/interface/interface';
 import { NavigationService } from './core/services/navigation/navigation';
@@ -43,12 +45,24 @@ const RouteSelectorIndices: Record<string, number> = {
 
     DropdownComponent,
     MinibuttonComponent,
-    MultibuttonComponent
+    MultibuttonComponent,
+    ContainerComponent,
+    TypewriterDirective
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements AfterViewInit {
+  private readonly PlatformID: object = inject(PLATFORM_ID);
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.PlatformID)) {
+      setTimeout(() => {
+        document.documentElement.classList.remove('no-transitions');
+      }, 100);
+    }
+  }
+
   private Router: Router = inject(Router);
   private Location: Location = inject(Location);
 
@@ -96,6 +110,7 @@ export class App {
   }
 
   public ToggleTheme(Event: MouseEvent): void {
+    if (this.InterfaceService.DarkModeExtensionActive()) return;
     this.InterfaceService.ToggleInterfaceTypeWithTransition(Event.clientX, Event.clientY);
   }
 

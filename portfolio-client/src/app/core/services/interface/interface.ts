@@ -19,6 +19,8 @@ export class InterfaceService {
   private readonly LanguageKey = makeStateKey<string>('Interface-Language');
   private readonly ThemeKey = makeStateKey<string>('Interface-Theme');
 
+  public readonly BlockDarkModeExtensions: boolean = false;
+
   /** Active translation dictionary */
   public readonly T: Signal<TranslationDictionary> = computed(() => (Translations[this.Language()] || Translations['English']));
 
@@ -34,6 +36,9 @@ export class InterfaceService {
   /** The global interface load status (Idle / Loading / Success / Error) */
   public Status: WritableSignal<FancyUIElementLoadStatusType> = signal<FancyUIElementLoadStatusType>('Idle');
 
+  /** Signal tracking whether an active third-party dark mode extension or shader is modifying the page. */
+  public DarkModeExtensionActive: WritableSignal<boolean> = signal<boolean>(false);
+
   /** Whether the app has completed its initial page load (used to skip animation on first render / refresh) */
   public IsAppInitialized: boolean = false;
 
@@ -43,7 +48,9 @@ export class InterfaceService {
   /** Shared data passed between routes during navigation */
   private NavigationData: WritableSignal<any> = signal<any>(null);
 
-   /** Helper to get initial value from Cookie/localStorage safely */
+
+
+  /** Helper to get initial value from Cookie/localStorage safely */
   private GetInitialValue(Key: string, DefaultValue: string): string {
     // Check TransferState first (client-side hydration)
     const StateKey: StateKey<string> = Key === 'Interface-Language' ? this.LanguageKey : this.ThemeKey;
@@ -116,39 +123,46 @@ export class InterfaceService {
     }
   }
 
-  /** The global interface type (Primary / Secondary) */
-  public InterfaceType: WritableSignal<FancyUIElementTypeType> = signal<FancyUIElementTypeType>(
-    this.GetInitialValue('Interface-Theme', 'Primary') as FancyUIElementTypeType
-  );
-
-  /** The global interface language */
-  public Language: WritableSignal<string> = signal<string>(
-    this.GetInitialValue('Interface-Language', 'English')
-  );
-
-  constructor() {
-    if (this.IsBrowser) {
-      // Persistence effects
-      effect(() => {
-        const Theme: FancyUIElementTypeType = this.InterfaceType();
-        localStorage.setItem('Interface-Theme', Theme);
-        this.SetCookie('Interface-Theme', Theme);
-      });
-      effect(() => {
-        const Language: string = this.Language();
-        localStorage.setItem('Interface-Language', Language);
-        this.SetCookie('Interface-Language', Language);
-        
-        document.documentElement.lang = this.T().LanguageCode;
-      });
-
-      effect(() => {
-        const Type: FancyUIElementTypeType = this.InterfaceType();
-
-        document.documentElement.classList.remove('Theme--Primary', 'Theme--Secondary');
-        document.documentElement.classList.add(`Theme--${Type}`);
-      });
+  /**
+   * Smart check for third-party dark mode extensions (or browser style overrides) without brute-forcing UI elements.
+   */
+  public CheckForDarkModeExtension(): void {
+    if (!this.IsBrowser || this.BlockDarkModeExtensions) {
+      if (this.DarkModeExtensionActive()) {
+        this.DarkModeExtensionActive.set(false);
+      }
+      
+      return;
     }
+
+    // 1. Check for known dark-mode extension injected <style> or <link> elements in head
+    const HasInjectedTags: boolean = document.querySelector(
+      'style[class*="darkreader"], style[id*="dark-mode"], style[id*="night-eye"], style[id*="super-dark"], link[id*="dark-mode"]'
+    ) !== null;
+
+    // 2. Check for root filter inversions or forced inline styles
+    const RootStyle: CSSStyleDeclaration = window.getComputedStyle(document.documentElement);
+    const HasFilterOverride: boolean = RootStyle.filter !== 'none' && RootStyle.filter !== '';
+
+    // 3. Single-point check: If in light mode (Secondary), verify the computed root or background color wasn't inverted
+    let HasColorDrift: boolean = false;
+    
+    if (this.InterfaceType() === 'Secondary') {
+      const BGColor: string = RootStyle.backgroundColor || '';
+      const Match: (RegExpMatchArray | null) = BGColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+      if (Match) {
+        const R: number = parseInt(Match[1], 10);
+        const G: number = parseInt(Match[2], 10);
+        const B: number = parseInt(Match[3], 10);
+
+        if (((R + G + B) / 3) < 128) {
+          HasColorDrift = true;
+        }
+      }
+    }
+
+    this.DarkModeExtensionActive.set(HasInjectedTags || HasFilterOverride || HasColorDrift);
   }
 
   /**
@@ -156,6 +170,10 @@ export class InterfaceService {
    * Falls back to an instant toggle if the View Transitions API is unavailable.
    */
   public ToggleInterfaceTypeWithTransition(X: number, Y: number): void {
+    if (this.DarkModeExtensionActive()) {
+      return;
+    }
+
     if (!(this.IsBrowser) || !(document.startViewTransition)) {
       this.ToggleInterfaceType();
 
@@ -179,6 +197,7 @@ export class InterfaceService {
             `circle(${EndRadius}px at ${X}px ${Y}px)`
           ]
         },
+
         {
           duration: this.ThemeTransitionDuration(),
           easing: 'cubic-bezier(0.86, 0, 0.07, 1)',
@@ -192,6 +211,10 @@ export class InterfaceService {
    * Toggles the global interface type between Primary and Secondary.
    */
   public ToggleInterfaceType(): void {
+    if (this.DarkModeExtensionActive()) {
+      return;
+    }
+
     this.InterfaceType.update(CurrentType => (CurrentType === 'Primary') ? 'Secondary' : 'Primary');
   }
 
@@ -248,9 +271,77 @@ export class InterfaceService {
    */
   public GetAndClearNavigationData(): any {
     const Data: any = this.NavigationData();
-    
     this.NavigationData.set(null);
 
     return Data;
+  }
+
+
+
+  /** The global interface type (Primary / Secondary) */
+  public InterfaceType: WritableSignal<FancyUIElementTypeType> = signal<FancyUIElementTypeType>(
+    this.GetInitialValue('Interface-Theme', 'Primary') as FancyUIElementTypeType
+  );
+
+  /** The global interface language */
+  public Language: WritableSignal<string> = signal<string>(
+    this.GetInitialValue('Interface-Language', 'English')
+  );
+
+
+
+  constructor() {
+    if (this.IsBrowser) {
+      if (this.BlockDarkModeExtensions) {
+        document.documentElement.classList.add('Block-DarkMode-Extensions');
+
+        let MetaLock: (HTMLMetaElement | null) = document.querySelector('meta[name="darkreader-lock"]');
+
+        if (!MetaLock) {
+          MetaLock = document.createElement('meta');
+          MetaLock.name = 'darkreader-lock';
+
+          document.head.appendChild(MetaLock);
+        }
+      } else {
+        document.documentElement.classList.remove('Block-DarkMode-Extensions');
+
+        const MetaLock: (HTMLMetaElement | null) = document.querySelector('meta[name="darkreader-lock"]');
+
+        if (MetaLock && MetaLock.parentNode) {
+          MetaLock.parentNode.removeChild(MetaLock);
+        }
+      }
+
+      if (!this.BlockDarkModeExtensions) {
+        setTimeout(() => this.CheckForDarkModeExtension(), 300);
+        setInterval(() => this.CheckForDarkModeExtension(), 2000);
+      }
+
+      // Persistence effects
+      effect(() => {
+        const Theme: FancyUIElementTypeType = this.InterfaceType();
+
+        localStorage.setItem('Interface-Theme', Theme);
+        this.SetCookie('Interface-Theme', Theme);
+      });
+      effect(() => {
+        const Language: string = this.Language();
+
+        localStorage.setItem('Interface-Language', Language);
+        this.SetCookie('Interface-Language', Language);
+        
+        document.documentElement.lang = this.T().LanguageCode;
+      });
+      
+      effect(() => {
+        const Type: FancyUIElementTypeType = this.InterfaceType();
+
+        document.documentElement.classList.remove('Theme--Primary', 'Theme--Secondary');
+        document.documentElement.classList.add(`Theme--${Type}`);
+
+        this.CheckForDarkModeExtension();
+      });
+    }
   }
 }
