@@ -3,10 +3,10 @@
 
 
 .Aurora-Container {
-    --Mouse-X: 0;
-    --Mouse-Y: 0;
-    --Mouse-Distance: 0;
-    --Mouse-Angle: 0;
+    --mouse-x: 0;
+    --mouse-y: 0;
+    --mouse-distance: 0;
+    --mouse-angle: 0;
 
     position: fixed;
     top: 0;
@@ -25,7 +25,7 @@
     backface-visibility: hidden;
 
     opacity: 0;
-    animation: Aurora-FadeIn 3s var(--Easing-Standard) forwards;
+    animation: Aurora-FadeIn 3s var(--easing-standard) forwards;
 
     :root.Block-DarkMode-Extensions & {
         color-scheme: inherit !important;
@@ -39,36 +39,36 @@
 
 
 .Aurora-Sphere {
-    --Parallax-X: calc(var(--Mouse-X) * var(--Sphere-Speed) * 0.4vw);
-    --Parallax-Y: calc(var(--Mouse-Y) * var(--Sphere-Speed) * 0.4vh);
+    --parallax-x: calc(var(--mouse-x) * var(--sphere-speed) * 0.4vw);
+    --parallax-y: calc(var(--mouse-y) * var(--sphere-speed) * 0.4vh);
     
-    --Rotation: calc(var(--Mouse-Angle) * var(--Sphere-RotationSpeed) * 1rad);
+    --rotation: calc(var(--mouse-angle) * var(--sphere-rotationspeed) * 1rad);
     
-    --Scale: calc(1 + var(--Mouse-Distance) * var(--Sphere-ScaleSpeed));
+    --scale: calc(1 + var(--mouse-distance) * var(--sphere-scalespeed));
 
     position: absolute;
     container-type: size;
-    border-radius: var(--Radius-Pill);
+    border-radius: var(--radius-pill);
     
     filter: blur(50px);
     
     will-change: transform;
     
-    animation: Aurora-BlobFloat 8s var(--Easing-Standard) infinite;
+    animation: Aurora-BlobFloat 8s var(--easing-standard) infinite;
 
     :root.Block-DarkMode-Extensions & {
         color-scheme: inherit !important;
     }
 
     transform: 
-        translate(var(--Parallax-X), var(--Parallax-Y))
-        rotate(var(--Rotation))
-        scale(var(--Scale));
-    opacity: clamp(0.2, calc(var(--Sphere-Opacity, 0.4) * (1 + var(--Mouse-Distance) * 0.15)), 0.8);
+        translate(var(--parallax-x), var(--parallax-y))
+        rotate(var(--rotation))
+        scale(var(--scale));
+    opacity: clamp(0.2, calc(var(--sphere-opacity, 0.4) * (1 + var(--mouse-distance) * 0.15)), 0.8);
     
     z-index: 4;
 
     :root.Theme--Secondary & {
-        opacity: clamp(0.05, calc(var(--Sphere-Opacity, 0.4) * 0.35), 0.25);
+        opacity: clamp(0.05, calc(var(--sphere-opacity, 0.4) * 0.35), 0.25);
     }
 }

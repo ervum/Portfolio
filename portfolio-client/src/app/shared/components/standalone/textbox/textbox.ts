@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnInit, OnChanges, SimpleChanges, Output, inject, input, computed, type Signal, type WritableSignal } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnChanges, SimpleChanges, Output, inject, input, computed, type Signal, type WritableSignal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Undefinable, FancyUIElementTypeType, FancyTextboxOrderType, VerticalPositionType, FancyUIElementFocusStateType, StringBooleanType, Nullable, NGStylesType } from '@ervum/types';
+import { Undefinable, FancyUIElementTypeType, FancyTextboxOrderType, FancyTextboxIconStateType, VerticalPositionType, FancyUIElementFocusStateType, StringBooleanType, Nullable, NGStylesType } from '@ervum/types';
 
 import { ContainerComponent } from '../container/container';
 
@@ -59,7 +59,8 @@ export class TextboxComponent implements OnInit, OnChanges {
 
   public IsVisible: boolean = false;
   public DisplayedIcon: Undefinable<string>;
-  public IconAnimationState: 'Idle' | 'Exiting' | 'Entering' = 'Idle';
+  public QueuedIcon: Undefinable<string>;
+  public IconAnimationState: FancyTextboxIconStateType = 'Idle';
 
   // #endregion
 
@@ -134,6 +135,17 @@ export class TextboxComponent implements OnInit, OnChanges {
     return `url(${this.IconsBasePath}${this.DisplayedIcon}.png)`;
   }
 
+  public get GetIconStyles(): NGStylesType {
+    if (!this.TextboxIconStyle) {
+      return {};
+    }
+
+    return {
+      '-webkit-mask-image': this.TextboxIconStyle,
+      'mask-image': this.TextboxIconStyle
+    };
+  }
+
   public get HasText(): boolean {
     return ((this.InputValue.length) > 0);
   }
@@ -143,7 +155,7 @@ export class TextboxComponent implements OnInit, OnChanges {
   // #region Logic & Helpers
 
   private Wait(ms: number): Promise<void> {
-    return new Promise<void>((Resolve) => setTimeout(Resolve, ms));
+    return new Promise<void>((Resolve: () => void) => setTimeout(Resolve, ms));
   }
 
   private ParseBoolean(b: boolean): StringBooleanType {
@@ -187,43 +199,53 @@ export class TextboxComponent implements OnInit, OnChanges {
     }
   }
 
-  private async AnimateIconChange(NewIcon: Undefinable<string>): Promise<void> {
-    this.IconAnimationState = 'Exiting';
-    await this.Wait(400); // Wait for ExitUp animation (0.4s)
-    this.DisplayedIcon = NewIcon;
-    this.IconAnimationState = 'Entering';
-    await this.Wait(400); // Wait for EnterDown animation (0.4s)
-    this.IconAnimationState = 'Idle';
+  private AnimateIconChange(NewIcon: Undefinable<string>): void {
+    if (this.IconAnimationState === 'Idle') {
+      this.QueuedIcon = NewIcon;
+      this.IconAnimationState = 'Exiting';
+    } else {
+      this.QueuedIcon = NewIcon;
+    }
+  }
+
+  public OnIconAnimationEnd(): void {
+    if (this.IconAnimationState === 'Exiting') {
+      this.DisplayedIcon = this.QueuedIcon;
+      this.QueuedIcon = undefined;
+      this.IconAnimationState = 'Entering';
+    } else if (this.IconAnimationState === 'Entering') {
+      this.IconAnimationState = 'Idle';
+    }
   }
 
   // #endregion
 
   // #region Inputs
 
-  public MaximumLength = input<Undefinable<number>>(undefined);
+  public MaximumLength: InputSignal<Undefinable<number>> = input<Undefinable<number>>(undefined);
 
-  public Icon = input<Undefinable<string>>('');
+  public Icon: InputSignal<Undefinable<string>> = input<Undefinable<string>>('');
 
   /** The global interface type signal. */
   private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
-  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+  public Type: InputSignal<Undefinable<FancyUIElementTypeType>> = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
   public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => (this.Type() ?? this.GlobalType()));
 
-  public BorderAnimation = input<Undefinable<VerticalPositionType>>('Above');
+  public BorderAnimation: InputSignal<Undefinable<VerticalPositionType>> = input<Undefinable<VerticalPositionType>>('Above');
 
-  public Order = input<Undefinable<FancyTextboxOrderType>>('Unique');
+  public Order: InputSignal<Undefinable<FancyTextboxOrderType>> = input<Undefinable<FancyTextboxOrderType>>('Unique');
 
-  public IsSensitive = input(false);
-  public InitialVisibility = input(false);
+  public IsSensitive: InputSignal<boolean> = input(false);
+  public InitialVisibility: InputSignal<boolean> = input(false);
 
   /** Whitelist of allowed characters. If set, only these characters can be typed or pasted. */
-  public OnlyAllow = input<Undefinable<string>>(undefined);
+  public OnlyAllow: InputSignal<Undefinable<string>> = input<Undefinable<string>>(undefined);
 
-  public Placeholder = input('');
+  public Placeholder: InputSignal<string> = input('');
   public DisplayPlaceholder: string = '';
   private PlaceholderAnimator: TypewriterAnimator = new TypewriterAnimator();
   private readonly PlaceholderTypewriter: TypewriterAnimator = new TypewriterAnimator();
@@ -315,7 +337,7 @@ export class TextboxComponent implements OnInit, OnChanges {
 
     const PastedText: string = Event.clipboardData?.getData('text') ?? '';
     const AllowedSet: Set<string> = new Set(this.OnlyAllow());
-    const Filtered: string = [...PastedText].filter(Character => AllowedSet.has(Character)).join('');
+    const Filtered: string = [...PastedText].filter((Character: string) => AllowedSet.has(Character)).join('');
 
     if (Filtered) {
       const Input: HTMLInputElement = Event.target as HTMLInputElement;

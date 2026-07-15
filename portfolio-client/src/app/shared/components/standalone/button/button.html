@@ -33,28 +33,25 @@
 
     (focus) = "OnFocus()"
     (blur) = "OnUnfocus()">
-    <div class = "FancyButton-Label-Wrapper">
+    <div 
+      class = "FancyButton-Label-Wrapper"
+      [ngClass] = "{'FancyButton-Label-Wrapper--Centered': !HasIcon()}">
       <span 
         class = "FancyButton-Label"
         [FancyTypewriter] = "Label() ?? ''">
       </span>
     </div>
 
-    @if (Icon() !== '') {
-      <FancyContainer
-        class = "FancyButton-Icon-Container"
+    @if (HasIcon() && Icon() !== '') {
+      <div
+        class = "FancyButton-Icon"
 
-        [Type] = "EffectiveType()"
+        [ngStyle] = "GetIconStyles"
 
-        [ngClass] = "GetIconClasses()">
-        <div
-          class = "FancyButton-Icon"
+        [ngClass] = "GetIconClasses()"
 
-          [ngClass] = "GetIconClasses()"
-
-          (animationend) = "OnIconAnimationEnd()">
-        </div>
-      </FancyContainer>
+        (animationend) = "OnIconAnimationEnd()">
+      </div>
     }
   </FancyContainer>
 </div>

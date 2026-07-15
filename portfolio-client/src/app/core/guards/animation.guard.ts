@@ -18,7 +18,7 @@ export const AnimationGuard: CanDeactivateFn<unknown> = () => {
   // Browser back/forward or other external navigation — trigger exit animation and delay
   Service.RouteTransitionRequest.set('__browser_navigation__');
 
-  return new Promise<boolean>(Resolve => {
+  return new Promise<boolean>((Resolve: (Value: boolean) => void) => {
     setTimeout(() => {
       Service.RouteTransitionRequest.set(null);
       Resolve(true);

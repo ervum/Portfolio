@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, computed, type Signal, TransferState, makeStateKey, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, inject, computed, type Signal, TransferState, makeStateKey, PLATFORM_ID, type StateKey } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
-import { BackgroundPalette, FancyUIElementTypeType } from '@ervum/types';
+import { BackgroundPalette, FancyUIElementTypeType, Nullable } from '@ervum/types';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
 
@@ -19,7 +19,7 @@ export class DeepBackgroundComponent {
   private TransferState: TransferState = inject(TransferState);
   private PlatformID: object = inject(PLATFORM_ID);
 
-  private static readonly PaletteKey = makeStateKey<{ Dark: BackgroundPalette; Light: BackgroundPalette }>('DeepBackground-Palette');
+  private static readonly PaletteKey: StateKey<{ Dark: BackgroundPalette; Light: BackgroundPalette }> = makeStateKey<{ Dark: BackgroundPalette; Light: BackgroundPalette }>('DeepBackground-Palette');
 
   /**
    * Generates a random palette on construction.
@@ -29,7 +29,7 @@ export class DeepBackgroundComponent {
   private readonly GeneratedPalette: { Dark: BackgroundPalette; Light: BackgroundPalette };
 
   constructor() {
-    const SavedPalette = this.TransferState.get(DeepBackgroundComponent.PaletteKey, null);
+    const SavedPalette: Nullable<{ Dark: BackgroundPalette; Light: BackgroundPalette }> = this.TransferState.get(DeepBackgroundComponent.PaletteKey, null);
     if (SavedPalette) {
       this.GeneratedPalette = SavedPalette;
     } else {
@@ -52,10 +52,10 @@ export class DeepBackgroundComponent {
   public BackgroundStyles: Signal<Record<string, string>> = computed(() => {
     const Palette: BackgroundPalette = this.ActivePalette();
     return {
-      '--BG-Color-1': Palette.Colors[0],
-      '--BG-Color-2': Palette.Colors[1],
-      '--BG-Color-3': Palette.Colors[2],
-      '--BG-Color-4': Palette.Colors[3]
+      '--bg-color-1': Palette.Colors[0],
+      '--bg-color-2': Palette.Colors[1],
+      '--bg-color-3': Palette.Colors[2],
+      '--bg-color-4': Palette.Colors[3]
     };
   });
 

@@ -3,8 +3,8 @@
 
 
 @mixin CreateTransition($Properties ...) {
-    $Duration: var(--Duration-Standard);
-    $Easing: var(--Easing-Standard);
+    $Duration: var(--duration-standard);
+    $Easing: var(--easing-standard);
 
     $Transitions: ();
 

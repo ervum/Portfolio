@@ -77,6 +77,7 @@ export type FancyButtonIconStateType = ('AtCenter' | 'Exiting' | 'OffScreen' | '
 
 /////        Fancy Textbox       \\\\\
 export type FancyTextboxOrderType = ('First' | 'Intermediate' | 'Last' | 'Unique');
+export type FancyTextboxIconStateType = ('Idle' | 'Exiting' | 'Entering');
 
 /////       Fancy Dropdown       \\\\\
 export interface FancyDropdownItemType {

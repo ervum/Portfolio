@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, input, computed, model, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input, computed, model, type Signal, type WritableSignal, type ModelSignal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContainerComponent } from '../container/container';
@@ -34,13 +34,13 @@ export class CheckboxComponent {
   private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
-  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+  public Type: InputSignal<Undefinable<FancyUIElementTypeType>> = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
   public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => (this.Type() ?? this.GlobalType()));
   
-  public Label = input('');
-  public LabelPosition = input<HorizontalPositionType>('Right');
+  public Label: InputSignal<string> = input('');
+  public LabelPosition: InputSignal<HorizontalPositionType> = input<HorizontalPositionType>('Right');
   
   @Output() CheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Output, computed, inject, input, model, effect, untracked, type Signal, type WritableSignal, type ModelSignal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Output, computed, inject, input, model, effect, untracked, type Signal, type WritableSignal, type ModelSignal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FancyDropdownItemType, FancyUIElementTypeType, Undefinable } from '@ervum/types';
@@ -30,7 +30,7 @@ export class DropdownComponent {
   private readonly InterfaceService: InterfaceService = inject(InterfaceService);
   private readonly ElementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
-  public Items = input<FancyDropdownItemType[]>([]);
+  public Items: InputSignal<FancyDropdownItemType[]> = input<FancyDropdownItemType[]>([]);
   public SelectedItem: ModelSignal<Undefinable<FancyDropdownItemType>> = model<Undefinable<FancyDropdownItemType>>();
   
   @Output() SelectionChange: EventEmitter<FancyDropdownItemType> = new EventEmitter<FancyDropdownItemType>();
@@ -38,7 +38,7 @@ export class DropdownComponent {
   public IsOpen: boolean = false;
 
   private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
-  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+  public Type: InputSignal<Undefinable<FancyUIElementTypeType>> = input<Undefinable<FancyUIElementTypeType>>(undefined);
   public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => this.Type() ?? this.GlobalType());
 
   /** Displayed text for the trigger label. */
@@ -59,7 +59,7 @@ export class DropdownComponent {
 
       const CurrentSelected: Undefinable<FancyDropdownItemType> = untracked(() => this.SelectedItem());
       if (CurrentSelected) {
-        const MatchingItem: Undefinable<FancyDropdownItemType> = Items.find(Item => this.IsSameItem(Item, CurrentSelected));
+        const MatchingItem: Undefinable<FancyDropdownItemType> = Items.find((Item: FancyDropdownItemType) => this.IsSameItem(Item, CurrentSelected));
         if (MatchingItem && MatchingItem !== CurrentSelected) {
           this.SelectedItem.set(MatchingItem);
         }

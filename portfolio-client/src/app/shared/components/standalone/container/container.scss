@@ -5,14 +5,14 @@
 :host {
     display: inline-flex;
 
-    border-radius: var(--Radius-Standard);
-    -webkit-backdrop-filter: blur(var(--Container-Blur));
-    backdrop-filter: blur(var(--Container-Blur));
+    border-radius: var(--radius-standard);
+    -webkit-backdrop-filter: blur(var(--container-blur));
+    backdrop-filter: blur(var(--container-blur));
 
     box-sizing: border-box;
     transition: inherit;
 
-    background-color: var(--Surface-BG);
-    border: 1px solid var(--Border-Strong);
-    color: var(--Text-Main);
+    background-color: var(--surface-bg);
+    border: 1px solid var(--border-strong);
+    color: var(--text-main);
 }

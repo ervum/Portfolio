@@ -2,14 +2,13 @@ import { Component, inject, signal, ViewChild, WritableSignal, computed, OnInit,
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { FancyUIElementLoadStatusType, LoginData, RegisterData, FancyMultibuttonItemType } from '@ervum/types';
+import { LoginData, RegisterData, FancyMultibuttonItemType } from '@ervum/types';
 
 import { MultibuttonComponent } from '../shared/components/standalone/multibutton/multibutton';
 import { ButtonComponent } from '../shared/components/standalone/button/button';
 import { TextboxComponent } from '../shared/components/standalone/textbox/textbox';
 import { CheckboxComponent } from '../shared/components/standalone/checkbox/checkbox';
 import { ContainerComponent } from '../shared/components/standalone/container/container';
-import { MinibuttonComponent } from '../shared/components/standalone/minibutton/minibutton';
 
 import { TypewriterDirective } from '../shared/directives/typewriter/typewriter.directive';
 import { SlideUpDownDirective } from '../shared/directives/slide-up-down/slide-up-down.directive';
@@ -33,7 +32,6 @@ import { forkJoin, timer } from 'rxjs';
     TextboxComponent,
     CheckboxComponent,
     ContainerComponent,
-    MinibuttonComponent,
 
     TypewriterDirective,
     SlideUpDownDirective

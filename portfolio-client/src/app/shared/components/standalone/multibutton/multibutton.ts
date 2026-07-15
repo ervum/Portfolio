@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, signal, WritableSignal, inject, input, computed, model, type Signal, type ModelSignal } from '@angular/core';
+import { Component, Output, EventEmitter, signal, WritableSignal, inject, input, computed, model, type Signal, type ModelSignal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Nullable, FancyUIElementTypeType, FancyMultiButtonDisplayModeType, HorizontalPositionType, VerticalPositionType, FancyMultiButtonIndicatorStyleType, FancyMultibuttonItemType, Undefinable } from '@ervum/types';
@@ -84,21 +84,21 @@ export class MultibuttonComponent {
   public get GetContentStyles(): Record<string, Nullable<number>> {
     return {
       '--selected-index': this.SelectedIndex(),
-      '--Hover-Index': this.LastHoveredIndex(),
+      '--hover-index': this.LastHoveredIndex(),
       '--button-count': this.Items().length
     };
   }
 
   public get GetHighlightClasses(): Record<string, boolean> {
-    const HoveredIndex = this.HoveredIndex();
-    const SelectedIndex = this.SelectedIndex();
-    const IsHovering = HoveredIndex !== null;
+    const HoveredIndex: Nullable<number> = this.HoveredIndex();
+    const SelectedIndex: number = this.SelectedIndex();
+    const IsHovering: boolean = HoveredIndex !== null;
 
     return {
       'Hovering--Any': IsHovering,
-      'Hovering--Selected': IsHovering && HoveredIndex === SelectedIndex,
-      'Hovering--Before': IsHovering && HoveredIndex < SelectedIndex,
-      'Hovering--After': IsHovering && HoveredIndex > SelectedIndex
+      'Hovering--Selected': HoveredIndex !== null && HoveredIndex === SelectedIndex,
+      'Hovering--Before': HoveredIndex !== null && HoveredIndex < SelectedIndex,
+      'Hovering--After': HoveredIndex !== null && HoveredIndex > SelectedIndex
     };
   }
 
@@ -123,38 +123,41 @@ export class MultibuttonComponent {
   }
 
   public GetIconStyles(Label: string): Record<string, string> {
+    const IconUrl: string = this.GetIconUrl(Label);
+
     return {
-      '--icon-url': this.GetIconUrl(Label)
+      '-webkit-mask-image': IconUrl,
+      'mask-image': IconUrl
     };
   }
 
   // #region Inputs
 
-  public Items = input<FancyMultibuttonItemType[]>([]);
+  public Items: InputSignal<FancyMultibuttonItemType[]> = input<FancyMultibuttonItemType[]>([]);
 
   /** The global interface type signal. */
   private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
-  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+  public Type: InputSignal<Undefinable<FancyUIElementTypeType>> = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
   public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => (this.Type() ?? this.GlobalType()));
 
-  public DisplayMode = input<Nullable<FancyMultiButtonDisplayModeType>>('Text');
+  public DisplayMode: InputSignal<Nullable<FancyMultiButtonDisplayModeType>> = input<Nullable<FancyMultiButtonDisplayModeType>>('Text');
   
-  public Vertical = input(false);
-  public IndicatorSide = input<Nullable<HorizontalPositionType | VerticalPositionType>>(null);
-  public IndicatorType = input<FancyMultiButtonIndicatorStyleType>('Dash');
+  public Vertical: InputSignal<boolean> = input(false);
+  public IndicatorSide: InputSignal<Nullable<HorizontalPositionType | VerticalPositionType>> = input<Nullable<HorizontalPositionType | VerticalPositionType>>(null);
+  public IndicatorType: InputSignal<FancyMultiButtonIndicatorStyleType> = input<FancyMultiButtonIndicatorStyleType>('Dash');
 
-  public ShowHighlight = input(false);
-  public ShowIndicator = input(false);
+  public ShowHighlight: InputSignal<boolean> = input(false);
+  public ShowIndicator: InputSignal<boolean> = input(false);
 
   // #endregion
 
   // #region Outputs
 
-  @Output() SelectedIndexChange = new EventEmitter<number>();
+  @Output() SelectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
   // #endregion
 }

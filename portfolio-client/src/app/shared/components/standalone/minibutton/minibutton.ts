@@ -1,7 +1,7 @@
 import { Component, input, inject, InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Undefinable, FancyButtonIconStateType } from '@ervum/types';
+import { Undefinable, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
 
 import { ContainerComponent } from '../container/container';
 
@@ -42,6 +42,18 @@ export class MinibuttonComponent {
 
   /** Current state of the icon animation. */
   public IconStatus: FancyButtonIconStateType = 'AtCenter';
+
+  public get GetIconStyles(): NGStylesType {
+    if (!this.Icon()) {
+      return {};
+    }
+
+    const IconUrl: string = `url(${this.Icon()})`;
+    return {
+      '-webkit-mask-image': IconUrl,
+      'mask-image': IconUrl
+    };
+  }
 
   /** Whether an entry animation is queued. */
   private EntryIsQueued: boolean = false;

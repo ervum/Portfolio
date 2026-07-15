@@ -22,4 +22,20 @@ describe('ButtonComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should support HasIcon=true hover and click', () => {
+    fixture.componentRef.setInput('HasIcon', true);
+    fixture.detectChanges();
+
+    const buttonElement = fixture.nativeElement.querySelector('.FancyButton');
+    expect(buttonElement).toBeTruthy();
+
+    buttonElement.dispatchEvent(new PointerEvent('pointerenter'));
+    fixture.detectChanges();
+
+    buttonElement.dispatchEvent(new PointerEvent('pointerdown'));
+    fixture.detectChanges();
+
+    expect(component.IconStatus).toBe('Exiting');
+  });
 });

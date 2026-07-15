@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, ElementRef, OnInit, OnChanges, SimpleChanges, inject, input, computed, type Signal, type WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, ElementRef, OnInit, OnChanges, SimpleChanges, inject, input, computed, type Signal, type WritableSignal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Nullable, Undefinable, FancyUIElementTypeType, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
@@ -92,10 +92,19 @@ export class ButtonComponent implements OnInit, OnChanges {
     return `url(${this.IconsBasePath}${this.Icon()}.png)`;
   }
 
-  /** Inline styles for the normal wrapper (icon URL). */
+  /** Inline styles for the normal wrapper. */
   public get GetWrapperStyles(): NGStylesType {
+    return {};
+  }
+
+  public get GetIconStyles(): NGStylesType {
+    if (!(this.ButtonIconStyle)) {
+      return {};
+    }
+
     return {
-      '--icon-url': this.ButtonIconStyle
+      '-webkit-mask-image': this.ButtonIconStyle,
+      'mask-image': this.ButtonIconStyle
     };
   }
 
@@ -127,24 +136,26 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   // #region Inputs
 
-  public BorderSpacing = input<Nullable<number>>(0.03);
+  public BorderSpacing: InputSignal<Nullable<number>> = input<Nullable<number>>(0.03);
 
-  public Padding = input<Nullable<number>>(-3.0);
+  public Padding: InputSignal<Nullable<number>> = input<Nullable<number>>(-3.0);
 
-  public Label = input<Nullable<string>>('');
+  public Label: InputSignal<Nullable<string>> = input<Nullable<string>>('');
 
-  public Icon = input<Nullable<string>>('next');
+  public Icon: InputSignal<Nullable<string>> = input<Nullable<string>>('arrow');
+
+  public HasIcon: InputSignal<boolean> = input<boolean>(false);
 
   /** The global interface type signal. */
   private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;
 
   /** Local type override. */
-  public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+  public Type: InputSignal<Undefinable<FancyUIElementTypeType>> = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
   /** The final type to use. */
   public EffectiveType: Signal<FancyUIElementTypeType> = computed(() => this.Type() ?? this.GlobalType());
 
-  public Centered = input<Nullable<boolean>>(false);
+  public Centered: InputSignal<Nullable<boolean>> = input<Nullable<boolean>>(false);
 
   // #endregion
 

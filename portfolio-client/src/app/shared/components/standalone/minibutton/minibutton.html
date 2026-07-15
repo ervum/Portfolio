@@ -12,7 +12,7 @@
             [class.Minibutton-Icon--Exiting] = "IconStatus === 'Exiting'"
             [class.Minibutton-Icon--OffScreen] = "IconStatus === 'OffScreen'"
             
-            [style.--icon] = "'url(' + Icon() + ')'"
+            [ngStyle] = "GetIconStyles"
             (animationend) = "OnIconAnimationEnd()">
         </div>
     }

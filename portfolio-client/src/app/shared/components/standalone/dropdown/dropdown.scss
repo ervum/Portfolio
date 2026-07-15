@@ -8,8 +8,8 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    width: var(--Button-Width, 100%);
-    height: var(--Button-Height, 50px);
+    width: var(--button-width, 100%);
+    height: var(--button-height, 50px);
 
     container-type: size;
 
@@ -19,16 +19,16 @@
     -webkit-font-smoothing: antialiased;
     will-change: transform;
 
-    color: var(--Text-Main);
+    color: var(--text-main);
     
     &:hover {
-        transform: scale(var(--Hover-Scale-Big)) translateZ(0);
-        --Container-Border-Color: var(--Border-Strong);
+        transform: scale(var(--hover-scale-big)) translateZ(0);
+        --container-border-color: var(--border-strong);
     }
 
     &:has(.FancyDropdown-Item:hover) {
         transform: scale(1) translateZ(0);
-        --Container-Border-Color: var(--Border-Main);
+        --container-border-color: var(--border-main);
     }
 
 }
@@ -51,11 +51,11 @@
 
     &:hover {
         @include s.SynchronizeStates('.FancyDropdown-Trigger') {
-            border-radius: var(--Radius-Pill);
+            border-radius: var(--radius-pill);
         }
 
         @include s.SynchronizeStates('.FancyDropdown-Icon-Container') {
-            border-radius: var(--Radius-Pill);
+            border-radius: var(--radius-pill);
         }
     }
 }
@@ -67,14 +67,14 @@
     flex-direction: row;
     place-items: center;
     justify-content: space-between;
-    padding: 0px var(--Padding-Medium);
+    padding: 0px var(--padding-medium);
 
     position: relative;
     width: 100%;
     height: 100%;
 
     cursor: pointer;
-    border-radius: var(--Radius-Standard);
+    border-radius: var(--radius-standard);
 }
 
 .FancyDropdown-Label-Wrapper {
@@ -85,7 +85,7 @@
 }
 
 .FancyDropdown-Label, .FancyDropdown-Item-Label {
-    font-size: var(--FontSize-Standard);
+    font-size: var(--fontsize-standard);
     white-space: normal;
     line-height: 1.1;
     word-break: break-word;
@@ -106,17 +106,17 @@
     
     position: relative;
     
-    height: var(--IconContainer-Size);
+    height: var(--iconcontainer-size);
     width: auto;
     aspect-ratio: 1 / 1;
     
-    border-radius: var(--Radius-Standard);
-    box-shadow: 0 0 10px var(--Shadow-Standard);
+    border-radius: var(--radius-standard);
+    box-shadow: 0 0 10px var(--shadow-standard);
     
     overflow: hidden;
     flex-shrink: 0;
     
-    background-color: var(--Surface-BG-Hover);
+    background-color: var(--surface-bg-hover);
 
     background-size: contain;
     background-repeat: no-repeat;
@@ -125,7 +125,7 @@
 
 .FancyDropdown-Icon {
     @include s.CreateTransition(transform);
-    @include s.MaskedIcon(url('/assets/icons/arrow.png'), currentColor);
+    @include s.MaskedIcon(url('/assets/icons/shaftless-arrow.png'), currentColor);
 
     border: none;
 
@@ -144,8 +144,8 @@
     z-index: 1;
     
     clip-path: inset(0px 0px -2000px 0px);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - 35.6cqmin), black var(--Button-Height, 50px));
-    mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--Button-Height, 50px) - 35.6cqmin), black var(--Button-Height, 50px));
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--button-height, 50px) - 35.6cqmin), black var(--button-height, 50px));
+    mask-image: linear-gradient(to bottom, transparent 0px, transparent calc(var(--button-height, 50px) - 35.6cqmin), black var(--button-height, 50px));
     pointer-events: none;
     
     &.Is-Open {
@@ -159,10 +159,10 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: calc(var(--Button-Height, 50px) + var(--Padding-Medium)) 0px var(--Padding-Medium) 0px;
-    gap: var(--Padding-Small);
+    padding: calc(var(--button-height, 50px) + var(--padding-medium)) 0px var(--padding-medium) 0px;
+    gap: var(--padding-small);
 
-    border-radius: var(--Radius-Sharp);
+    border-radius: var(--radius-sharp);
     border-top: none;
     overflow: hidden;
     
@@ -173,7 +173,7 @@
     }
 
     &:has(.FancyDropdown-Item:hover) {
-        border-radius: var(--Radius-Pill);
+        border-radius: var(--radius-pill);
     }
 }
 
@@ -184,15 +184,15 @@
     flex-direction: row;
     place-items: center;
     
-    padding: var(--Padding-Small) var(--Padding-Medium);
+    padding: var(--padding-small) var(--padding-medium);
     cursor: pointer;
-    border-radius: var(--Radius-Pill);
+    border-radius: var(--radius-pill);
 
     &:hover {
-        background-color: var(--Surface-BG-Hover);
+        background-color: var(--surface-bg-hover);
 
-        transform: scale(var(--Hover-Scale-Big));
+        transform: scale(var(--hover-scale-big));
 
-        border-radius: var(--Radius-Pill);
+        border-radius: var(--radius-pill);
     }
 }

@@ -10,7 +10,7 @@
     /* Make it untappable for text selection */
     user-select: none;
 
-    color: var(--Text-Main);
+    color: var(--text-main);
 
     -webkit-tap-highlight-color: transparent;
 }
@@ -21,10 +21,10 @@
     display: flex;
     align-items: center;
     height: 100%;
-    gap: var(--Padding-Medium, 8px);
+    gap: var(--padding-medium, 8px);
     
     /* Dictating the font-size here allowing elements to scale relatively off it */
-    font-size: var(--FontSize-Standard, 14px);
+    font-size: var(--fontsize-standard, 14px);
 }
 
 .FancyCheckbox-Wrapper.Label-Left {
@@ -47,13 +47,13 @@
 
     container-type: size;
 
-    transition-duration: var(--Duration-Standard);
-    transition-timing-function: var(--Easing-Standard);
+    transition-duration: var(--duration-standard);
+    transition-timing-function: var(--easing-standard);
 
     /* Reset parent FancyContainer styles to use pseudo-element for correct cqmin resolution */
     background-color: transparent !important;
     border: none !important;
-    border-radius: var(--Radius-Standard);
+    border-radius: var(--radius-standard);
 
     &::before {
         content: '';
@@ -61,11 +61,11 @@
         inset: 0;
         z-index: -1;
 
-        background-color: var(--Surface-BG);
-        border: 1px solid var(--Border-Strong);
-        border-radius: var(--Radius-Standard);
+        background-color: var(--surface-bg);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-standard);
 
-        transition: border-radius var(--Duration-Standard) var(--Easing-Standard);
+        transition: border-radius var(--duration-standard) var(--easing-standard);
     }
 }
 
@@ -80,18 +80,18 @@
 .FancyCheckbox-Icon {
     @include s.MaskedIcon(url('../../../../../assets/icons/checkmark.png'), currentColor);
     
-    width: var(--Icon-Size-Standard, 60%);
-    height: var(--Icon-Size-Standard, 60%);
+    width: var(--icon-size-standard, 60%);
+    height: var(--icon-size-standard, 60%);
 }
 
 /* Hover Interaction */
 .FancyCheckbox-Wrapper:hover {
     .FancyCheckbox-IconContainer {
-        transform: scale(var(--Hover-Scale-Big));
-        border-radius: var(--Radius-Pill);
+        transform: scale(var(--hover-scale-big));
+        border-radius: var(--radius-pill);
 
         &::before {
-            border-radius: var(--Radius-Pill);
+            border-radius: var(--radius-pill);
         }
     }
 }

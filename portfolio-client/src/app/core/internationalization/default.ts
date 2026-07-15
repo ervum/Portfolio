@@ -1,4 +1,26 @@
-export const DefaultDictionary = {
+export type TranslationDictionary = {
+  LanguageCode: string;
+  Portfolio: string;
+  SignIn: string;
+  SignUp: string;
+  RememberMe: string;
+  Email: string;
+  PhoneNumber: string;
+  Username: string;
+  UserIdentifier: string;
+  Password: string;
+  LanguageName_English: string;
+  LanguageName_Spanish: string;
+  AccountRecovery: string;
+  Recover: string;
+  Continue: string;
+  RecoveryIntro: string;
+  Home: string;
+  OR: string;
+  ExtensionWarningTooltip: string;
+};
+
+export const DefaultDictionary: TranslationDictionary = {
   LanguageCode: 'en',
   
   Portfolio: 'Portfolio',
@@ -25,7 +47,3 @@ export const DefaultDictionary = {
 
    ExtensionWarningTooltip: 'A third-party extension is modifying this page. Some parts of the interface may appear visually different from the original design.',
  };
-
-
-
-export type TranslationDictionary = typeof DefaultDictionary;

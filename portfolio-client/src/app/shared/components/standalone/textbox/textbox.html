@@ -4,9 +4,7 @@
   [Type] = "EffectiveType()"
 
   [attr.Has-Text] = "HasText"
-  [attr.Focus-State] = "FocusState"
-
-  [style.--icon-url] = "TextboxIconStyle">
+  [attr.Focus-State] = "FocusState">
   <FancyContainer
     class = "FancyTextbox-Icon-Container"
 
@@ -16,12 +14,15 @@
     <div
       class = "FancyTextbox-Icon"
 
+      [ngStyle] = "GetIconStyles"
+
       [ngClass] = "{ 
         'Icon-ExitUp': IconAnimationState === 'Exiting', 
         'Icon-EnterDown': IconAnimationState === 'Entering',
         'FancyTextbox--Primary': EffectiveType() === 'Primary',
         'FancyTextbox--Secondary': EffectiveType() === 'Secondary'
-      }">
+      }"
+      (animationend) = "OnIconAnimationEnd()">
     </div>
   </FancyContainer>
 
@@ -80,4 +81,4 @@
       </div>
     }
   </div>
-</FancyContainer>
+</FancyContainer>

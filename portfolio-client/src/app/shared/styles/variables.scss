@@ -63,115 +63,115 @@ $Button-Width: 100%;
 /* --- CSS Variables Export --- */
 :root {
     /* --- Global Shared Tokens --- */
-    --Radius-Square: #{$Radius-Square};
-    --Radius-Sharpest: #{$Radius-Sharpest};
-    --Radius-Sharp: #{$Radius-Sharp};
-    --Radius-Standard: #{$Radius-Standard};
-    --Radius-Round: #{$Radius-Round};
-    --Radius-Pill: #{$Radius-Pill};
+    --radius-square: #{$Radius-Square};
+    --radius-sharpest: #{$Radius-Sharpest};
+    --radius-sharp: #{$Radius-Sharp};
+    --radius-standard: #{$Radius-Standard};
+    --radius-round: #{$Radius-Round};
+    --radius-pill: #{$Radius-Pill};
 
-    --FontSize-Standard: #{$FontSize-Standard};
-    --FontSize-Small: #{$FontSize-Small};
+    --fontsize-standard: #{$FontSize-Standard};
+    --fontsize-small: #{$FontSize-Small};
 
-    --Easing-Standard: #{$Easing-Standard};
-    --Easing-Snap: #{$Easing-Snap};
+    --easing-standard: #{$Easing-Standard};
+    --easing-snap: #{$Easing-Snap};
 
-    --Duration-Standard: #{$Duration-Standard};
-    --Duration-Slow: #{$Duration-Slow};
+    --duration-standard: #{$Duration-Standard};
+    --duration-slow: #{$Duration-Slow};
 
-    --Interact-Scale-Big: #{$Interact-Scale-Big};
-    --Interact-Scale-Standard: #{$Interact-Scale-Standard};
+    --interact-scale-big: #{$Interact-Scale-Big};
+    --interact-scale-standard: #{$Interact-Scale-Standard};
 
-    --Hover-Scale-Standard: #{$Hover-Scale-Standard};
-    --Hover-Scale-Big: #{$Hover-Scale-Big};
+    --hover-scale-standard: #{$Hover-Scale-Standard};
+    --hover-scale-big: #{$Hover-Scale-Big};
 
-    --Hover-MoveY: #{$Hover-MoveY};
+    --hover-movey: #{$Hover-MoveY};
 
-    --Blur-Standard: #{$Blur-Standard};
-    --Container-Blur: var(--Blur-Standard);
+    --blur-standard: #{$Blur-Standard};
+    --container-blur: var(--blur-standard);
 
-    --Section-Width: #{$Section-Width};
-    --Section-Height: #{$Section-Height};
+    --section-width: #{$Section-Width};
+    --section-height: #{$Section-Height};
 
-    --Field-Width: #{$Field-Width};
+    --field-width: #{$Field-Width};
 
-    --Padding-Small: #{$Padding-Small};
-    --Padding-Medium: #{$Padding-Medium};
+    --padding-small: #{$Padding-Small};
+    --padding-medium: #{$Padding-Medium};
 
-    --Control-Height: #{$Control-Height};
+    --control-height: #{$Control-Height};
 
-    --IconContainer-Size: #{$IconContainer-Size};
-    --Icon-Size-Standard: #{$Icon-Size-Standard};
-    --Icon-Size-Small: #{$Icon-Size-Small};
+    --iconcontainer-size: #{$IconContainer-Size};
+    --icon-size-standard: #{$Icon-Size-Standard};
+    --icon-size-small: #{$Icon-Size-Small};
 
-    --Textbox-Width: #{$Textbox-Width};
+    --textbox-width: #{$Textbox-Width};
 
-    --Multibutton-Width: #{$Multibutton-Width};
-    --Multibutton-Padding: #{$Multibutton-Padding};
-    --Multibutton-IndicatorTrackHeight: #{$Multibutton-IndicatorTrackHeight};
+    --multibutton-width: #{$Multibutton-Width};
+    --multibutton-padding: #{$Multibutton-Padding};
+    --multibutton-indicatortrackheight: #{$Multibutton-IndicatorTrackHeight};
 
-    --Button-Width: #{$Button-Width};
+    --button-width: #{$Button-Width};
 
     /* --- Theme Palettes --- */
 
     /* [Default / Primary] - Lumina (Dark Mode with White Accents) */
     &, &.Theme--Primary {
-        --Base-BG: #050505;
-        --Surface-BG: rgba(17, 17, 17, 0.45);
-        --Surface-BG-Hover: rgba(26, 26, 26, 0.55);
-        --Container-Blur: 40px;
+        --base-bg: #050505;
+        --surface-bg: rgba(17, 17, 17, 0.45);
+        --surface-bg-hover: rgba(26, 26, 26, 0.55);
+        --container-blur: 40px;
         
-        --Accent-Main: #ffffff;
-        --Accent-Muted: rgba(255, 255, 255, 0.5);
-        --Accent-Glow: rgba(255, 255, 255, 0.8);
+        --accent-main: #ffffff;
+        --accent-muted: rgba(255, 255, 255, 0.5);
+        --accent-glow: rgba(255, 255, 255, 0.8);
         
-        --Text-Main: #ffffff;
-        --Text-Muted: rgba(255, 255, 255, 0.6);
+        --text-main: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.6);
         
-        --Border-Main: rgba(255, 255, 255, 0.15);
-        --Border-Strong: rgba(255, 255, 255, 0.4);
+        --border-main: rgba(255, 255, 255, 0.15);
+        --border-strong: rgba(255, 255, 255, 0.4);
         
-        --Glow-Standard: rgba(255, 255, 255, 0.6);
-        --Glow-Strong: rgba(255, 255, 255, 0.35);
+        --glow-standard: rgba(255, 255, 255, 0.6);
+        --glow-strong: rgba(255, 255, 255, 0.35);
 
-        --Shadow-Standard: rgba(255, 255, 255, 0.2);
-        --Shadow-Strong: rgba(255, 255, 255, 0.05);
+        --shadow-standard: rgba(255, 255, 255, 0.2);
+        --shadow-strong: rgba(255, 255, 255, 0.05);
 
-        --Scrollbar-Thumb: rgba(255, 255, 255, 0.2);
+        --scrollbar-thumb: rgba(255, 255, 255, 0.2);
         
         /* Legacy Support (to be deprecated) */
-        --Edge-Colour: #ffffff;
-        --Edge-Glow: rgba(255, 255, 255, 0.8);
+        --edge-colour: #ffffff;
+        --edge-glow: rgba(255, 255, 255, 0.8);
     }
 
     /* [Secondary] - Obsidian (Light Mode with Black Accents) */
     &.Theme--Secondary {
-        --Base-BG: #fcfcfd;
-        --Surface-BG: rgba(0, 0, 0, 0.04);
-        --Surface-BG-Hover: rgba(0, 0, 0, 0.08);
+        --base-bg: #fcfcfd;
+        --surface-bg: rgba(0, 0, 0, 0.04);
+        --surface-bg-hover: rgba(0, 0, 0, 0.08);
         
-        --Accent-Main: #111111;
-        --Accent-Muted: rgba(0, 0, 0, 0.4);
-        --Accent-Glow: rgba(0, 0, 0, 0.2);
+        --accent-main: #111111;
+        --accent-muted: rgba(0, 0, 0, 0.4);
+        --accent-glow: rgba(0, 0, 0, 0.2);
         
-        --Text-Main: #111111;
-        --Text-Muted: rgba(0, 0, 0, 0.6);
+        --text-main: #111111;
+        --text-muted: rgba(0, 0, 0, 0.6);
         
-        --Border-Main: rgba(0, 0, 0, 0.1);
-        --Border-Strong: rgba(0, 0, 0, 0.3);
+        --border-main: rgba(0, 0, 0, 0.1);
+        --border-strong: rgba(0, 0, 0, 0.3);
         
-        --Glow-Standard: rgba(0, 0, 0, 0.15);
-        --Glow-Strong: rgba(0, 0, 0, 0.1);
+        --glow-standard: rgba(0, 0, 0, 0.15);
+        --glow-strong: rgba(0, 0, 0, 0.1);
 
-        --Shadow-Standard: rgba(0, 0, 0, 0.2);
-        --Shadow-Strong: rgba(0, 0, 0, 0.5);
+        --shadow-standard: rgba(0, 0, 0, 0.2);
+        --shadow-strong: rgba(0, 0, 0, 0.5);
 
-        --Scrollbar-Thumb: rgba(0, 0, 0, 0.2);
+        --scrollbar-thumb: rgba(0, 0, 0, 0.2);
 
-        --Container-Blur: 40px;
+        --container-blur: 40px;
 
         /* Legacy Support (to be deprecated) */
-        --Edge-Colour: #111111;
-        --Edge-Glow: rgba(0, 0, 0, 0.2);
+        --edge-colour: #111111;
+        --edge-glow: rgba(0, 0, 0, 0.2);
     }
 }

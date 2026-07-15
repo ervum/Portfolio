@@ -12,14 +12,14 @@
     
     z-index: 0; // Base background layer
     
-    background-color: var(--BG-Color-1, var(--Base-BG));
+    background-color: var(--bg-color-1, var(--base-bg));
     overflow: hidden;
     
     will-change: transform;
     transform: translateZ(0);
     backface-visibility: hidden;
     
-    transition: background-color var(--Duration-Standard) var(--Easing-Standard);
+    transition: background-color var(--duration-standard) var(--easing-standard);
 
     :root.Block-DarkMode-Extensions & {
         color-scheme: inherit !important;

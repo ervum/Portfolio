@@ -4,9 +4,9 @@
 
 /* --- Utility Animations --- */
 .Animation-Draw {
-    --Draw-Transition: clip-path var(--Duration-Standard) var(--Easing-Standard), opacity var(--Duration-Standard) var(--Easing-Standard);
+    --draw-transition: clip-path var(--duration-standard) var(--easing-standard), opacity var(--duration-standard) var(--easing-standard);
 
-    transition: var(--Draw-Transition);
+    transition: var(--draw-transition);
 
     /* Start un-drawn and fully transparent */
     clip-path: inset(0 100% 0 0);
@@ -54,32 +54,32 @@
 @keyframes Aurora-BlobFloat {
     0%, 100% {
         transform: 
-            translate(var(--Parallax-X), var(--Parallax-Y))
-            rotate(var(--Rotation))
-            scale(var(--Scale))
+            translate(var(--parallax-x), var(--parallax-y))
+            rotate(var(--rotation))
+            scale(var(--scale))
             translate(0px, 0px);
     }
 
     33% {
         transform: 
-            translate(var(--Parallax-X), var(--Parallax-Y))
-            rotate(var(--Rotation))
-            scale(var(--Scale))
+            translate(var(--parallax-x), var(--parallax-y))
+            rotate(var(--rotation))
+            scale(var(--scale))
             translate(10px, -15px);
     }
 
     66% {
         transform: 
-            translate(var(--Parallax-X), var(--Parallax-Y))
-            rotate(var(--Rotation))
-            scale(var(--Scale))
+            translate(var(--parallax-x), var(--parallax-y))
+            rotate(var(--rotation))
+            scale(var(--scale))
             translate(-8px, 10px);
     }
 }
 @mixin EdgeGlowAnimation {
     &::after {
-        --Edge-Colour: rgba(255, 255, 255, 0);
-        --Edge-Glow: rgba(255, 255, 255, 0);
+        --edge-colour: rgba(255, 255, 255, 0);
+        --edge-glow: rgba(255, 255, 255, 0);
 
         content: '';
         position: absolute;
@@ -89,20 +89,20 @@
         border-radius: inherit;
 
         border: 1px solid transparent;
-        background: linear-gradient(90deg, transparent, var(--Edge-Colour), transparent) border-box;
+        background: linear-gradient(90deg, transparent, var(--edge-colour), transparent) border-box;
         -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
         mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
 
-        box-shadow: 0px 0px 15px 1px var(--Edge-Glow);
+        box-shadow: 0px 0px 15px 1px var(--edge-glow);
 
         opacity: 0%;
         clip-path: inset(0 50%);
         
         transition: 
-            --Edge-Colour 0s ease 0.4s,
-            --Edge-Glow 0s ease 0.4s,
+            --edge-colour 0s ease 0.4s,
+            --edge-glow 0s ease 0.4s,
             clip-path 0.4s cubic-bezier(0.86, 0, 0.07, 1),
             opacity 0s ease 0.4s;
     }
@@ -114,25 +114,25 @@
         clip-path: inset(0 0);
         
         transition: 
-            --Edge-Colour 0.1s ease,
-            --Edge-Glow 0.1s ease,
+            --edge-colour 0.1s ease,
+            --edge-glow 0.1s ease,
             clip-path 0.4s cubic-bezier(0.86, 0, 0.07, 1),
             opacity 0.1s ease;
     }
 
     &.Section--Loading::after {
-        --Edge-Colour: var(--Accent-Main);
-        --Edge-Glow: var(--Accent-Glow);
+        --edge-colour: var(--accent-main);
+        --edge-glow: var(--accent-glow);
     }
 
     &.Section--Success::after {
-        --Edge-Colour: #4ade80;
-        --Edge-Glow: rgba(34, 197, 94, 0.8);
+        --edge-colour: #4ade80;
+        --edge-glow: rgba(34, 197, 94, 0.8);
     }
 
     &.Section--Error::after {
-        --Edge-Colour: #ef4444;
-        --Edge-Glow: rgba(220, 38, 38, 0.8);
+        --edge-colour: #ef4444;
+        --edge-glow: rgba(220, 38, 38, 0.8);
     }
 
     &.Section--Idle::after {

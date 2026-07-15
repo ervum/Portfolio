@@ -1,4 +1,4 @@
-import { Component, input, computed, inject, type Signal, type WritableSignal } from '@angular/core';
+import { Component, input, computed, inject, type Signal, type WritableSignal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Undefinable, FancyUIElementTypeType } from '@ervum/types';
@@ -28,7 +28,7 @@ export class ContainerComponent {
      * Local type override. 
      * Starts as undefined to detect if it was provided in the template.
      */
-    public Type = input<Undefinable<FancyUIElementTypeType>>(undefined);
+    public Type: InputSignal<Undefinable<FancyUIElementTypeType>> = input<Undefinable<FancyUIElementTypeType>>(undefined);
 
     /** 
      * The final type to use. 

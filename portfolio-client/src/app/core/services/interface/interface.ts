@@ -16,8 +16,8 @@ export class InterfaceService {
   private readonly IsBrowser: boolean = isPlatformBrowser(this.PlatformID);
   private readonly TransferState: TransferState = inject(TransferState);
 
-  private readonly LanguageKey = makeStateKey<string>('Interface-Language');
-  private readonly ThemeKey = makeStateKey<string>('Interface-Theme');
+  private readonly LanguageKey: StateKey<string> = makeStateKey<string>('Interface-Language');
+  private readonly ThemeKey: StateKey<string> = makeStateKey<string>('Interface-Theme');
 
   public readonly BlockDarkModeExtensions: boolean = false;
 
@@ -95,7 +95,7 @@ export class InterfaceService {
         } else if (typeof (this.Request as any).get === 'function') {
           CookieString = (this.Request as any).get('cookie') || '';
         }
-      } catch (Error) {
+      } catch (Error: any) {
         console.error('Error reading cookie header on server:', Error);
       }
     }
@@ -215,7 +215,7 @@ export class InterfaceService {
       return;
     }
 
-    this.InterfaceType.update(CurrentType => (CurrentType === 'Primary') ? 'Secondary' : 'Primary');
+    this.InterfaceType.update((CurrentType: FancyUIElementTypeType) => (CurrentType === 'Primary') ? 'Secondary' : 'Primary');
   }
 
   /**

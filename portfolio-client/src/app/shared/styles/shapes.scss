@@ -49,37 +49,37 @@ $Polygon-Square: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%;
 
 /* --- Utility Classes (for global availability) --- */
 .Concave-Border {
-    @include ConcaveBorder(var(--Size), var(--X), var(--Y), var(--Smoothness));
+    @include ConcaveBorder(var(--size), var(--x), var(--y), var(--smoothness));
     
-    --Size: 75%;
-    --X: 50%;
-    --Y: 50%;
-    --Smoothness: 1%;
+    --size: 75%;
+    --x: 50%;
+    --y: 50%;
+    --smoothness: 1%;
     
     background: white;
 
-    &.Top { --Y: 0%; }
-    &.Bottom { --Y: 100%; }
-    &.Left { --X: 0%; }
-    &.Right { --X: 100%; }
+    &.Top { --y: 0%; }
+    &.Bottom { --y: 100%; }
+    &.Left { --x: 0%; }
+    &.Right { --x: 100%; }
 }
 
 .Shape {
-    @include ClipShape(var(--Shape));
+    @include ClipShape(var(--shape));
 
-    --Shape: #{$Polygon-Square};
+    --shape: #{$Polygon-Square};
 
     background: white;
     container-type: size;
     border-radius: 5cqmin;
 
     &.Invert {
-        @include InvertShape(var(--Shape), var(--Stroke));
+        @include InvertShape(var(--shape), var(--stroke));
 
-        --Stroke: -5px;
+        --stroke: -5px;
     }
 }
 
 .Square {
-    --Shape: #{$Polygon-Square};
+    --shape: #{$Polygon-Square};
 }

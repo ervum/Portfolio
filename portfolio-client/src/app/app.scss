@@ -36,7 +36,7 @@
     transform: translateY(-50%);
     z-index: 100;
 
-    --Multibutton-Width: 56px;
+    --multibutton-width: 56px;
     height: 220px;
 }
 
@@ -46,8 +46,8 @@
     left: 10px;
     z-index: 100;
 
-    --Minibutton-Width: 50px;
-    --Minibutton-Height: 50px;
+    --minibutton-width: 50px;
+    --minibutton-height: 50px;
 }
 
 .Back-Minibutton {
@@ -56,8 +56,8 @@
     left: 10px;
     z-index: 100;
 
-    --Minibutton-Width: 50px;
-    --Minibutton-Height: 50px;
+    --minibutton-width: 50px;
+    --minibutton-height: 50px;
 
     transform: rotate(180deg);
     transition: left 0.5s cubic-bezier(0.86, 0, 0.07, 1);
@@ -70,7 +70,7 @@
 
     ::ng-deep .Minibutton-IconContainer {
         &:hover {
-            transform: translateY(5px) scale(var(--Hover-Scale-Big));
+            transform: translateY(5px) scale(var(--hover-scale-big));
         }
     }
 }
@@ -87,7 +87,7 @@
 
     opacity: 0;
     transform: translateY(-80px);
-    transition: transform 0.6s var(--Easing-Standard), opacity 0.6s var(--Easing-Standard);
+    transition: transform 0.6s var(--easing-standard), opacity 0.6s var(--easing-standard);
 
     &.Extension-Warning-Tooltip-Wrapper--Active {
         opacity: 1;
@@ -100,19 +100,19 @@
 }
 
 .Extension-Warning-Tooltip {
-    width: var(--Section-Width);
+    width: var(--section-width);
     max-width: calc(100vw - 40px);
     box-sizing: border-box;
 
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--Padding-Medium, 8px) 20px;
-    border-radius: var(--Radius-Standard);
+    padding: var(--padding-medium, 8px) 20px;
+    border-radius: var(--radius-standard);
     text-align: center;
-    font-size: var(--FontSize-Small, 12px);
+    font-size: var(--fontsize-small, 12px);
     font-weight: 500;
     line-height: 1.4;
-    color: var(--Text-Main);
+    color: var(--text-main);
     pointer-events: none;
 }

@@ -6,7 +6,7 @@
     display: block;
     width: 100%;
     
-    color: var(--Text-Main);
+    color: var(--text-main);
 }
 
 
@@ -22,43 +22,43 @@
     left: 50%;
     transform: translate(-50%, 0%);
 
-    width: var(--Textbox-Width);
-    height: var(--Control-Height);
+    width: var(--textbox-width);
+    height: var(--control-height);
 
     container-type: size;
 
-    transition: all var(--Duration-Standard) var(--Easing-Standard);
+    transition: all var(--duration-standard) var(--easing-standard);
 
-    border-radius: var(--Radius-Standard);
+    border-radius: var(--radius-standard);
     
-    padding: 0px var(--Padding-Small) 0px var(--Padding-Small);
+    padding: 0px var(--padding-small) 0px var(--padding-small);
 
-    font-size: var(--FontSize-Standard);
+    font-size: var(--fontsize-standard);
 
     background: transparent;
     border: none;
 
     &:hover:not(:has(.FancyTextbox-Visibility-Toggle:hover)) {
-        width: calc(var(--Textbox-Width) * var(--Hover-Scale-Big));
-        border-radius: var(--Radius-Pill);
+        width: calc(var(--textbox-width) * var(--hover-scale-big));
+        border-radius: var(--radius-pill);
 
         .FancyTextbox-Icon-Container {
-            transform: scale(var(--Hover-Scale-Standard));
-            border-radius: var(--Radius-Pill);
+            transform: scale(var(--hover-scale-standard));
+            border-radius: var(--radius-pill);
         }
 
         .FancyTextbox-Border {
-            border-radius: var(--Radius-Pill);
+            border-radius: var(--radius-pill);
         }
 
         .FancyTextbox {
-            transform: scale(var(--Hover-Scale-Big));
+            transform: scale(var(--hover-scale-big));
         }
     }
 
     &:has(.FancyTextbox:focus),
     &[Focus-State = "Focusing"] {
-        width: calc(var(--Textbox-Width) * var(--Interact-Scale-Standard)) !important;
+        width: calc(var(--textbox-width) * var(--interact-scale-standard)) !important;
 
         .FancyTextbox {
             transform: scale(1) !important;
@@ -78,33 +78,33 @@
 
     z-index: 3;
 
-    height: var(--IconContainer-Size);
+    height: var(--iconcontainer-size);
     width: auto;
 
-    transition: all var(--Duration-Standard) var(--Easing-Standard);
+    transition: all var(--duration-standard) var(--easing-standard);
 
     flex-shrink: 0;
     
-    border-radius: var(--Radius-Standard);
+    border-radius: var(--radius-standard);
 
-    background-color: var(--Surface-BG-Hover);
+    background-color: var(--surface-bg-hover);
     
     &::before {
         content: '';
         position: absolute;
         inset: 0;
-        background-color: var(--Surface-BG);
+        background-color: var(--surface-bg);
         z-index: -1;
         border-radius: inherit;
     }
 
-    border: 1px solid var(--Border-Strong);
-    box-shadow: 0 0 10px var(--Shadow-Standard);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 0 10px var(--shadow-standard);
 }
 
 
 .FancyTextbox-Icon {
-    @include s.MaskedIcon(var(--icon-url), currentColor);
+    @include s.MaskedIcon(none, currentColor);
 
     pointer-events: none;
 
@@ -112,22 +112,20 @@
 
     z-index: 5;
 
-    width: var(--Icon-Size-Standard);
-    height: var(--Icon-Size-Standard);
-
-    transition: transform var(--Duration-Standard) var(--Easing-Standard);
+    width: var(--icon-size-standard);
+    height: var(--icon-size-standard);
 
     &.Icon-ExitUp {
-        animation: Icon-ExitUp var(--Duration-Standard) var(--Easing-Standard) forwards;
+        animation: Icon-ExitUp 0.35s var(--easing-standard) forwards;
     }
     &.Icon-EnterDown {
-        animation: Icon-EnterDown var(--Duration-Standard) var(--Easing-Standard) forwards;
+        animation: Icon-EnterDown 0.35s var(--easing-standard) forwards;
     }
 }
 
 .FancyTextbox-Visibility-Toggle {
     position: absolute;
-    right: var(--Padding-Small);
+    right: var(--padding-small);
 
     height: 100%;
     aspect-ratio: 1 / 1;
@@ -139,7 +137,7 @@
     cursor: pointer;
     pointer-events: all;
 
-    transition: all var(--Duration-Standard) var(--Easing-Standard);
+    transition: all var(--duration-standard) var(--easing-standard);
 
     &::after {
         content: '';
@@ -147,7 +145,7 @@
         top: 0;
         bottom: 0;
         left: 0;
-        right: calc(var(--Padding-Small) * -1);
+        right: calc(var(--padding-small) * -1);
     }
 
     .Visibility-Toggle-BaseIcon,
@@ -155,10 +153,10 @@
         @include s.MaskedIcon(none, currentColor);
         
         position: absolute;
-        width: calc(var(--Icon-Size-Standard) * 0.7);
-        height: calc(var(--Icon-Size-Standard) * 0.7);
+        width: calc(var(--icon-size-standard) * 0.7);
+        height: calc(var(--icon-size-standard) * 0.7);
         
-        transition: transform var(--Duration-Standard) var(--Easing-Standard);
+        transition: transform var(--duration-standard) var(--easing-standard);
     }
 
     .Visibility-Toggle-BaseIcon {
@@ -170,12 +168,12 @@
         -webkit-mask-image: url('../../../../../assets/icons/crossmark.png');
         mask-image: url('../../../../../assets/icons/crossmark.png');
         
-        transition: transform var(--Duration-Standard) var(--Easing-Standard), var(--Draw-Transition);
+        transition: transform var(--duration-standard) var(--easing-standard), var(--draw-transition);
     }
 
     &:hover .Visibility-Toggle-BaseIcon,
     &:hover .Visibility-Toggle-StrikeIcon {
-        transform: scale(var(--Hover-Scale-Big));
+        transform: scale(var(--hover-scale-big));
     }
 }
 
@@ -201,14 +199,14 @@
     width: 100%;
     height: 100%;
 
-    transition: all var(--Duration-Standard) var(--Easing-Standard);
+    transition: all var(--duration-standard) var(--easing-standard);
 
-    border: 1px solid var(--Border-Strong);
-    background-color: var(--Surface-BG);
+    border: 1px solid var(--border-strong);
+    background-color: var(--surface-bg);
     box-sizing: border-box;
 
     &.FancyTextbox--First {
-        border-radius: var(--Radius-Standard) var(--Radius-Standard) 2px 2px;
+        border-radius: var(--radius-standard) var(--radius-standard) 2px 2px;
     }
     &.FancyTextbox--Intermediate {
         border-top: none;
@@ -216,10 +214,10 @@
     }
     &.FancyTextbox--Last {
         border-top: none;
-        border-radius: 2px 2px var(--Radius-Standard) var(--Radius-Standard);
+        border-radius: 2px 2px var(--radius-standard) var(--radius-standard);
     }
     &.FancyTextbox--Unique {
-        border-radius: var(--Radius-Standard);
+        border-radius: var(--radius-standard);
     }
 }
 
@@ -234,15 +232,15 @@
     width: 100%;
     height: 100%;
 
-    transition: transform var(--Duration-Standard) var(--Easing-Standard);
+    transition: transform var(--duration-standard) var(--easing-standard);
     transform-origin: left;
 
     background-color: transparent;
 
     cursor: pointer;
 
-    padding-left: calc(var(--Control-Height) + var(--Padding-Small));
-    padding-right: var(--Padding-Small);
+    padding-left: calc(var(--control-height) + var(--padding-small));
+    padding-right: var(--padding-small);
     box-sizing: border-box;
 
     border: none;
@@ -255,6 +253,6 @@
     color: inherit;
 
     &:has(~ .FancyTextbox-Visibility-Toggle) {
-        padding-right: calc(var(--Control-Height) + var(--Padding-Small));
+        padding-right: calc(var(--control-height) + var(--padding-small));
     }
 }

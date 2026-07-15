@@ -6,12 +6,12 @@
     display: flex;
     place-content: center;
     position: relative;
-    width: var(--Button-Width, 100%);
+    width: var(--button-width, 100%);
     height: 100%;
 
     container-type: size;
     
-    color: var(--Text-Main);
+    color: var(--text-main);
 }
 
 
@@ -34,26 +34,25 @@
 
         border: solid;
         border-width: 1px;
-        border-color: var(--Border-Strong);
-        color: var(--Text-Main);
+        border-color: var(--border-strong);
+        color: var(--text-main);
     }
 
     &:hover,
     &:active,
     &:has(.FancyButton:focus-visible) {
         @include s.SynchronizeStates('.FancyButton') {
-            transform: translateY(var(--Hover-MoveY));
+            transform: translateY(var(--hover-movey));
 
-            border-radius: var(--Radius-Pill);
+            border-radius: var(--radius-pill);
         }
 
         @include s.SynchronizeStates('.FancyButton-Label') {
-            transform: scale(var(--Hover-Scale-Standard));
+            transform: scale(var(--hover-scale-standard));
         }
 
-        @include s.SynchronizeStates('.FancyButton-Icon-Container') {
-            border-radius: var(--Radius-Pill);
-            transform: scale(var(--Hover-Scale-Standard));
+        @include s.SynchronizeStates('.FancyButton-Icon') {
+            --icon-scale: var(--hover-scale-standard);
         }
     }
 }
@@ -64,8 +63,8 @@
     place-items: center;
     place-content: space-between;
     
-    gap: var(--Padding-Small);
-    padding: 0px var(--Padding-Small) 0px var(--Padding-Medium);
+    gap: var(--padding-small);
+    padding: 0px var(--padding-small) 0px var(--padding-medium);
 
     outline: none;
 
@@ -80,66 +79,46 @@
 
     background-color: transparent;
 
-    border-radius: var(--Radius-Standard);
+    border-radius: var(--radius-standard);
 
     text-align: left;
+
+    overflow: hidden;
 }
 
-.FancyButton-Icon-Container {
-    @include s.CreateTransition(border-radius, transform);
-    
-    display: flex;
-    flex-direction: row;
-    place-items: center;
-    place-content: center;
-    
-    position: relative;
-    
-    height: var(--IconContainer-Size);
-    width: auto;
-    aspect-ratio: 1 / 1;
-    
-    background-color: var(--Surface-BG-Hover);
+@keyframes Icon-FadeIn {
+    0% { opacity: 0; transform: scale(var(--icon-scale)); }
+    100% { opacity: 1; transform: scale(var(--icon-scale)); }
+}
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-color: var(--Surface-BG);
-        z-index: -1;
-        border-radius: inherit;
-    }
-    
-    border-radius: var(--Radius-Standard);
-    border: 1px solid var(--Border-Strong);
-    box-shadow: 0 0 10px var(--Shadow-Standard);
-    
-    overflow: hidden;
-    flex-shrink: 0;
-    
-    background-size: contain;
-
-
-    background-repeat: no-repeat;
-    background-position: center;
+@keyframes FancyButton-Icon-ExitRight {
+    0% { transform: translateX(0px) scale(var(--icon-scale)); }
+    100% { transform: translateX(50px) scale(var(--icon-scale)); }
 }
 
 .FancyButton-Icon {
     @include s.CreateTransition(width, height, transform);
-    @include s.MaskedIcon(var(--icon-url), currentColor);
+    @include s.MaskedIcon(none, currentColor);
+
+    pointer-events: none;
 
     will-change: transform;
 
     border: none;
+    flex-shrink: 0;
 
-    height: 50%;
-    width: 50%;
+    height: var(--icon-size-standard, 60%);
+    width: auto;
+    aspect-ratio: 1 / 1;
+
+    --icon-scale: 1;
+    transform: scale(var(--icon-scale));
 
     &.FancyButton-Icon--Entering {
-        animation: Icon-EnterLeft var(--Duration-Standard) var(--Easing-Standard) forwards;
+        animation: Icon-FadeIn var(--duration-standard) var(--easing-standard) forwards;
     }
     &.FancyButton-Icon--Exiting {
-        animation: Icon-ExitRight var(--Duration-Standard) var(--Easing-Standard) forwards;
+        animation: FancyButton-Icon-ExitRight var(--duration-standard) var(--easing-standard) forwards;
     }
     &.FancyButton-Icon--OffScreen {
         transform: translateX(50px);
@@ -152,6 +131,15 @@
     display: flex;
     place-content: center flex-start;
     place-items: center;
+
+    &.FancyButton-Label-Wrapper--Centered {
+        place-content: center;
+        
+        .FancyButton-Label {
+            text-align: center;
+            transform-origin: center;
+        }
+    }
 }
 
 .FancyButton-Label {
@@ -159,7 +147,7 @@
     
     transform-origin: left;
     
-    font-size: var(--FontSize-Standard);
+    font-size: var(--fontsize-standard);
 
     white-space: normal;
     line-height: 1.1;

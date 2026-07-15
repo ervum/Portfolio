@@ -96,7 +96,7 @@ export class App implements AfterViewInit {
   public CurrentLanguageItem: Signal<Undefinable<FancyDropdownItemType>> = computed(() => {
     const CurrentLanguage: string = this.InterfaceService.Language();
 
-    return this.LanguageItems().find(Item => Item.ID === CurrentLanguage);
+    return this.LanguageItems().find((Item: FancyDropdownItemType) => Item.ID === CurrentLanguage);
   });
 
   public ThemeIcon: Signal<string> = computed(() => {
@@ -116,7 +116,7 @@ export class App implements AfterViewInit {
 
   public NavigateBack(): void {
     const URL: string = this.Router.url;
-    const Segments: string[] = URL.split('/').filter(s => s !== '');
+    const Segments: string[] = URL.split('/').filter((s: string) => s !== '');
     
     if ((Segments.length) > 0) {
       Segments.pop();
@@ -128,10 +128,10 @@ export class App implements AfterViewInit {
 
   constructor() {
     this.Router.events.pipe(
-      filter((Event): Event is NavigationEnd | NavigationStart => 
+      filter((Event: any): Event is NavigationEnd | NavigationStart => 
         Event instanceof NavigationEnd || Event instanceof NavigationStart
       )
-    ).subscribe((Event) => {
+    ).subscribe((Event: NavigationEnd | NavigationStart) => {
       this.SelectedIndex.set(this.GetSelectedIndex(Event.url));
     });
   }

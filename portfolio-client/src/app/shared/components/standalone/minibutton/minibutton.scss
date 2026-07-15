@@ -6,8 +6,8 @@
     display: inline-flex;
     cursor: pointer;
 
-    width: var(--Minibutton-Width, 48px);
-    height: var(--Minibutton-Height, 48px);
+    width: var(--minibutton-width, 48px);
+    height: var(--minibutton-height, 48px);
     
     container-type: size;
 }
@@ -31,16 +31,16 @@
     place-content: center;
     place-items: center;
     
-    width: var(--Minibutton-Width, 48px);
-    height: var(--Minibutton-Height, 48px);
-    border-radius: var(--Radius-Standard);
+    width: var(--minibutton-width, 48px);
+    height: var(--minibutton-height, 48px);
+    border-radius: var(--radius-standard);
     
     overflow: hidden;
     
     &:hover {
-        transform: translateY(var(--Hover-MoveY)) scale(var(--Hover-Scale-Big));
+        transform: translateY(var(--hover-movey)) scale(var(--hover-scale-big));
 
-        border-radius: var(--Radius-Pill);
+        border-radius: var(--radius-pill);
     }
 }
 
@@ -52,20 +52,20 @@
     -webkit-mask-size: cover;
     -webkit-mask-position: center;
     -webkit-mask-repeat: no-repeat;
-    -webkit-mask-image: var(--icon);
+    -webkit-mask-image: none;
 
     mask-size: cover;
     mask-position: center;
     mask-repeat: no-repeat;
-    mask-image: var(--icon);
+    mask-image: none;
 
-    transition: background-color var(--Duration-Standard) var(--Easing-Standard);
+    transition: background-color var(--duration-standard) var(--easing-standard);
     
     &.Minibutton-Icon--Entering {
-        animation: Icon-EnterLeft var(--Duration-Standard) var(--Easing-Standard) forwards;
+        animation: Icon-EnterLeft var(--duration-standard) var(--easing-standard) forwards;
     }
     &.Minibutton-Icon--Exiting {
-        animation: Icon-ExitRight var(--Duration-Standard) var(--Easing-Standard) forwards;
+        animation: Icon-ExitRight var(--duration-standard) var(--easing-standard) forwards;
     }
     &.Minibutton-Icon--OffScreen {
         transform: translateX(50px);
@@ -76,5 +76,5 @@
     font-size: 14px;
     font-weight: 600;
 
-    transition: color var(--Duration-Standard) var(--Easing-Standard);
+    transition: color var(--duration-standard) var(--easing-standard);
 }

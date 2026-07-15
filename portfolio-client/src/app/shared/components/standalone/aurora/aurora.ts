@@ -1,10 +1,11 @@
-import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, OnInit, OnDestroy, Inject, PLATFORM_ID, inject, effect, input, TransferState, makeStateKey } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, AfterViewInit, OnInit, OnDestroy, Inject, PLATFORM_ID, inject, effect, input, TransferState, makeStateKey, type InputSignal, type StateKey } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 import { Nullable, Undefinable, RGBColor, AuroraSphere } from '@ervum/types';
 
 import { InterfaceService } from '../../../../core/services/interface/interface';
-import { MouseSmoothing } from '../../../constants';
+
+const MouseSmoothing: number = 0.12;
 
 
 
@@ -23,49 +24,49 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   // #region Inputs
 
   /** Number of gradient spheres to generate. */
-  public SphereCount = input(5);
+  public SphereCount: InputSignal<number> = input(5);
 
   /** Minimum sphere diameter (in vw units). */
-  public MinimumSize = input(14);
+  public MinimumSize: InputSignal<number> = input(14);
   /** Maximum sphere diameter (in vw units). */
-  public MaximumSize = input(22);
+  public MaximumSize: InputSignal<number> = input(22);
 
   /** Minimum vertical position (in percentage). */
-  public MinimumTop = input(0);
+  public MinimumTop: InputSignal<number> = input(0);
   /** Maximum vertical position (in percentage). */
-  public MaximumTop = input(100);
+  public MaximumTop: InputSignal<number> = input(100);
 
   /** Minimum horizontal position (in percentage). */
-  public MinimumLeft = input(0);
+  public MinimumLeft: InputSignal<number> = input(0);
   /** Maximum horizontal position (in percentage). */
-  public MaximumLeft = input(100);
+  public MaximumLeft: InputSignal<number> = input(100);
 
   /** Minimum parallax speed. */
-  public MinimumSpeed = input(-20);
+  public MinimumSpeed: InputSignal<number> = input(-20);
   /** Maximum parallax speed. */
-  public MaximumSpeed = input(20);
+  public MaximumSpeed: InputSignal<number> = input(20);
 
   /** Minimum rotation speed. */
-  public MinimumRotationSpeed = input(-0.8);
+  public MinimumRotationSpeed: InputSignal<number> = input(-0.8);
   /** Maximum rotation speed. */
-  public MaximumRotationSpeed = input(0.8);
+  public MaximumRotationSpeed: InputSignal<number> = input(0.8);
 
   /** Minimum scale speed. */
-  public MinimumScaleSpeed = input(0.1);
+  public MinimumScaleSpeed: InputSignal<number> = input(0.1);
   /** Maximum scale speed. */
-  public MaximumScaleSpeed = input(0.2);
+  public MaximumScaleSpeed: InputSignal<number> = input(0.2);
 
   /** Minimum sphere opacity. */
-  public MinimumOpacity = input(0.55);
+  public MinimumOpacity: InputSignal<number> = input(0.55);
   /** Maximum sphere opacity. */
-  public MaximumOpacity = input(0.85);
+  public MaximumOpacity: InputSignal<number> = input(0.85);
 
 
 
   /** Minimum animation delay (in seconds). */
-  public MinimumAnimationDelay = input(0);
+  public MinimumAnimationDelay: InputSignal<number> = input(0);
   /** Maximum animation delay (in seconds). */
-  public MaximumAnimationDelay = input(4);
+  public MaximumAnimationDelay: InputSignal<number> = input(4);
 
   // #endregion
 
@@ -95,7 +96,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private LastAngle: number = -999;
 
   private TransferState: TransferState = inject(TransferState);
-  private static readonly SpheresKey = makeStateKey<AuroraSphere[]>('Aurora-Spheres');
+  private static readonly SpheresKey: StateKey<AuroraSphere[]> = makeStateKey<AuroraSphere[]>('Aurora-Spheres');
 
   // #endregion
 
@@ -113,7 +114,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const SavedSpheres = this.TransferState.get(AuroraComponent.SpheresKey, null);
+    const SavedSpheres: Nullable<AuroraSphere[]> = this.TransferState.get(AuroraComponent.SpheresKey, null);
     if (SavedSpheres) {
       this.Spheres = SavedSpheres;
     } else {
@@ -142,7 +143,7 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
   private StartRenderLoop(): void {
     if (!this.IsBrowser) return;
 
-    const Loop = (): void => {
+    const Loop: () => void = (): void => {
       this.UpdateSmoothedValues();
       this.ApplyCSSVariables();
       this.AnimationFrameID = requestAnimationFrame(Loop);
@@ -195,10 +196,10 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const DistanceSquared: number = (this.SmoothedX * this.SmoothedX) + (this.SmoothedY * this.SmoothedY);
 
-    Container.style.setProperty('--Mouse-X', this.SmoothedX.toFixed(4));
-    Container.style.setProperty('--Mouse-Y', this.SmoothedY.toFixed(4));
-    Container.style.setProperty('--Mouse-Distance', Math.sqrt(DistanceSquared).toFixed(4));
-    Container.style.setProperty('--Mouse-Angle', this.SmoothedAngle.toFixed(4));
+    Container.style.setProperty('--mouse-x', this.SmoothedX.toFixed(4));
+    Container.style.setProperty('--mouse-y', this.SmoothedY.toFixed(4));
+    Container.style.setProperty('--mouse-distance', Math.sqrt(DistanceSquared).toFixed(4));
+    Container.style.setProperty('--mouse-angle', this.SmoothedAngle.toFixed(4));
   }
 
   // #endregion
@@ -233,10 +234,10 @@ export class AuroraComponent implements OnInit, AfterViewInit, OnDestroy {
     for (let i: number = 0; i < this.SphereCount(); i++) {
       this.Spheres.push({
         Styles: {
-          '--Sphere-Opacity':         `${this.RandomBetween(this.MinimumOpacity(), this.MaximumOpacity()).toFixed(3)}`,
-          '--Sphere-Speed':           `${this.RandomBetween(this.MinimumSpeed(), this.MaximumSpeed()).toFixed(2)}`,
-          '--Sphere-RotationSpeed':   `${this.RandomBetween(this.MinimumRotationSpeed(), this.MaximumRotationSpeed()).toFixed(3)}`,
-          '--Sphere-ScaleSpeed':      `${this.RandomBetween(this.MinimumScaleSpeed(), this.MaximumScaleSpeed()).toFixed(3)}`,
+          '--sphere-opacity':         `${this.RandomBetween(this.MinimumOpacity(), this.MaximumOpacity()).toFixed(3)}`,
+          '--sphere-speed':           `${this.RandomBetween(this.MinimumSpeed(), this.MaximumSpeed()).toFixed(2)}`,
+          '--sphere-rotationspeed':   `${this.RandomBetween(this.MinimumRotationSpeed(), this.MaximumRotationSpeed()).toFixed(3)}`,
+          '--sphere-scalespeed':      `${this.RandomBetween(this.MinimumScaleSpeed(), this.MaximumScaleSpeed()).toFixed(3)}`,
           
           'animation-delay':          `${this.RandomBetween(this.MinimumAnimationDelay(), this.MaximumAnimationDelay()).toFixed(2)}s`,
 

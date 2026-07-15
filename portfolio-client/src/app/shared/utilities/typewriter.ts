@@ -70,6 +70,6 @@ export class TypewriterAnimator {
   }
 
   private Delay(Ms: number): Promise<void> {
-    return new Promise<void>(Resolve => setTimeout(Resolve, Ms));
+    return new Promise<void>((Resolve: () => void) => setTimeout(Resolve, Ms));
   }
 }

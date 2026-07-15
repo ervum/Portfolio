@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed, signal, type Signal } from '@angular/core';
+import { Component, inject, OnInit, computed, signal, type Signal, type WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -48,7 +48,7 @@ export class RecoveryComponent implements OnInit {
     { ID: 'Password', Label: this.InterfaceService.T().Password, Action: () => {} },
   ]);
 
-  public SelectedOption = signal<Undefinable<FancyDropdownItemType>>(undefined);
+  public SelectedOption: WritableSignal<Undefinable<FancyDropdownItemType>> = signal<Undefinable<FancyDropdownItemType>>(undefined);
 
   public SelectedRecoveryType: Signal<string> = computed(() => {
     const Selected: Undefinable<FancyDropdownItemType> = this.SelectedOption();
@@ -75,15 +75,15 @@ export class RecoveryComponent implements OnInit {
     this.SelectedOption.set(Item);
   }
 
-  public FirstTextboxOnlyAllow = computed(() => {
+  public FirstTextboxOnlyAllow: Signal<Undefinable<string>> = computed(() => {
     return this.SelectedRecoveryType() === 'Username' ? '0123456789+-()' : undefined;
   });
 
-  public SecondTextboxOnlyAllow = computed(() => {
+  public SecondTextboxOnlyAllow: Signal<Undefinable<string>> = computed(() => {
     return this.SelectedRecoveryType() === 'Email' ? '0123456789+-()' : undefined;
   });
 
-  public FirstTextboxIcon = computed(() => {
+  public FirstTextboxIcon: Signal<Undefinable<string>> = computed(() => {
     const Type: string = this.SelectedRecoveryType();
   
     if (Type === 'Username') return 'phone';
@@ -92,7 +92,7 @@ export class RecoveryComponent implements OnInit {
     return undefined;
   });
 
-  public SecondTextboxIcon = computed(() => {
+  public SecondTextboxIcon: Signal<Undefinable<string>> = computed(() => {
     const Type: string = this.SelectedRecoveryType();
   
     if (Type === 'Username' || Type === 'PhoneNumber') return 'envelope';
@@ -101,7 +101,7 @@ export class RecoveryComponent implements OnInit {
     return undefined;
   });
 
-  public FirstTextboxPlaceholder = computed(() => {
+  public FirstTextboxPlaceholder: Signal<string> = computed(() => {
     const Type: string = this.SelectedRecoveryType();
     const T: TranslationDictionary = this.InterfaceService.T();
 
@@ -111,7 +111,7 @@ export class RecoveryComponent implements OnInit {
     return '';
   });
 
-  public SecondTextboxPlaceholder = computed(() => {
+  public SecondTextboxPlaceholder: Signal<string> = computed(() => {
     const Type: string = this.SelectedRecoveryType();
     const T: TranslationDictionary = this.InterfaceService.T();
   
