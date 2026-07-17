@@ -19,14 +19,24 @@
     [SelectedItem] = "CurrentLanguageItem()">
 </FancyDropdown>
 
-<FancyMinibutton
-    class = "Theme-Toggle-Minibutton"
-    [Icon] = "ThemeIcon()"
-    [Animated] = "false"
-    [Disabled] = "InterfaceService.DarkModeExtensionActive()"
-    
-    (click) = "ToggleTheme($event)">
-</FancyMinibutton>
+<div class = "Theme-Toggle-Wrapper">
+    <FancyMinibutton
+        class = "Theme-Toggle-Minibutton"
+        [Icon] = "ThemeIcon()"
+        [Animated] = "false"
+        [Disabled] = "InterfaceService.DarkModeExtensionActive()"
+        
+        (click) = "ToggleTheme($event)">
+    </FancyMinibutton>
+
+    <FancyTooltip
+        class = "Theme-Toggle-Tooltip"
+        [Message] = "InterfaceService.T().ExtensionWarningTooltip"
+        [Active] = "InterfaceService.DarkModeExtensionActive()"
+        [Fixed] = "false"
+        [ArrowLeft] = "true">
+    </FancyTooltip>
+</div>
 
 <FancyMultibutton
     class = "RouteSelector-Multibutton"
@@ -38,14 +48,5 @@
 
     DisplayMode = "Icon">
 </FancyMultibutton>
-
-<div
-    class = "Extension-Warning-Tooltip-Wrapper"
-    [class.Extension-Warning-Tooltip-Wrapper--Active] = "InterfaceService.DarkModeExtensionActive()">
-
-    <FancyContainer class = "Extension-Warning-Tooltip">
-        <span [FancyTypewriter] = "InterfaceService.T().ExtensionWarningTooltip"></span>
-    </FancyContainer>
-</div>
 
 <router-outlet />

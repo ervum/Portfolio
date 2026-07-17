@@ -5,7 +5,8 @@ import { TranslationDictionary } from './default';
 export const SpanishDictionary: TranslationDictionary = {
   LanguageCode: 'es',
 
-  Portfolio: 'Portfolio',
+  PageName: 'Portfolio',
+  
   SignIn: 'Iniciar sesión',
   SignUp: 'Registrarse',
   RememberMe: 'Recuérdame',
@@ -28,4 +29,10 @@ export const SpanishDictionary: TranslationDictionary = {
   OR: 'O',
 
   ExtensionWarningTooltip: 'Una extensión de terceros está modificando esta página. Algunos aspectos de la interfaz podrían verse visualmente diferentes al diseño original.',
+
+  Error_00_000: 'Ocurrió un error inesperado. Por favor, inténtelo de nuevo.',
+  Error_01_000: 'El [1] no puede estar vacío.',
+  Error_01_001: 'El correo electrónico introducido es inválido.',
+  Error_01_002: 'La contraseña debe tener al menos 6 caracteres.',
+  Error_01_003: 'Credenciales inválidas. Por favor, compruebe su usuario y contraseña.',
 };

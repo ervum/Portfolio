@@ -40,14 +40,22 @@
     height: 220px;
 }
 
-.Theme-Toggle-Minibutton {
+.Theme-Toggle-Wrapper {
     position: fixed;
     bottom: 10px;
     left: 10px;
     z-index: 100;
+    display: flex;
+    align-items: center;
+}
 
+.Theme-Toggle-Minibutton {
     --minibutton-width: 50px;
     --minibutton-height: 50px;
+}
+
+.Theme-Toggle-Tooltip {
+    margin-left: 10px;
 }
 
 .Back-Minibutton {
@@ -73,46 +81,4 @@
             transform: translateY(5px) scale(var(--hover-scale-big));
         }
     }
-}
-
-.Extension-Warning-Tooltip-Wrapper {
-    position: fixed;
-    top: 10px;
-    left: 0;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 1000;
-
-    opacity: 0;
-    transform: translateY(-80px);
-    transition: transform 0.6s var(--easing-standard), opacity 0.6s var(--easing-standard);
-
-    &.Extension-Warning-Tooltip-Wrapper--Active {
-        opacity: 1;
-        transform: translateY(0);
-
-        .Extension-Warning-Tooltip {
-            pointer-events: auto;
-        }
-    }
-}
-
-.Extension-Warning-Tooltip {
-    width: var(--section-width);
-    max-width: calc(100vw - 40px);
-    box-sizing: border-box;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--padding-medium, 8px) 20px;
-    border-radius: var(--radius-standard);
-    text-align: center;
-    font-size: var(--fontsize-small, 12px);
-    font-weight: 500;
-    line-height: 1.4;
-    color: var(--text-main);
-    pointer-events: none;
 }

@@ -14,6 +14,7 @@
         "panel": "dedicated"
       }
     },
+
     {
       "label": "Server: start:dev",
       "type": "shell",
@@ -27,6 +28,7 @@
         "panel": "dedicated"
       }
     },
+
     {
       "label": "Client: start",
       "type": "shell",
@@ -40,6 +42,7 @@
         "panel": "dedicated"
       }
     },
+    
     {
       "label": "Dev: All",
       "dependsOn": [

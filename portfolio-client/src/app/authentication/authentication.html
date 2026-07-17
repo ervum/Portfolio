@@ -9,7 +9,7 @@
             <div class = "Content-Section">
                 <span
                     class = "Section-Title"
-                    [FancyTypewriter] = "InterfaceService.T().Portfolio">
+                    [FancyTypewriter] = "InterfaceService.T().PageName">
                 </span>
 
                 <FancyMultibutton
@@ -26,37 +26,81 @@
 
                     [ngClass] = "GetFormFieldsClasses">
                     <div class = "Extra-Fields-Container">
-                        <FancyTextbox
-                            #EmailTextbox
-                            class = "Input-Field"
-                            [Placeholder] = "InterfaceService.T().Email"
-                            Icon = "envelope">
-                        </FancyTextbox>
+                        <div class = "Input-Field-Wrapper">
+                            <FancyTextbox
+                                #EmailTextbox
+                                ID = "email"
+                                Name = "email"
+                                class = "Input-Field"
+                                [Placeholder] = "InterfaceService.T().Email"
+                                Icon = "envelope">
+                            </FancyTextbox>
+                            <FancyTooltip
+                                class = "Input-Field-Tooltip"
+                                [Message] = "ErrorMessageMap['Email']()"
+                                [Active] = "ErrorActiveSignalMap['Email']()"
+                                [Fixed] = "false"
+                                [ArrowLeft] = "true">
+                            </FancyTooltip>
+                        </div>
 
-                        <FancyTextbox
-                            #PhoneNumberTextbox
-                            class = "Input-Field"
-                            [Placeholder] = "InterfaceService.T().PhoneNumber"
-                            Icon = "phone"
-                            [OnlyAllow] = "'0123456789+-()'">
-                        </FancyTextbox>
+                        <div class = "Input-Field-Wrapper">
+                            <FancyTextbox
+                                #PhoneNumberTextbox
+                                ID = "phone"
+                                Name = "phone"
+                                class = "Input-Field"
+                                [Placeholder] = "InterfaceService.T().PhoneNumber"
+                                Icon = "phone"
+                                [OnlyAllow] = "'0123456789+-()'">
+                            </FancyTextbox>
+                            <FancyTooltip
+                                class = "Input-Field-Tooltip"
+                                [Message] = "ErrorMessageMap['PhoneNumber']()"
+                                [Active] = "ErrorActiveSignalMap['PhoneNumber']()"
+                                [Fixed] = "false"
+                                [ArrowLeft] = "true">
+                            </FancyTooltip>
+                        </div>
                     </div>
 
                     <div class = "Main-Fields-Container">
-                        <FancyTextbox
-                            #MainIdentifierTextbox
-                            class = "Input-Field"
-                            [Placeholder] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
-                            [Icon] = "CurrentFormType() === 'Sign In' ? 'user' : 'at'">
-                        </FancyTextbox>
+                        <div class = "Input-Field-Wrapper">
+                            <FancyTextbox
+                                #MainIdentifierTextbox
+                                ID = "username"
+                                Name = "username"
+                                class = "Input-Field"
+                                [Placeholder] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
+                                [Icon] = "CurrentFormType() === 'Sign In' ? 'user' : 'at'">
+                            </FancyTextbox>
+                            <FancyTooltip
+                                class = "Input-Field-Tooltip"
+                                [Message] = "ErrorMessageMap['UserIdentifier']()"
+                                [Active] = "ErrorActiveSignalMap['UserIdentifier']()"
+                                [Fixed] = "false"
+                                [ArrowLeft] = "true">
+                            </FancyTooltip>
+                        </div>
 
-                        <FancyTextbox
-                            #PasswordTextbox
-                            class = "Input-Field"
-                            [Placeholder] = "InterfaceService.T().Password"
-                            [IsSensitive] = "true"
-                            Icon = "lock">
-                        </FancyTextbox>
+                        <div class = "Input-Field-Wrapper">
+                            <FancyTextbox
+                                #PasswordTextbox
+                                ID = "password"
+                                Name = "password"
+                                class = "Input-Field"
+                                [Placeholder] = "InterfaceService.T().Password"
+                                [IsSensitive] = "true"
+                                Icon = "lock">
+                            </FancyTextbox>
+                            <FancyTooltip
+                                class = "Input-Field-Tooltip"
+                                [Message] = "ErrorMessageMap['Password']()"
+                                [Active] = "ErrorActiveSignalMap['Password']()"
+                                [Fixed] = "false"
+                                [ArrowLeft] = "true">
+                            </FancyTooltip>
+                        </div>
                     </div>
                 </div>
 

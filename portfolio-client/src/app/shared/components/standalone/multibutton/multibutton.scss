@@ -48,7 +48,7 @@
         inset: -1px; // Match border width offset
         z-index: -1;
         
-        background-color: var(--surface-bg);
+        background-color: var(--surface-background);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius-standard);
         
@@ -63,22 +63,43 @@
             border-radius: var(--radius-standard);
         }
 
-        &.Hovering--First {
-            border-top-left-radius: var(--radius-pill);
-            border-bottom-left-radius: var(--radius-pill);
-            
-            &::before {
+        &:not(.FancyMultibutton--Vertical) {
+            &.Hovering--First {
                 border-top-left-radius: var(--radius-pill);
                 border-bottom-left-radius: var(--radius-pill);
+                border-top-right-radius: var(--radius-sharp);
+                border-bottom-right-radius: var(--radius-sharp);
+                
+                &::before {
+                    border-top-left-radius: var(--radius-pill);
+                    border-bottom-left-radius: var(--radius-pill);
+                    border-top-right-radius: var(--radius-sharp);
+                    border-bottom-right-radius: var(--radius-sharp);
+                }
             }
-        }
-        &.Hovering--Last {
-            border-top-right-radius: var(--radius-pill);
-            border-bottom-right-radius: var(--radius-pill);
-            
-            &::before {
+            &.Hovering--Last {
                 border-top-right-radius: var(--radius-pill);
                 border-bottom-right-radius: var(--radius-pill);
+                border-top-left-radius: var(--radius-sharp);
+                border-bottom-left-radius: var(--radius-sharp);
+                
+                &::before {
+                    border-top-right-radius: var(--radius-pill);
+                    border-bottom-right-radius: var(--radius-pill);
+                    border-top-left-radius: var(--radius-sharp);
+                    border-bottom-left-radius: var(--radius-sharp);
+                }
+            }
+
+            .FancyMultibutton-Highlight {
+                &.Hovering--Before {
+                    border-top-right-radius: var(--radius-sharp);
+                    border-bottom-right-radius: var(--radius-sharp);
+                }
+                &.Hovering--After {
+                    border-top-left-radius: var(--radius-sharp);
+                    border-bottom-left-radius: var(--radius-sharp);
+                }
             }
         }
 
@@ -105,14 +126,25 @@
 
         &:hover {
             &.Hovering--First {
-                border-radius: var(--radius-pill) var(--radius-pill) var(--radius-standard) var(--radius-standard);
+                border-radius: var(--radius-pill) var(--radius-pill) var(--radius-sharp) var(--radius-sharp);
 
                 &::before { border-radius: inherit; }
             }
             &.Hovering--Last {
-                border-radius: var(--radius-standard) var(--radius-standard) var(--radius-pill) var(--radius-pill);
+                border-radius: var(--radius-sharp) var(--radius-sharp) var(--radius-pill) var(--radius-pill);
 
                 &::before { border-radius: inherit; }
+            }
+
+            .FancyMultibutton-Highlight {
+                &.Hovering--Before {
+                    border-bottom-left-radius: var(--radius-sharp);
+                    border-bottom-right-radius: var(--radius-sharp);
+                }
+                &.Hovering--After {
+                    border-top-left-radius: var(--radius-sharp);
+                    border-top-right-radius: var(--radius-sharp);
+                }
             }
         }
 
@@ -167,7 +199,7 @@
 
     top: 0;
 
-    background-color: var(--surface-bg-hover);
+    background-color: var(--surface-background-hover);
     border: 1px solid var(--border-strong);
     box-shadow: 0 0 8px var(--glow-standard);
     
@@ -214,24 +246,34 @@
     background-color: transparent;
 
     &.Hovering--Self {
-        &.Hovering--First {
-            border-top-left-radius: var(--radius-pill);
-            border-bottom-left-radius: var(--radius-pill);
-
-            :host-context(.FancyMultibutton--Vertical) &,
-            :host(.FancyMultibutton--Vertical) & {
+        &:not(:host(.FancyMultibutton--Vertical) &):not(:host-context(.FancyMultibutton--Vertical) &) {
+            &.Hovering--First {
+                border-top-left-radius: var(--radius-pill);
+                border-bottom-left-radius: var(--radius-pill);
+                border-top-right-radius: var(--radius-sharp);
+                border-bottom-right-radius: var(--radius-sharp);
+            }
+            &.Hovering--Last {
                 border-top-right-radius: var(--radius-pill);
-                border-bottom-left-radius: var(--radius-standard);
+                border-bottom-right-radius: var(--radius-pill);
+                border-top-left-radius: var(--radius-sharp);
+                border-bottom-left-radius: var(--radius-sharp);
             }
         }
-        &.Hovering--Last {
-            border-top-right-radius: var(--radius-pill);
-            border-bottom-right-radius: var(--radius-pill);
 
-            :host-context(.FancyMultibutton--Vertical) &,
-            :host(.FancyMultibutton--Vertical) & {
-                border-top-right-radius: var(--radius-standard);
+        :host-context(.FancyMultibutton--Vertical) &,
+        :host(.FancyMultibutton--Vertical) & {
+            &.Hovering--First {
+                border-top-left-radius: var(--radius-pill);
+                border-top-right-radius: var(--radius-pill);
+                border-bottom-left-radius: var(--radius-sharp);
+                border-bottom-right-radius: var(--radius-sharp);
+            }
+            &.Hovering--Last {
+                border-top-left-radius: var(--radius-sharp);
+                border-top-right-radius: var(--radius-sharp);
                 border-bottom-left-radius: var(--radius-pill);
+                border-bottom-right-radius: var(--radius-pill);
             }
         }
 
@@ -246,10 +288,10 @@
         
         inset: 50%;
         
-        background-color: var(--surface-bg-hover);
-        box-shadow: 0 0 8px var(--glow-standard); // Synced to 8px to prevent visual bleeding
+        background-color: var(--surface-background-hover);
+        box-shadow: 0 0 8px var(--glow-standard); // Synchronized to 8px to prevent visual bleeding
 
-        backdrop-filter: blur(var(--container-blur)); // Synced with 
+        backdrop-filter: blur(var(--container-blur)); // Synchronized with 
         -webkit-backdrop-filter: blur(var(--container-blur));
         
         border-radius: inherit;

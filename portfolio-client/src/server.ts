@@ -5,7 +5,10 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express, { Express, Request, Response, NextFunction } from 'express';
+
 import { join } from 'node:path';
+
+import { Nullable } from '@ervum/types';
 
 
 
@@ -45,7 +48,7 @@ app.use(
 app.use((req: Request, res: Response, next: NextFunction): void => {
   angularApp
     .handle(req)
-    .then((response: globalThis.Response | null) =>
+    .then((response: Nullable<globalThis.Response>) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
     )
     .catch(next);
@@ -59,6 +62,7 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port: string | number = process.env['PORT'] || 4000;
+
   app.listen(port, (error: any) => {
     if (error) {
       throw error;
@@ -67,6 +71,8 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
+
+
 
 /**
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.

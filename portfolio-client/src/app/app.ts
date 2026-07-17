@@ -14,6 +14,7 @@ import { DropdownComponent } from './shared/components/standalone/dropdown/dropd
 import { MinibuttonComponent } from './shared/components/standalone/minibutton/minibutton';
 import { MultibuttonComponent } from './shared/components/standalone/multibutton/multibutton';
 import { ContainerComponent } from './shared/components/standalone/container/container';
+import { TooltipComponent } from './shared/components/standalone/tooltip/tooltip';
 import { TypewriterDirective } from './shared/directives/typewriter/typewriter.directive';
 
 import { InterfaceService } from './core/services/interface/interface';
@@ -46,8 +47,7 @@ const RouteSelectorIndices: Record<string, number> = {
     DropdownComponent,
     MinibuttonComponent,
     MultibuttonComponent,
-    ContainerComponent,
-    TypewriterDirective
+    TooltipComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

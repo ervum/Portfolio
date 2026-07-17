@@ -116,9 +116,9 @@ $Button-Width: 100%;
 
     /* [Default / Primary] - Lumina (Dark Mode with White Accents) */
     &, &.Theme--Primary {
-        --base-bg: #050505;
-        --surface-bg: rgba(17, 17, 17, 0.45);
-        --surface-bg-hover: rgba(26, 26, 26, 0.55);
+        --base-background: #050505;
+        --surface-background: rgba(17, 17, 17, 0.45);
+        --surface-background-hover: rgba(26, 26, 26, 0.55);
         --container-blur: 40px;
         
         --accent-main: #ffffff;
@@ -146,9 +146,9 @@ $Button-Width: 100%;
 
     /* [Secondary] - Obsidian (Light Mode with Black Accents) */
     &.Theme--Secondary {
-        --base-bg: #fcfcfd;
-        --surface-bg: rgba(0, 0, 0, 0.04);
-        --surface-bg-hover: rgba(0, 0, 0, 0.08);
+        --base-background: #fcfcfd;
+        --surface-background: rgba(0, 0, 0, 0.04);
+        --surface-background-hover: rgba(0, 0, 0, 0.08);
         
         --accent-main: #111111;
         --accent-muted: rgba(0, 0, 0, 0.4);

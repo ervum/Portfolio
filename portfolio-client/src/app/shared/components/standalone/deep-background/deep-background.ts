@@ -52,10 +52,10 @@ export class DeepBackgroundComponent {
   public BackgroundStyles: Signal<Record<string, string>> = computed(() => {
     const Palette: BackgroundPalette = this.ActivePalette();
     return {
-      '--bg-color-1': Palette.Colors[0],
-      '--bg-color-2': Palette.Colors[1],
-      '--bg-color-3': Palette.Colors[2],
-      '--bg-color-4': Palette.Colors[3]
+      '--background-colour-1': Palette.Colors[0],
+      '--background-colour-2': Palette.Colors[1],
+      '--background-colour-3': Palette.Colors[2],
+      '--background-colour-4': Palette.Colors[3]
     };
   });
 

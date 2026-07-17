@@ -35,6 +35,9 @@
     {
       "path": "../packages/types" 
     },
+    {
+      "path": "../packages/constants"
+    },
 
     {
       "path": "./tsconfig.app.json"

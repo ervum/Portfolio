@@ -1,4 +1,5 @@
 ///          Shared Types          \\\
+/////          General           \\\\\
 export type AnyFunction = ((...Arguments: any[]) => (any));
 export type Void = (null | undefined);
 
@@ -7,6 +8,21 @@ export type Undefinable<T> = (T | undefined);
 export type Voidable<T> = (T | Void);
 
 export type StringBooleanType = ('True' | 'False');
+
+/////         Error Codes        \\\\\
+export interface ErrorInformationDescriptor {
+  Code: string;
+  IsGeneral: boolean;
+}
+
+export const ErrorRegistry: Record<string, ErrorInformationDescriptor> = {
+  '00_000': { Code: '00_000', IsGeneral: true },
+  '01_000': { Code: '01_000', IsGeneral: true },
+
+  '01_001': { Code: '01_001', IsGeneral: false },
+  '01_002': { Code: '01_002', IsGeneral: false },
+  '01_003': { Code: '01_003', IsGeneral: false },
+};
 
 
 
@@ -35,6 +51,11 @@ export type SecretsType = {
 
 export type ServerConfigurationType = (ConfigurationType & SecretsType);
 
+export type AuthenticationFormFieldType = ('Email' | 'PhoneNumber' | 'UserIdentifier' | 'Password');
+export type AuthenticationTabType = ('Sign In' | 'Sign Up');
+
+
+
 export interface LoginData {
   UserIdentifier: string;
   Password: string;
@@ -43,14 +64,22 @@ export interface LoginData {
 export interface RegisterData {
   Email: string;
   PhoneNumber: string;
+
   Username: string;
   Password: string;
+};
+
+export interface FieldErrorDescriptor {
+  Key: string;
+  FieldKey?: string;
+  RawMessage?: string;
+  IsGeneral?: boolean;
 };
 
 
 
 ///          Client Types          \\\
-/////      User  Interfaces      \\\\\
+/////       User Interfaces      \\\\\
 export type FancyUIElementTypeType = ('Primary' | 'Secondary');
 export type FancyUIElementStyleType = ('Standard' | 'Backgroundless');
 

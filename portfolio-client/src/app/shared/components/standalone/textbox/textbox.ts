@@ -220,7 +220,8 @@ export class TextboxComponent implements OnInit, OnChanges {
 
   // #endregion
 
-  // #region Inputs
+  public ID: InputSignal<Undefinable<string>> = input<Undefinable<string>>(undefined);
+  public Name: InputSignal<Undefinable<string>> = input<Undefinable<string>>(undefined);
 
   public MaximumLength: InputSignal<Undefinable<number>> = input<Undefinable<number>>(undefined);
 

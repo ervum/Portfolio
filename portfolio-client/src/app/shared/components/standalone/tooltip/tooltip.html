@@ -1,0 +1,24 @@
+<div
+    class = "FancyTooltip-Wrapper"
+    [class.FancyTooltip-Wrapper--Active] = "Active()"
+    [class.FancyTooltip-Wrapper--Fixed] = "Fixed()">
+
+    <FancyContainer class = "FancyTooltip-Content">
+        @if (ArrowTop()) {
+            <div class="FancyTooltip-Arrow FancyTooltip-Arrow--Top"></div>
+        }
+        @if (ArrowBottom()) {
+            <div class="FancyTooltip-Arrow FancyTooltip-Arrow--Bottom"></div>
+        }
+        @if (ArrowLeft()) {
+            <div class="FancyTooltip-Arrow FancyTooltip-Arrow--Left"></div>
+        }
+        @if (ArrowRight()) {
+            <div class="FancyTooltip-Arrow FancyTooltip-Arrow--Right"></div>
+        }
+
+        @if (DisplayedMessage()) {
+            <span [FancyTypewriter] = "DisplayedMessage()"></span>
+        }
+    </FancyContainer>
+</div>

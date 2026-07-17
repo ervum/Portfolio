@@ -2,6 +2,8 @@ import { inject } from '@angular/core';
 import { CanDeactivateFn } from '@angular/router';
 import { InterfaceService } from '../services/interface/interface';
 
+
+
 /**
  * Global guard that ensures exit animations play before a route change.
  * - For manual navigations (NavigateWithAnimation): allows immediately (animation already handled).
@@ -21,6 +23,7 @@ export const AnimationGuard: CanDeactivateFn<unknown> = () => {
   return new Promise<boolean>((Resolve: (Value: boolean) => void) => {
     setTimeout(() => {
       Service.RouteTransitionRequest.set(null);
+
       Resolve(true);
     }, 800);
   });

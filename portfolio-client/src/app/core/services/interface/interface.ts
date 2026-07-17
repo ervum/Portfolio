@@ -1,5 +1,6 @@
 import { REQUEST, Injectable, signal, WritableSignal, computed, PLATFORM_ID, effect, inject, TransferState, makeStateKey, type Signal, StateKey } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 
 import { Nullable, FancyUIElementTypeType, FancyUIElementLoadStatusType } from '@ervum/types';
 
@@ -11,15 +12,16 @@ import { Translations, type TranslationDictionary } from '../../internationaliza
   providedIn: 'root'
 })
 export class InterfaceService {
+  private readonly TransferState: TransferState = inject(TransferState);
   private readonly PlatformID: object = inject(PLATFORM_ID);
   private readonly Request: any = inject(REQUEST, { optional: true });
   private readonly IsBrowser: boolean = isPlatformBrowser(this.PlatformID);
-  private readonly TransferState: TransferState = inject(TransferState);
+  private readonly TitleService: Title = inject(Title);
 
   private readonly LanguageKey: StateKey<string> = makeStateKey<string>('Interface-Language');
   private readonly ThemeKey: StateKey<string> = makeStateKey<string>('Interface-Theme');
 
-  public readonly BlockDarkModeExtensions: boolean = false;
+  public readonly BlockDarkModeExtensions: boolean = true;
 
   /** Active translation dictionary */
   public readonly T: Signal<TranslationDictionary> = computed(() => (Translations[this.Language()] || Translations['English']));
@@ -90,10 +92,10 @@ export class InterfaceService {
       try {
         if (this.Request.headers && typeof this.Request.headers.get === 'function') {
           CookieString = this.Request.headers.get('cookie') || '';
-        } else if (this.Request.headers && (this.Request.headers as any)['cookie']) {
-          CookieString = (this.Request.headers as any)['cookie'];
-        } else if (typeof (this.Request as any).get === 'function') {
-          CookieString = (this.Request as any).get('cookie') || '';
+        } else if (this.Request.headers && this.Request.headers['cookie']) {
+          CookieString = this.Request.headers['cookie'];
+        } else if (typeof this.Request.get === 'function') {
+          CookieString = this.Request.get('cookie') || '';
         }
       } catch (Error: any) {
         console.error('Error reading cookie header on server:', Error);
@@ -102,14 +104,14 @@ export class InterfaceService {
 
     if (!CookieString) return null;
 
-    const NameLenPlus: number = (Name.length + 1);
+    const NameLengthPlus: number = (Name.length + 1);
     const Parts: string[] = CookieString.split(';');
     
     for (let Part of Parts) {
       Part = Part.trim();
 
-      if (Part.substring(0, NameLenPlus) === `${Name}=`) {
-        return decodeURIComponent(Part.substring(NameLenPlus));
+      if (Part.substring(0, NameLengthPlus) === `${Name}=`) {
+        return decodeURIComponent(Part.substring(NameLengthPlus));
       }
     }
 
@@ -148,8 +150,8 @@ export class InterfaceService {
     let HasColorDrift: boolean = false;
     
     if (this.InterfaceType() === 'Secondary') {
-      const BGColor: string = RootStyle.backgroundColor || '';
-      const Match: (RegExpMatchArray | null) = BGColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      const BackgroundColour: string = RootStyle.backgroundColor || '';
+      const Match: Nullable<RegExpMatchArray> = BackgroundColour.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
 
       if (Match) {
         const R: number = parseInt(Match[1], 10);
@@ -185,7 +187,7 @@ export class InterfaceService {
       Math.max(Y, ((window.innerHeight) - Y))
     );
 
-    const Transition: any = (document as any).startViewTransition(() => {
+    const Transition: any = document.startViewTransition(() => {
       this.ToggleInterfaceType();
     });
 
@@ -295,7 +297,7 @@ export class InterfaceService {
       if (this.BlockDarkModeExtensions) {
         document.documentElement.classList.add('Block-DarkMode-Extensions');
 
-        let MetaLock: (HTMLMetaElement | null) = document.querySelector('meta[name="darkreader-lock"]');
+        let MetaLock: Nullable<HTMLMetaElement> = document.querySelector('meta[name="darkreader-lock"]');
 
         if (!MetaLock) {
           MetaLock = document.createElement('meta');
@@ -306,7 +308,7 @@ export class InterfaceService {
       } else {
         document.documentElement.classList.remove('Block-DarkMode-Extensions');
 
-        const MetaLock: (HTMLMetaElement | null) = document.querySelector('meta[name="darkreader-lock"]');
+        const MetaLock: Nullable<HTMLMetaElement> = document.querySelector('meta[name="darkreader-lock"]');
 
         if (MetaLock && MetaLock.parentNode) {
           MetaLock.parentNode.removeChild(MetaLock);
@@ -341,6 +343,12 @@ export class InterfaceService {
         document.documentElement.classList.add(`Theme--${Type}`);
 
         this.CheckForDarkModeExtension();
+      });
+
+      effect(() => {
+        const PageTitle: string = this.T().PageName;
+
+        this.TitleService.setTitle(PageTitle);
       });
     }
   }

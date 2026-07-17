@@ -25,7 +25,7 @@
       "@ervum/types": ["../packages/types/dist"],
       "@ervum/*": ["../packages/*/dist"]
     },
-    "types": ["node"],
+    "types": ["node", "jest"],
     "resolveJsonModule": true
   },
   "references": [

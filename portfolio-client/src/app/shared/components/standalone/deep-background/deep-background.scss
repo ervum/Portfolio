@@ -12,7 +12,7 @@
     
     z-index: 0; // Base background layer
     
-    background-color: var(--bg-color-1, var(--base-bg));
+    background-color: var(--background-colour-1, var(--base-background));
     overflow: hidden;
     
     will-change: transform;

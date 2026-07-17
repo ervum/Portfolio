@@ -116,7 +116,7 @@
     overflow: hidden;
     flex-shrink: 0;
     
-    background-color: var(--surface-bg-hover);
+    background-color: var(--surface-background-hover);
 
     background-size: contain;
     background-repeat: no-repeat;
@@ -189,7 +189,7 @@
     border-radius: var(--radius-pill);
 
     &:hover {
-        background-color: var(--surface-bg-hover);
+        background-color: var(--surface-background-hover);
 
         transform: scale(var(--hover-scale-big));
 

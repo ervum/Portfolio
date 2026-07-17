@@ -87,13 +87,13 @@
     
     border-radius: var(--radius-standard);
 
-    background-color: var(--surface-bg-hover);
+    background-color: var(--surface-background-hover);
     
     &::before {
         content: '';
         position: absolute;
         inset: 0;
-        background-color: var(--surface-bg);
+        background-color: var(--surface-background);
         z-index: -1;
         border-radius: inherit;
     }
@@ -202,7 +202,7 @@
     transition: all var(--duration-standard) var(--easing-standard);
 
     border: 1px solid var(--border-strong);
-    background-color: var(--surface-bg);
+    background-color: var(--surface-background);
     box-sizing: border-box;
 
     &.FancyTextbox--First {

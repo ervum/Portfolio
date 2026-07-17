@@ -144,7 +144,7 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   public Icon: InputSignal<Nullable<string>> = input<Nullable<string>>('arrow');
 
-  public HasIcon: InputSignal<boolean> = input<boolean>(false);
+  public HasIcon: InputSignal<boolean> = input<boolean>(true);
 
   /** The global interface type signal. */
   private GlobalType: WritableSignal<FancyUIElementTypeType> = this.InterfaceService.InterfaceType;

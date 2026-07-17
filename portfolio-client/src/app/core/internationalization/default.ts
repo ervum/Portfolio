@@ -1,29 +1,45 @@
 export type TranslationDictionary = {
   LanguageCode: string;
-  Portfolio: string;
+
+  PageName: string;
+
   SignIn: string;
   SignUp: string;
   RememberMe: string;
+
   Email: string;
   PhoneNumber: string;
   Username: string;
   UserIdentifier: string;
   Password: string;
+
   LanguageName_English: string;
   LanguageName_Spanish: string;
+
   AccountRecovery: string;
   Recover: string;
   Continue: string;
   RecoveryIntro: string;
+
   Home: string;
   OR: string;
+
   ExtensionWarningTooltip: string;
+
+  Error_00_000: string;
+  Error_01_000: string;
+  Error_01_001: string;
+  Error_01_002: string;
+  Error_01_003: string;
 };
+
+
 
 export const DefaultDictionary: TranslationDictionary = {
   LanguageCode: 'en',
   
-  Portfolio: 'Portfolio',
+  PageName: 'Portfolio',
+  
   SignIn: 'Sign In',
   SignUp: 'Sign Up',
   RememberMe: 'Remember me',
@@ -34,16 +50,22 @@ export const DefaultDictionary: TranslationDictionary = {
   UserIdentifier: 'User Identifier',
   Password: 'Password',
 
-   LanguageName_English: 'English',
-   LanguageName_Spanish: 'Spanish',
- 
-   AccountRecovery: 'Account recovery',
-   Recover: 'recover',
-   Continue: 'Continue',
-   RecoveryIntro: "I'd like to recover my",
-   
-   Home: 'HOME',
-   OR: 'OR',
+  LanguageName_English: 'English',
+  LanguageName_Spanish: 'Spanish',
 
-   ExtensionWarningTooltip: 'A third-party extension is modifying this page. Some parts of the interface may appear visually different from the original design.',
- };
+  AccountRecovery: 'Account recovery',
+  Recover: 'recover',
+  Continue: 'Continue',
+  RecoveryIntro: "I'd like to recover my",
+  
+  Home: 'HOME',
+  OR: 'OR',
+
+  ExtensionWarningTooltip: 'A third-party extension is modifying this page. Some parts of the interface may appear visually different from the original design.',
+
+  Error_00_000: 'An unexpected error occurred. Please try again.',
+  Error_01_000: '[1] cannot be empty.',
+  Error_01_001: 'The email address introduced is invalid.',
+  Error_01_002: 'Password must be longer than or equal to 6 characters.',
+  Error_01_003: 'Invalid credentials. Please check your username and password.',
+};

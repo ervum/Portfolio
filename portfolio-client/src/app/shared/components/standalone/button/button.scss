@@ -87,22 +87,22 @@
 }
 
 @keyframes Icon-FadeIn {
-    0% { opacity: 0; transform: scale(var(--icon-scale)); }
-    100% { opacity: 1; transform: scale(var(--icon-scale)); }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 @keyframes FancyButton-Icon-ExitRight {
-    0% { transform: translateX(0px) scale(var(--icon-scale)); }
-    100% { transform: translateX(50px) scale(var(--icon-scale)); }
+    0% { translate: 0px 0px; }
+    100% { translate: 50px 0px; }
 }
 
 .FancyButton-Icon {
-    @include s.CreateTransition(width, height, transform);
+    @include s.CreateTransition(width, height, scale, translate, transform);
     @include s.MaskedIcon(none, currentColor);
 
     pointer-events: none;
 
-    will-change: transform;
+    will-change: transform, scale, translate;
 
     border: none;
     flex-shrink: 0;
@@ -112,7 +112,8 @@
     aspect-ratio: 1 / 1;
 
     --icon-scale: 1;
-    transform: scale(var(--icon-scale));
+    scale: var(--icon-scale);
+    translate: 0px 0px;
 
     &.FancyButton-Icon--Entering {
         animation: Icon-FadeIn var(--duration-standard) var(--easing-standard) forwards;
@@ -121,7 +122,7 @@
         animation: FancyButton-Icon-ExitRight var(--duration-standard) var(--easing-standard) forwards;
     }
     &.FancyButton-Icon--OffScreen {
-        transform: translateX(50px);
+        translate: 50px 0px;
     }
 }
 
