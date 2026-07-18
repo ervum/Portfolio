@@ -21,7 +21,7 @@
 
     color: var(--text-main);
     
-    &:hover {
+    &:hover, &:focus-within {
         transform: scale(var(--hover-scale-big)) translateZ(0);
         --container-border-color: var(--border-strong);
     }
@@ -49,7 +49,7 @@
 
     outline: none;
 
-    &:hover {
+    &:hover, &:focus-within {
         @include s.SynchronizeStates('.FancyDropdown-Trigger') {
             border-radius: var(--radius-pill);
         }
@@ -75,6 +75,11 @@
 
     cursor: pointer;
     border-radius: var(--radius-standard);
+
+    &:focus-visible, &:focus {
+        outline: none;
+        border-color: var(--border-strong);
+    }
 }
 
 .FancyDropdown-Label-Wrapper {
@@ -187,8 +192,9 @@
     padding: var(--padding-small) var(--padding-medium);
     cursor: pointer;
     border-radius: var(--radius-pill);
+    outline: none;
 
-    &:hover {
+    &:hover, &:focus-visible, &:focus {
         background-color: var(--surface-background-hover);
 
         transform: scale(var(--hover-scale-big));

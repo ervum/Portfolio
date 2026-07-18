@@ -36,8 +36,9 @@
     border-radius: var(--radius-standard);
     
     overflow: hidden;
+    outline: none;
     
-    &:hover {
+    &:hover, &:focus-visible, &:focus {
         transform: translateY(var(--hover-movey)) scale(var(--hover-scale-big));
 
         border-radius: var(--radius-pill);

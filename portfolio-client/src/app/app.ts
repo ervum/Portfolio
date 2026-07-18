@@ -1,4 +1,4 @@
-import { Component, inject, signal, WritableSignal, computed, type Signal, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal, computed, type Signal, AfterViewInit, PLATFORM_ID, Inject, HostListener } from '@angular/core';
 import { CommonModule, Location, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd, NavigationStart } from '@angular/router';
 
@@ -111,7 +111,17 @@ export class App implements AfterViewInit {
 
   public ToggleTheme(Event: MouseEvent): void {
     if (this.InterfaceService.DarkModeExtensionActive()) return;
-    this.InterfaceService.ToggleInterfaceTypeWithTransition(Event.clientX, Event.clientY);
+
+    let X: number = Event.clientX;
+    let Y: number = Event.clientY;
+
+    if (X === 0 && Y === 0 && Event.currentTarget) {
+      const BoundingRectangle: DOMRect = (Event.currentTarget as HTMLElement).getBoundingClientRect();
+      X = BoundingRectangle.left + (BoundingRectangle.width / 2);
+      Y = BoundingRectangle.top + (BoundingRectangle.height / 2);
+    }
+
+    this.InterfaceService.ToggleInterfaceTypeWithTransition(X, Y);
   }
 
   public NavigateBack(): void {
@@ -123,6 +133,70 @@ export class App implements AfterViewInit {
 
       const Target: string = Segments.join('/') || '';
       this.NavigateWithAnimation(Target);
+    }
+  }
+
+  private GetFocusableElements(): HTMLElement[] {
+    if (!isPlatformBrowser(this.PlatformID)) {
+      return [];
+    }
+
+    const Selectors: string = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled])',
+      'textarea:not([disabled])',
+      'select:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+      '[contenteditable]'
+    ].join(',');
+
+    const Elements: HTMLElement[] = Array.from(document.querySelectorAll(Selectors)) as HTMLElement[];
+
+    return Elements.filter((Element: HTMLElement) => {
+      const Style: CSSStyleDeclaration = window.getComputedStyle(Element);
+      if (Style.display === 'none' || Style.visibility === 'hidden') {
+        return false;
+      }
+      
+      const BoundingRectangle: DOMRect = Element.getBoundingClientRect();
+      if (BoundingRectangle.width === 0 && BoundingRectangle.height === 0) {
+        return false;
+      }
+
+      let Parent: HTMLElement | null = Element.parentElement;
+      while (Parent) {
+        const ParentStyle: CSSStyleDeclaration = window.getComputedStyle(Parent);
+        if (ParentStyle.display === 'none' || ParentStyle.visibility === 'hidden') {
+          return false;
+        }
+        Parent = Parent.parentElement;
+      }
+
+      return true;
+    });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public HandleTabLoop(Event: KeyboardEvent): void {
+    if (Event.key !== 'Tab') return;
+
+    const FocusableElements: HTMLElement[] = this.GetFocusableElements();
+    if (FocusableElements.length === 0) return;
+
+    const ActiveElement: HTMLElement = document.activeElement as HTMLElement;
+    const Index: number = FocusableElements.indexOf(ActiveElement);
+
+    if (Event.shiftKey) {
+      if (Index <= 0) {
+        Event.preventDefault();
+        FocusableElements[FocusableElements.length - 1].focus();
+      }
+    } else {
+      if (Index === -1 || Index === FocusableElements.length - 1) {
+        Event.preventDefault();
+        FocusableElements[0].focus();
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, input, inject, InputSignal } from '@angular/core';
+import { Component, input, inject, Output, EventEmitter, computed, type Signal, type InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Undefinable, FancyButtonIconStateType, NGStylesType } from '@ervum/types';
@@ -40,8 +40,16 @@ export class MinibuttonComponent {
   /** Whether the icon should play entering/exiting animations. */
   public Animated: InputSignal<boolean> = input<boolean>(true);
 
+  /** Tab index override. */
+  public Tabindex: InputSignal<number> = input<number>(0);
+
+  /** Computed effective tab index that becomes -1 if disabled. */
+  public EffectiveTabindex: Signal<number> = computed(() => this.Disabled() ? -1 : this.Tabindex());
+
   /** Current state of the icon animation. */
   public IconStatus: FancyButtonIconStateType = 'AtCenter';
+
+  @Output() Activate: EventEmitter<void> = new EventEmitter<void>();
 
   public get GetIconStyles(): NGStylesType {
     if (!this.Icon()) {
@@ -82,6 +90,18 @@ export class MinibuttonComponent {
     }
   }
 
+  public OnKeyDown(Event: KeyboardEvent): void {
+    if (this.Disabled()) return;
+
+    if ((Event.key === 'Enter') || (Event.key === ' ')) {
+      Event.preventDefault();
+
+      this.Activate.emit();
+
+      (Event.currentTarget as HTMLElement)?.click();
+    }
+  }
+
   public OnIconAnimationEnd(): void {
     if (this.IconStatus === 'Exiting') {
       this.ExitIsQueued = false;
@@ -102,3 +122,4 @@ export class MinibuttonComponent {
     }
   }
 }
+

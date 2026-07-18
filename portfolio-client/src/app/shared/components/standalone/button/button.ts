@@ -237,7 +237,14 @@ export class ButtonComponent implements OnInit, OnChanges {
     }
   }
 
-  public OnKeyDown(): void { this.KeyDown.emit(); }
+  public OnKeyDown(Event: KeyboardEvent): void {
+    this.KeyDown.emit();
+
+    if ((Event.key === 'Enter') || (Event.key === ' ')) {
+      this.Up.emit();
+      Event.preventDefault();
+    }
+  }
   public OnKeyUp(): void { this.KeyUp.emit(); }
 
   public OnWheel(): void { this.Wheel.emit(); }

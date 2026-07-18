@@ -25,6 +25,8 @@
     
     /* Dictating the font-size here allowing elements to scale relatively off it */
     font-size: var(--fontsize-standard, 14px);
+    
+    outline: none;
 }
 
 .FancyCheckbox-Wrapper.Label-Left {
@@ -84,8 +86,10 @@
     height: var(--icon-size-standard, 60%);
 }
 
-/* Hover Interaction */
-.FancyCheckbox-Wrapper:hover {
+/* Hover & Focus Interaction */
+.FancyCheckbox-Wrapper:hover,
+.FancyCheckbox-Wrapper:focus-visible,
+.FancyCheckbox-Wrapper:focus {
     .FancyCheckbox-IconContainer {
         transform: scale(var(--hover-scale-big));
         border-radius: var(--radius-pill);

@@ -55,7 +55,7 @@
         transition: border-radius var(--duration-standard) var(--easing-standard);
     }
 
-    &:hover {
+    &:hover, &:focus-within {
         // Base hover state (no extra rounding by default)
         border-radius: var(--radius-standard);
 
@@ -124,16 +124,32 @@
 
         width: var(--multibutton-width, auto);
 
-        &:hover {
+        &:hover, &:focus-within {
             &.Hovering--First {
-                border-radius: var(--radius-pill) var(--radius-pill) var(--radius-sharp) var(--radius-sharp);
+                border-top-left-radius: var(--radius-pill);
+                border-top-right-radius: var(--radius-pill);
+                border-bottom-left-radius: var(--radius-sharp);
+                border-bottom-right-radius: var(--radius-sharp);
 
-                &::before { border-radius: inherit; }
+                &::before {
+                    border-top-left-radius: var(--radius-pill);
+                    border-top-right-radius: var(--radius-pill);
+                    border-bottom-left-radius: var(--radius-sharp);
+                    border-bottom-right-radius: var(--radius-sharp);
+                }
             }
             &.Hovering--Last {
-                border-radius: var(--radius-sharp) var(--radius-sharp) var(--radius-pill) var(--radius-pill);
+                border-top-left-radius: var(--radius-sharp);
+                border-top-right-radius: var(--radius-sharp);
+                border-bottom-left-radius: var(--radius-pill);
+                border-bottom-right-radius: var(--radius-pill);
 
-                &::before { border-radius: inherit; }
+                &::before {
+                    border-top-left-radius: var(--radius-sharp);
+                    border-top-right-radius: var(--radius-sharp);
+                    border-bottom-left-radius: var(--radius-pill);
+                    border-bottom-right-radius: var(--radius-pill);
+                }
             }
 
             .FancyMultibutton-Highlight {

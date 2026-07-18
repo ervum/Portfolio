@@ -2,7 +2,10 @@
     <FancyContainer
         class = "FancyDropdown-Trigger"
         [Type] = "EffectiveType()"
-        (click) = "Toggle()">
+        tabindex = "0"
+        (click) = "Toggle()"
+        (keydown.enter) = "Toggle()"
+        (keydown.space) = "Toggle(); $event.preventDefault()">
         
         <div class = "FancyDropdown-Label-Wrapper">
             <span 
@@ -27,7 +30,10 @@
             @if (!IsSameItem(Item, SelectedItem())) {
                 <div 
                     class = "FancyDropdown-Item"
-                    (click) = "Select(Item)">
+                    [attr.tabindex] = "IsOpen ? 0 : -1"
+                    (click) = "Select(Item)"
+                    (keydown.enter) = "Select(Item)"
+                    (keydown.space) = "Select(Item); $event.preventDefault()">
                     <span 
                         class = "FancyDropdown-Item-Label"
                         [FancyTypewriter] = "GetItemLabel(Item)">

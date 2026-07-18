@@ -82,11 +82,15 @@ export class InterfaceService {
   }
 
   /** Helper to read a cookie (browser or server) */
-  private GetCookie(Name: string): Nullable<string> {
+  public GetCookie(Name: string): Nullable<string> {
     let CookieString: string = '';
     
     if (this.IsBrowser) {
       CookieString = document.cookie;
+
+      if (!CookieString) {
+        CookieString = localStorage.getItem(Name) || '';
+      }
     } else if (this.Request) {
       // Robust detection for different request types in SSR
       try {
@@ -119,9 +123,24 @@ export class InterfaceService {
   }
 
   /** Helper to set a cookie (browser only) */
-  private SetCookie(Name: string, Value: string): void {
+  public SetCookie(Name: string, Value: string, UpdateLocalStorage: boolean = true): void {
     if (this.IsBrowser) {
       document.cookie = `${Name}=${Value}; path=/; max-age=31536000; SameSite=Lax`;
+
+      if (UpdateLocalStorage) {
+        localStorage.setItem(Name, Value);
+      }
+    }
+  }
+
+  /** Helper to delete a cookie (browser only) */
+  public DeleteCookie(Name: string, UpdateLocalStorage: boolean = true): void {
+    if (this.IsBrowser) {
+      document.cookie = `${Name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=-1; SameSite=Lax`;
+
+      if (UpdateLocalStorage) {
+        localStorage.removeItem(Name);
+      }
     }
   }
 
@@ -324,13 +343,11 @@ export class InterfaceService {
       effect(() => {
         const Theme: FancyUIElementTypeType = this.InterfaceType();
 
-        localStorage.setItem('Interface-Theme', Theme);
         this.SetCookie('Interface-Theme', Theme);
       });
       effect(() => {
         const Language: string = this.Language();
 
-        localStorage.setItem('Interface-Language', Language);
         this.SetCookie('Interface-Language', Language);
         
         document.documentElement.lang = this.T().LanguageCode;

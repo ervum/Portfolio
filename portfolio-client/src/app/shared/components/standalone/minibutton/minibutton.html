@@ -1,9 +1,12 @@
 <FancyContainer
     class = "Minibutton-IconContainer"
+    [attr.tabindex] = "EffectiveTabindex()"
+    role = "button"
     (pointerdown) = "OnDown()"
     (pointerup) = "OnUp()"
     (pointerleave) = "OnUp()"
-    (pointercancel) = "OnUp()">
+    (pointercancel) = "OnUp()"
+    (keydown) = "OnKeyDown($event)">
 
     @if (Icon()) {
         <div

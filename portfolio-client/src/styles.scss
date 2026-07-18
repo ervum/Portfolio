@@ -99,3 +99,34 @@ body {
     mix-blend-mode: normal;
     z-index: 9999;
 }
+
+/* Global Browser input/autofill override styles for all browsers (Chrome, Edge, Brave, Opera, Firefox, Safari) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+    transition: background-color 9999000s ease-in-out 0s, color 9999000s ease-in-out 0s !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+/* Block native/default browser elements like password reveal (eye), clear buttons, and autofill icons */
+input::-ms-clear,
+input::-ms-reveal,
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-search-cancel-button,
+input::-webkit-search-decoration,
+input::-webkit-search-results-button,
+input::-webkit-search-results-decoration {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}

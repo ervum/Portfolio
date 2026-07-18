@@ -51,7 +51,7 @@ export type SecretsType = {
 
 export type ServerConfigurationType = (ConfigurationType & SecretsType);
 
-export type AuthenticationFormFieldType = ('Email' | 'PhoneNumber' | 'UserIdentifier' | 'Password');
+export type AuthenticationFormFieldType = ('Email' | 'PhoneNumber' | 'UserIdentifier' | 'Username' | 'Password');
 export type AuthenticationTabType = ('Sign In' | 'Sign Up');
 
 

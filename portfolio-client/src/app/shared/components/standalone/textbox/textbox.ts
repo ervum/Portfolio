@@ -117,7 +117,8 @@ export class TextboxComponent implements OnInit, OnChanges {
   /** Class Getter for `.FancyTextbox` and `.FancyTextbox-Icon`. */
   public get GetInputClasses(): Record<string, boolean> {
     return {
-      [`FancyTextbox--${this.EffectiveType()}`]: true
+      [`FancyTextbox--${this.EffectiveType()}`]: true,
+      ...(this.GetOrderClasses)
     };
   }
 
@@ -224,6 +225,7 @@ export class TextboxComponent implements OnInit, OnChanges {
   public Name: InputSignal<Undefinable<string>> = input<Undefinable<string>>(undefined);
 
   public MaximumLength: InputSignal<Undefinable<number>> = input<Undefinable<number>>(undefined);
+  public Tabindex: InputSignal<Undefinable<number>> = input<Undefinable<number>>(undefined);
 
   public Icon: InputSignal<Undefinable<string>> = input<Undefinable<string>>('');
 

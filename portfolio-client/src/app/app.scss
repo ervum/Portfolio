@@ -77,7 +77,7 @@
     }
 
     ::ng-deep .Minibutton-IconContainer {
-        &:hover {
+        &:hover, &:focus-visible, &:focus {
             transform: translateY(5px) scale(var(--hover-scale-big));
         }
     }

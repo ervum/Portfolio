@@ -3,6 +3,14 @@
         class = "Section-Wrapper"
         FancySlideUpDown>
 
+        <FancyTooltip
+            class = "Section-Header-Tooltip"
+            [Message] = "SectionHeaderErrorMessage()"
+            [Active] = "SectionHeaderErrorActiveSignal()"
+            [Fixed] = "false"
+            [ArrowBottom] = "true">
+        </FancyTooltip>
+
         <FancyContainer 
             class = "Content-Section-Wrapper"
             [ngClass] = "InterfaceService.GetStatusClasses()">
@@ -33,7 +41,8 @@
                                 Name = "email"
                                 class = "Input-Field"
                                 [Placeholder] = "InterfaceService.T().Email"
-                                Icon = "envelope">
+                                Icon = "envelope"
+                                [Tabindex] = "CurrentFormTab() === 'Sign In' ? -1 : undefined">
                             </FancyTextbox>
                             <FancyTooltip
                                 class = "Input-Field-Tooltip"
@@ -43,7 +52,7 @@
                                 [ArrowLeft] = "true">
                             </FancyTooltip>
                         </div>
-
+ 
                         <div class = "Input-Field-Wrapper">
                             <FancyTextbox
                                 #PhoneNumberTextbox
@@ -52,7 +61,9 @@
                                 class = "Input-Field"
                                 [Placeholder] = "InterfaceService.T().PhoneNumber"
                                 Icon = "phone"
-                                [OnlyAllow] = "'0123456789+-()'">
+                                [OnlyAllow] = "'0123456789+-() '"
+                                [MaximumLength] = "15"
+                                [Tabindex] = "CurrentFormTab() === 'Sign In' ? -1 : undefined">
                             </FancyTextbox>
                             <FancyTooltip
                                 class = "Input-Field-Tooltip"
@@ -71,13 +82,13 @@
                                 ID = "username"
                                 Name = "username"
                                 class = "Input-Field"
-                                [Placeholder] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
-                                [Icon] = "CurrentFormType() === 'Sign In' ? 'user' : 'at'">
+                                [Placeholder] = "CurrentFormTab() === 'Sign In' ? InterfaceService.T().UserIdentifier : InterfaceService.T().Username"
+                                [Icon] = "CurrentFormTab() === 'Sign In' ? 'user' : 'at'">
                             </FancyTextbox>
                             <FancyTooltip
                                 class = "Input-Field-Tooltip"
-                                [Message] = "ErrorMessageMap['UserIdentifier']()"
-                                [Active] = "ErrorActiveSignalMap['UserIdentifier']()"
+                                [Message] = "CurrentFormTab() === 'Sign In' ? ErrorMessageMap['UserIdentifier']() : ErrorMessageMap['Username']()"
+                                [Active]  = "CurrentFormTab() === 'Sign In' ? ErrorActiveSignalMap['UserIdentifier']() : ErrorActiveSignalMap['Username']()"
                                 [Fixed] = "false"
                                 [ArrowLeft] = "true">
                             </FancyTooltip>
@@ -108,14 +119,15 @@
                     <FancyCheckbox
                         class = "RememberMe-Checkbox"
                         [Label] = "InterfaceService.T().RememberMe"
-                        [Checked] = "false">
+                        [Checked] = "RememberMeChecked()"
+                        (CheckedChange) = "RememberMeChecked.set($event)">
                     </FancyCheckbox>
                 </div>
 
                 <div class = "Buttons-Container">
                     <FancyButton
                         class = "Action-Button"
-                        [Label] = "CurrentFormType() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp"
+                        [Label] = "CurrentFormTab() === 'Sign In' ? InterfaceService.T().SignIn : InterfaceService.T().SignUp"
                         (Up) = "HandleSubmit()">
                     </FancyButton>
 
@@ -131,7 +143,7 @@
 
         <!--
         <div class = "Minibuttons-Justified-Container">
-            <FancyMinibutton Icon = "house" (click) = "NavigateToHome()"></FancyMinibutton>
+            <FancyMinibutton Icon = "house" (click) = "NavigationService.NavigateWithAnimation('home')"></FancyMinibutton>
             <FancyMinibutton Icon = "sun" (click) = "ToggleTheme($event)"></FancyMinibutton>
             <FancyMinibutton Icon = "moon" (click) = "ToggleTheme($event)"></FancyMinibutton>
             <FancyMinibutton Icon = "logo"></FancyMinibutton>

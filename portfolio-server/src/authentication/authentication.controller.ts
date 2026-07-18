@@ -26,7 +26,7 @@ export class AuthenticationController {
       return FoundUser;
     }
     
-    throw new UnauthorizedException('Invalid credentials');
+    throw new UnauthorizedException('01_003');
   }
 }
 

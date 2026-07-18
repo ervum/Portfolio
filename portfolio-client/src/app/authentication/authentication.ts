@@ -1,7 +1,7 @@
-import { Component, inject, signal, ViewChild, WritableSignal, computed, type Signal } from '@angular/core';
+import { Component, inject, signal, ViewChild, WritableSignal, computed, type Signal, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LoginData, RegisterData, FancyMultibuttonItemType, AuthenticationFormFieldType, AuthenticationTabType, FieldErrorDescriptor, ErrorRegistry, Undefinable } from '@ervum/types';
+import { LoginData, RegisterData, FancyMultibuttonItemType, AuthenticationFormFieldType, AuthenticationTabType, FieldErrorDescriptor, ErrorRegistry, Undefinable, Nullable } from '@ervum/types';
 
 import { MultibuttonComponent } from '../shared/components/standalone/multibutton/multibutton';
 import { ButtonComponent } from '../shared/components/standalone/button/button';
@@ -40,7 +40,7 @@ import { forkJoin, timer } from 'rxjs';
   templateUrl: './authentication.html',
   styleUrl: './authentication.scss'
 })
-export class AuthenticationComponent {
+export class AuthenticationComponent implements OnInit, AfterViewInit {
   @ViewChild('MainIdentifierTextbox') private MainIdentifierTextbox!: TextboxComponent;
   @ViewChild('EmailTextbox') private EmailTextbox!: TextboxComponent;
   @ViewChild('PhoneNumberTextbox') private PhoneNumberTextbox!: TextboxComponent;
@@ -50,7 +50,7 @@ export class AuthenticationComponent {
   private NavigationService: NavigationService = inject(NavigationService);
   public InterfaceService: InterfaceService = inject(InterfaceService);
 
-  private readonly TargetFormFields: AuthenticationFormFieldType[] = ['Email', 'PhoneNumber', 'UserIdentifier', 'Password'];
+  private readonly TargetFormFields: AuthenticationFormFieldType[] = ['Email', 'PhoneNumber', 'UserIdentifier', 'Username', 'Password'];
 
   /**
    * Error descriptors store the translation key and an optional field key for programmatic replacement of "[1]".
@@ -82,13 +82,19 @@ export class AuthenticationComponent {
     {} as Record<AuthenticationFormFieldType, Signal<string>>
   );
 
-  public CurrentFormType: WritableSignal<AuthenticationTabType> = signal<AuthenticationTabType>('Sign In');
+  public readonly SectionHeaderErrorDescriptorSignal: WritableSignal<FieldErrorDescriptor[]> = signal([]);
+  public readonly SectionHeaderErrorActiveSignal: WritableSignal<boolean> = signal(false);
+  public readonly SectionHeaderErrorMessage: Signal<string> = computed((): string => this.TranslateDescriptors(this.SectionHeaderErrorDescriptorSignal()));
+
+  public readonly RememberMeChecked: WritableSignal<boolean> = signal(false);
+
+  public CurrentFormTab: WritableSignal<AuthenticationTabType> = signal<AuthenticationTabType>('Sign In');
 
   public AuthenticationButtons: Signal<FancyMultibuttonItemType[]> = computed((): FancyMultibuttonItemType[] => [
     {
       Label: this.InterfaceService.T().SignIn,
       Action: (): void => {
-        const IsFromSignUp: boolean = (this.CurrentFormType() === 'Sign Up');
+        const IsFromSignUp: boolean = (this.CurrentFormTab() === 'Sign Up');
 
         let HasVisibleErrors: boolean = false;
         
@@ -104,10 +110,10 @@ export class AuthenticationComponent {
 
         if (IsFromSignUp && HasVisibleErrors) {
           setTimeout((): void => {
-            this.CurrentFormType.set('Sign In');
+            this.CurrentFormTab.set('Sign In');
           }, 400);
         } else {
-          this.CurrentFormType.set('Sign In');
+          this.CurrentFormTab.set('Sign In');
         }
       }
     },
@@ -116,7 +122,7 @@ export class AuthenticationComponent {
       Label: this.InterfaceService.T().SignUp,
       Action: (): void => {
         this.ResetErrors();
-        this.CurrentFormType.set('Sign Up');
+        this.CurrentFormTab.set('Sign Up');
       }
     }
   ]);
@@ -128,7 +134,7 @@ export class AuthenticationComponent {
   /** Classes for the form fields wrapper (sign-up expanded state). */
   public get GetFormFieldsClasses(): Record<string, boolean> {
     return {
-      'Is-SignUp': (this.CurrentFormType() === 'Sign Up')
+      'Is-SignUp': (this.CurrentFormTab() === 'Sign Up')
     };
   }
 
@@ -170,14 +176,16 @@ export class AuthenticationComponent {
     for (const FormField of this.TargetFormFields) {
       this.ErrorActiveSignalMap[FormField].set(false);
     }
+
+    this.SectionHeaderErrorActiveSignal.set(false);
   }
 
   private DisplayErrorTooltips(ErrorObject: any): void {
     this.ResetErrors(); 
 
     if (!ErrorObject || !ErrorObject.error) {
-      this.ErrorDescriptorSignalMap['Password'].set([{ Key: 'Error_00_000', IsGeneral: true }]);
-      this.ErrorActiveSignalMap['Password'].set(true);
+      this.SectionHeaderErrorDescriptorSignal.set([{ Key: 'Error_00_000', IsGeneral: true }]);
+      this.SectionHeaderErrorActiveSignal.set(true);
       
       return;
     }
@@ -195,19 +203,31 @@ export class AuthenticationComponent {
       {} as Record<AuthenticationFormFieldType, FieldErrorDescriptor[]>
     );
     
+    const SectionHeaderDescriptors: FieldErrorDescriptor[] = [];
+
     for (const Message of Messages) {
       const ErrorCodeSections: string[] = Message.split(':');
 
-      const PropertyName: AuthenticationFormFieldType = (ErrorCodeSections[0].trim() as AuthenticationFormFieldType);
-      const RawCode: string = (ErrorCodeSections[1] ?? '00_000').trim();
+      const PossiblePropertyName: string = ErrorCodeSections[0].trim();
+      const RawCode: string = (ErrorCodeSections[1] ?? PossiblePropertyName).trim();
       const ResolvedCode: string = (RawCode in ErrorRegistry) ? RawCode : '00_000';
 
-      ErrorDescriptorMap[PropertyName].push({
-        Key: `Error_${ResolvedCode}`,
-        FieldKey: PropertyName,
-        RawMessage: Message,
-        IsGeneral: (ErrorRegistry[ResolvedCode].IsGeneral === true)
-      });
+      if (this.TargetFormFields.includes(PossiblePropertyName as AuthenticationFormFieldType)) {
+        const PropertyName: AuthenticationFormFieldType = (PossiblePropertyName as AuthenticationFormFieldType);
+
+        ErrorDescriptorMap[PropertyName].push({
+          Key: `Error_${ResolvedCode}`,
+          FieldKey: PropertyName,
+          RawMessage: Message,
+          IsGeneral: (ErrorRegistry[ResolvedCode].IsGeneral === true)
+        });
+      } else {
+        SectionHeaderDescriptors.push({
+          Key: `Error_${ResolvedCode}`,
+          RawMessage: Message,
+          IsGeneral: (ErrorRegistry[ResolvedCode].IsGeneral === true)
+        });
+      }
     }
 
     for (const FormField of this.TargetFormFields) {
@@ -219,19 +239,19 @@ export class AuthenticationComponent {
       }
     }
 
+    if (SectionHeaderDescriptors.length > 0) {
+      this.SectionHeaderErrorDescriptorSignal.set(SectionHeaderDescriptors);
+      this.SectionHeaderErrorActiveSignal.set(true);
+    }
+
     setTimeout((): void => {
       this.ResetErrors();
     }, 5000);
   }
 
-  /** Navigates back to the home page. */
-  public NavigateToHome(): void {
-    this.NavigationService.NavigateWithAnimation('home');
-  }
-
   /** Delegates to the appropriate sign-in or sign-up handler based on the current form type. */
   public HandleSubmit(): void {
-    if (this.CurrentFormType() === 'Sign In') {
+    if (this.CurrentFormTab() === 'Sign In') {
       this.HandleSignIn();
     } else {
       this.HandleSignUp();
@@ -243,15 +263,100 @@ export class AuthenticationComponent {
     this.NavigationService.NavigateWithAnimation('authentication/recovery');
   }
 
+  ngOnInit(): void {
+    const RememberedState: Nullable<string> = this.InterfaceService.GetCookie('RememberMe');
+
+    if (RememberedState === 'true') {
+      this.RememberMeChecked.set(true);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    const RememberedState: Nullable<string> = this.InterfaceService.GetCookie('RememberMe');
+    const RememberedIdentifier: Nullable<string> = this.InterfaceService.GetCookie('UserIdentifier');
+
+    if ((RememberedState === 'true') && RememberedIdentifier && this.MainIdentifierTextbox) {
+      this.RememberMeChecked.set(true);
+
+      setTimeout((): void => {
+        if (this.MainIdentifierTextbox) {
+          this.MainIdentifierTextbox.InputValue = RememberedIdentifier;
+        }
+      }, 0);
+    }
+  }
+
+  private ValidateFields(Rules: { FieldKey: AuthenticationFormFieldType; Value: string; IsEmailCheck?: boolean; MinLength?: number; }[]): boolean {
+    let HasValidationError: boolean = false;
+
+    for (const Rule of Rules) {
+      const Value: string = (Rule.FieldKey === 'Password') ? Rule.Value : (Rule.Value).trim();
+
+      if (Value === '') {
+        this.ErrorDescriptorSignalMap[Rule.FieldKey].set([{ Key: 'Error_01_000', FieldKey: Rule.FieldKey, IsGeneral: false }]);
+        this.ErrorActiveSignalMap[Rule.FieldKey].set(true);
+        
+        HasValidationError = true;
+      } else if (Rule.IsEmailCheck === true) {
+        const EmailPattern: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!EmailPattern.test(Value)) {
+          this.ErrorDescriptorSignalMap[Rule.FieldKey].set([{ Key: 'Error_01_001', FieldKey: Rule.FieldKey, IsGeneral: false }]);
+          this.ErrorActiveSignalMap[Rule.FieldKey].set(true);
+          
+          HasValidationError = true;
+        }
+      } else if ((Rule.MinLength !== undefined) && (Value.length < Rule.MinLength)) {
+        this.ErrorDescriptorSignalMap[Rule.FieldKey].set([{ Key: 'Error_01_002', FieldKey: Rule.FieldKey, IsGeneral: false }]);
+        this.ErrorActiveSignalMap[Rule.FieldKey].set(true);
+        
+        HasValidationError = true;
+      }
+    }
+
+    if (HasValidationError) {
+      setTimeout((): void => {
+        this.ResetErrors();
+      }, 5000);
+    }
+
+    return !HasValidationError;
+  }
+
+  private ValidateSignInFields(): boolean {
+    const Rules: { FieldKey: AuthenticationFormFieldType; Value: string; IsEmailCheck?: boolean; MinLength?: number; }[] = [
+      { FieldKey: 'UserIdentifier', Value: ((this.MainIdentifierTextbox?.InputValue) ?? '') },
+      { FieldKey: 'Password', Value: ((this.PasswordTextbox?.InputValue) ?? ''), MinLength: 6 }
+    ];
+
+    return this.ValidateFields(Rules);
+  }
+
+  private ValidateSignUpFields(): boolean {
+    const Rules: { FieldKey: AuthenticationFormFieldType; Value: string; IsEmailCheck?: boolean; MinLength?: number; }[] = [
+      { FieldKey: 'Email', Value: ((this.EmailTextbox?.InputValue) ?? ''), IsEmailCheck: true },
+      { FieldKey: 'PhoneNumber', Value: ((this.PhoneNumberTextbox?.InputValue) ?? '') },
+      { FieldKey: 'Username', Value: ((this.MainIdentifierTextbox?.InputValue) ?? '') },
+      { FieldKey: 'Password', Value: ((this.PasswordTextbox?.InputValue) ?? ''), MinLength: 6 }
+    ];
+
+    return this.ValidateFields(Rules);
+  }
+
   /** Sends a sign-in request with the current form values. */
   public HandleSignIn(): void {
     console.log('Sign-In attempt initiated from the Authentication Component!');
     
     this.ResetErrors();
+
+    if (!this.ValidateSignInFields()) {
+      return;
+    }
+
     this.InterfaceService.SetStatus('Loading');
     
     const UserPayload: LoginData = {
-      UserIdentifier: ((this.MainIdentifierTextbox?.InputValue) ?? ''),
+      UserIdentifier: (((this.MainIdentifierTextbox?.InputValue) ?? '').trim()),
       Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 
@@ -264,7 +369,19 @@ export class AuthenticationComponent {
         // TODO: Remove before production — logs sensitive user data (password, email, etc.)
         console.log('Successfully signed in:', Response);
 
+        if (this.RememberMeChecked()) {
+          this.InterfaceService.SetCookie('RememberMe', 'true');
+          this.InterfaceService.SetCookie('UserIdentifier', UserPayload.UserIdentifier);
+        } else {
+          this.InterfaceService.DeleteCookie('RememberMe');
+          this.InterfaceService.DeleteCookie('UserIdentifier');
+        }
+
         this.InterfaceService.SetStatus('Success');
+
+        setTimeout((): void => {
+          this.NavigationService.NavigateWithAnimation('home');
+        }, 500);
       },
       error: (ErrorObject: unknown): void => {
         console.error('Error signing in:', ErrorObject);
@@ -280,13 +397,18 @@ export class AuthenticationComponent {
     console.log('Sign-Up attempt initiated from the Authentication Component!');
     
     this.ResetErrors();
+
+    if (!this.ValidateSignUpFields()) {
+      return;
+    }
+
     this.InterfaceService.SetStatus('Loading');
 
     const UserPayload: RegisterData = {
-      Email: ((this.EmailTextbox?.InputValue) ?? ''),
-      PhoneNumber: ((this.PhoneNumberTextbox?.InputValue) ?? ''),
+      Email: (((this.EmailTextbox?.InputValue) ?? '').trim()),
+      PhoneNumber: (((this.PhoneNumberTextbox?.InputValue) ?? '').trim()),
 
-      Username: ((this.MainIdentifierTextbox?.InputValue) ?? ''),
+      Username: (((this.MainIdentifierTextbox?.InputValue) ?? '').trim()),
       Password: ((this.PasswordTextbox?.InputValue) ?? '')
     };
 
@@ -298,6 +420,14 @@ export class AuthenticationComponent {
       next: (Response: [RegisterData, number]): void => {
         // TODO: Remove before production — logs sensitive user data (password, email, etc.)
         console.log('Successfully signed up:', Response);
+
+        if (this.RememberMeChecked()) {
+          this.InterfaceService.SetCookie('RememberMe', 'true');
+          this.InterfaceService.SetCookie('UserIdentifier', UserPayload.Username);
+        } else {
+          this.InterfaceService.DeleteCookie('RememberMe');
+          this.InterfaceService.DeleteCookie('UserIdentifier');
+        }
 
         this.InterfaceService.SetStatus('Success');
       },
@@ -312,6 +442,15 @@ export class AuthenticationComponent {
 
   /** Toggles the global interface theme with a circular ripple transition from the click origin. */
   public ToggleTheme(Event: MouseEvent): void {
-    this.InterfaceService.ToggleInterfaceTypeWithTransition(Event.clientX, Event.clientY);
+    let X: number = Event.clientX;
+    let Y: number = Event.clientY;
+
+    if (X === 0 && Y === 0 && Event.currentTarget) {
+      const BoundingRectangle: DOMRect = (Event.currentTarget as HTMLElement).getBoundingClientRect();
+      X = BoundingRectangle.left + (BoundingRectangle.width / 2);
+      Y = BoundingRectangle.top + (BoundingRectangle.height / 2);
+    }
+
+    this.InterfaceService.ToggleInterfaceTypeWithTransition(X, Y);
   }
 }

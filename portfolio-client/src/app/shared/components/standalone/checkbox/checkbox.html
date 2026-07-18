@@ -3,8 +3,10 @@
     [class.Label-Left] = "LabelPosition() === 'Left'"
     [class.FancyCheckbox--Primary] = "EffectiveType() === 'Primary'"
     [class.FancyCheckbox--Secondary] = "EffectiveType() === 'Secondary'"
-
-    (click) = "Toggle()">
+    tabindex = "0"
+    (click) = "Toggle()"
+    (keydown.enter) = "Toggle()"
+    (keydown.space) = "Toggle(); $event.preventDefault()">
     <FancyContainer class = "FancyCheckbox-IconContainer" [Type] = "EffectiveType()">
         <div 
             class = "FancyCheckbox-Icon Animation-Draw"

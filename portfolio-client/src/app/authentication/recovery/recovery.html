@@ -27,7 +27,8 @@
                                 class = "Input-Field"
                                 [Placeholder] = "FirstTextboxPlaceholder()"
                                 [Icon] = "FirstTextboxIcon()"
-                                [OnlyAllow] = "FirstTextboxOnlyAllow()">
+                                [OnlyAllow] = "FirstTextboxOnlyAllow()"
+                                [Tabindex] = "SelectedRecoveryType() === 'Password' ? -1 : undefined">
                             </FancyTextbox>
                         </div>
                         <span class = "Separator-Text">{{ InterfaceService.T().OR }}</span>
@@ -36,7 +37,8 @@
                                 class = "Input-Field"
                                 [Placeholder] = "SecondTextboxPlaceholder()"
                                 [Icon] = "SecondTextboxIcon()"
-                                [OnlyAllow] = "SecondTextboxOnlyAllow()">
+                                [OnlyAllow] = "SecondTextboxOnlyAllow()"
+                                [Tabindex] = "SelectedRecoveryType() === 'Password' ? -1 : undefined">
                             </FancyTextbox>
                         </div>
                     </div>
@@ -46,7 +48,8 @@
                             <FancyTextbox
                                 class = "Input-Field"
                                 [Placeholder] = "InterfaceService.T().UserIdentifier"
-                                Icon = "user">
+                                Icon = "user"
+                                [Tabindex] = "SelectedRecoveryType() !== 'Password' ? -1 : undefined">
                             </FancyTextbox>
                         </div>
                     </div>

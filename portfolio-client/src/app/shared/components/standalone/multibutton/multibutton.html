@@ -45,7 +45,9 @@
 
                 (click) = "SelectButton($index)"
                 (pointerenter) = "OnHover($index)"
-                (pointerleave) = "OnUnhover()">
+                (pointerleave) = "OnUnhover()"
+                (focus) = "OnHover($index)"
+                (blur) = "OnUnhover()">
 
                 @if (DisplayMode() === 'Icon') {
                     <div

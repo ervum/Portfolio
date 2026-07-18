@@ -136,6 +136,7 @@
 
     cursor: pointer;
     pointer-events: all;
+    outline: none;
 
     transition: all var(--duration-standard) var(--easing-standard);
 
@@ -172,7 +173,11 @@
     }
 
     &:hover .Visibility-Toggle-BaseIcon,
-    &:hover .Visibility-Toggle-StrikeIcon {
+    &:hover .Visibility-Toggle-StrikeIcon,
+    &:focus-visible .Visibility-Toggle-BaseIcon,
+    &:focus-visible .Visibility-Toggle-StrikeIcon,
+    &:focus .Visibility-Toggle-BaseIcon,
+    &:focus .Visibility-Toggle-StrikeIcon {
         transform: scale(var(--hover-scale-big));
     }
 }
@@ -205,15 +210,23 @@
     background-color: var(--surface-background);
     box-sizing: border-box;
 
+    &.FancyTextbox--Intermediate {
+        border-top: none;
+    }
+    &.FancyTextbox--Last {
+        border-top: none;
+    }
+}
+
+.FancyTextbox-Border,
+.FancyTextbox {
     &.FancyTextbox--First {
         border-radius: var(--radius-standard) var(--radius-standard) 2px 2px;
     }
     &.FancyTextbox--Intermediate {
-        border-top: none;
         border-radius: 0cqmin;
     }
     &.FancyTextbox--Last {
-        border-top: none;
         border-radius: 2px 2px var(--radius-standard) var(--radius-standard);
     }
     &.FancyTextbox--Unique {
